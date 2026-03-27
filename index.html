@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kingpin Dashboard</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  :root {
+    --bg: #080808; --bg2: #0f0f0f; --bg3: #141414;
+    --border: #1e1e1e; --red: #ff3333; --green: #00ff88;
+    --yellow: #ffaa00; --blue: #3388ff; --text: #ddd; --dim: #555;
+  }
+  body { background:var(--bg); color:var(--text); font-family:'Courier New',monospace; min-height:100vh; }
+
+  /* HEADER */
+  header { display:flex; align-items:center; justify-content:space-between; padding:16px 24px; border-bottom:1px solid var(--border); background:var(--bg2); }
+  .logo { color:var(--red); font-size:18px; font-weight:bold; letter-spacing:4px; }
+  .goal-bar { display:flex; align-items:center; gap:12px; font-size:11px; color:var(--dim); }
+  .goal-val { color:var(--yellow); font-size:13px; font-weight:bold; }
+  .progress-wrap { width:160px; height:6px; background:#1a1a1a; border-radius:3px; overflow:hidden; }
+  .progress-fill { height:100%; background:linear-gradient(90deg,var(--red),var(--yellow)); border-radius:3px; transition:width 1s; }
+  .live-dot { width:8px; height:8px; border-radius:50%; background:var(--green); box-shadow:0 0 8px var(--green); animation:blink 2s infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  /* LAYOUT */
+  .grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); }
+  .panel { background:var(--bg2); padding:20px; }
+  .panel-title { font-size:9px; letter-spacing:3px; color:var(--dim); text-transform:uppercase; margin-bottom:16px; display:flex; align-items:center; gap:8px; }
+  .panel-title .dot { width:6px; height:6px; border-radius:50%; }
+
+  /* STATS ROW */
+  .stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--border); }
+  .stat-box { background:var(--bg2); padding:16px 20px; }
+  .stat-label { font-size:9px; color:var(--dim); letter-spacing:2px; text-transform:uppercase; margin-bottom:6px; }
+  .stat-value { font-size:22px; font-weight:bold; }
+  .stat-value.green { color:var(--green); }
+  .stat-value.red { color:var(--red); }
+  .stat-value.yellow { color:var(--yellow); }
+  .stat-sub { font-size:10px; color:var(--dim); margin-top:4px; }
+
+  /* SIGNALS */
+  .signal-item { padding:10px 0; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
+  .signal-item:last-child { border-bottom:none; }
+  .signal-name { font-size:13px; color:var(--text); }
+  .signal-sym { font-size:10px; color:var(--dim); }
+  .signal-score { font-size:12px; }
+  .score-high { color:var(--green); }
+  .score-mid { color:var(--yellow); }
+  .signal-meta { font-size:10px; color:var(--dim); margin-top:2px; }
+  .empty { color:var(--dim); font-size:12px; text-align:center; padding:20px 0; }
+
+  /* WALLET */
+  .wallet-addr { font-size:10px; color:var(--dim); word-break:break-all; margin-bottom:12px; }
+  .balance-big { font-size:36px; font-weight:bold; color:var(--green); }
+  .balance-usd { font-size:13px; color:var(--dim); margin-top:4px; }
+  .goal-progress { margin-top:16px; }
+  .goal-label { font-size:10px; color:var(--dim); margin-bottom:6px; display:flex; justify-content:space-between; }
+  .goal-bar-full { height:8px; background:#1a1a1a; border-radius:4px; overflow:hidden; }
+  .goal-bar-inner { height:100%; background:linear-gradient(90deg,#ff3333,#ffaa00,#00ff88); border-radius:4px; transition:width 1s; }
+
+  /* SYSTEM */
+  .sys-row { display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid #111; font-size:12px; }
+  .sys-row:last-child { border-bottom:none; }
+  .sys-status { font-size:10px; padding:2px 8px; border-radius:3px; }
+  .sys-ok { background:#00ff8822; color:var(--green); }
+  .sys-err { background:#ff333322; color:var(--red); }
+  .sys-warn { background:#ffaa0022; color:var(--yellow); }
+
+  /* ACTIVITY */
+  .activity-item { padding:8px 0; border-bottom:1px solid #111; font-size:11px; color:var(--dim); }
+  .activity-item:last-child { border-bottom:none; }
+  .activity-time { color:var(--dim); font-size:10px; }
+  .activity-msg { color:var(--text); margin-top:2px; }
+
+  /* CHART */
+  .chart-wrap { height:80px; position:relative; }
+  svg.sparkline { width:100%; height:100%; }
+
+  /* FOOTER */
+  footer { text-align:center; padding:12px; font-size:10px; color:var(--dim); border-top:1px solid var(--border); letter-spacing:2px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">⚡ KINGPIN</div>
+  <div class="goal-bar">
+    <span>GOAL: 1000 SOL</span>
+    <div class="progress-wrap">
+      <div class="progress-fill" id="headerProgress" style="width:0.06%"></div>
+    </div>
+    <span class="goal-val" id="headerPct">0.06%</span>
+    <div class="live-dot"></div>
+    <span id="serverStatus" style="font-size:10px;color:#555">CHECKING...</span>
+  </div>
+</header>
+
+<!-- STAT BOXES -->
+<div class="stats-row">
+  <div class="stat-box">
+    <div class="stat-label">Wallet Balance</div>
+    <div class="stat-value green" id="balanceSol">—</div>
+    <div class="stat-sub" id="balanceUsd">Loading...</div>
+  </div>
+  <div class="stat-box">
+    <div class="stat-label">Tokens Scanned</div>
+    <div class="stat-value yellow" id="scanned">—</div>
+    <div class="stat-sub" id="scanRate">pump.fun live</div>
+  </div>
+  <div class="stat-box">
+    <div class="stat-label">Signals Today</div>
+    <div class="stat-value" id="signals" style="color:#fff">—</div>
+    <div class="stat-sub">score &gt; 78</div>
+  </div>
+  <div class="stat-box">
+    <div class="stat-label">Server Uptime</div>
+    <div class="stat-value" id="uptime" style="color:var(--blue)">—</div>
+    <div class="stat-sub">render.com</div>
+  </div>
+</div>
+
+<!-- MAIN GRID -->
+<div class="grid">
+
+  <!-- SIGNALS -->
+  <div class="panel">
+    <div class="panel-title"><div class="dot" style="background:var(--red)"></div>Live Signals</div>
+    <div id="signalsList"><div class="empty">Watching pump.fun...</div></div>
+  </div>
+
+  <!-- WALLET -->
+  <div class="panel">
+    <div class="panel-title"><div class="dot" style="background:var(--green)"></div>Wallet</div>
+    <div class="wallet-addr">3s4DjczzFbGwmD9UaLf4xKSCiFBk97noLdNcbUSxs5Uq</div>
+    <div class="balance-big" id="walletBig">—</div>
+    <div class="balance-usd" id="walletUsd">SOL</div>
+    <div class="goal-progress">
+      <div class="goal-label">
+        <span>Progress to 1000 SOL</span>
+        <span id="goalPct">0%</span>
+      </div>
+      <div class="goal-bar-full">
+        <div class="goal-bar-inner" id="goalBar" style="width:0.06%"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SYSTEM -->
+  <div class="panel">
+    <div class="panel-title"><div class="dot" style="background:var(--blue)"></div>System</div>
+    <div class="sys-row"><span>Kingpin Server</span><span class="sys-status sys-ok" id="sysServer">CHECKING</span></div>
+    <div class="sys-row"><span>PumpFun Scanner</span><span class="sys-status" id="sysScanner">—</span></div>
+    <div class="sys-row"><span>Telegram Bot</span><span class="sys-status sys-ok">ACTIVE</span></div>
+    <div class="sys-row"><span>Wallet Monitor</span><span class="sys-status sys-ok">ACTIVE</span></div>
+    <div class="sys-row"><span>WSL2 / Whisper</span><span class="sys-status sys-ok">READY</span></div>
+    <div class="sys-row"><span>Nightly Cron</span><span class="sys-status sys-ok">00:00 CET</span></div>
+    <div class="sys-row"><span>Voice Bot</span><span class="sys-status sys-warn">LOCAL</span></div>
+  </div>
+
+  <!-- ACTIVITY LOG -->
+  <div class="panel">
+    <div class="panel-title"><div class="dot" style="background:var(--yellow)"></div>Activity Log</div>
+    <div id="activityLog">
+      <div class="activity-item"><div class="activity-time">23:23</div><div class="activity-msg">🚀 Kingpin Server deployed to Render.com</div></div>
+      <div class="activity-item"><div class="activity-time">23:12</div><div class="activity-msg">📤 GitHub repo created: II187/kingpin-server</div></div>
+      <div class="activity-item"><div class="activity-time">23:07</div><div class="activity-msg">🤖 @Tradioor_bot activated</div></div>
+      <div class="activity-item"><div class="activity-time">22:54</div><div class="activity-msg">🔴 PumpFun Trader started (paper mode)</div></div>
+      <div class="activity-item"><div class="activity-time">22:42</div><div class="activity-msg">🧹 Nightly maintenance cron created</div></div>
+      <div class="activity-item"><div class="activity-time">22:07</div><div class="activity-msg">💰 0.6 SOL received from Lu</div></div>
+      <div class="activity-item"><div class="activity-time">22:00</div><div class="activity-msg">🎙️ whisper.cpp compiled in WSL2</div></div>
+    </div>
+  </div>
+
+  <!-- STRATEGY -->
+  <div class="panel">
+    <div class="panel-title"><div class="dot" style="background:var(--yellow)"></div>Strategy</div>
+    <div class="sys-row"><span>Mode</span><span style="color:var(--yellow);font-size:11px">PAPER TRADE</span></div>
+    <div class="sys-row"><span>Buy Size</span><span style="color:var(--text);font-size:11px">10% balance</span></div>
+    <div class="sys-row"><span>Take Profit</span><span style="color:var(--green);font-size:11px">5x</span></div>
+    <div class="sys-row"><span>Stop Loss</span><span style="color:var(--red);font-size:11px">-35%</span></div>
+    <div class="sys-row"><span>Min Score</span><span style="color:var(--text);font-size:11px">78 / 100</span></div>
+    <div class="sys-row"><span>Max Positions</span><span style="color:var(--text);font-size:11px">3</span></div>
+    <div class="sys-row"><span>Timeout</span><span style="color:var(--text);font-size:11px">20 min</span></div>
+    <div class="sys-row"><span>Source</span><span style="color:var(--text);font-size:11px">pump.fun</span></div>
+  </div>
+
+  <!-- GOAL TRACKER -->
+  <div class="panel">
+    <div class="panel-title"><div class="dot" style="background:var(--red)"></div>Goal Tracker</div>
+    <div class="sys-row"><span>Starting Capital</span><span style="color:var(--dim);font-size:11px">0.60 SOL</span></div>
+    <div class="sys-row"><span>Current Balance</span><span style="color:var(--green);font-size:11px" id="goalCurrent">0.60 SOL</span></div>
+    <div class="sys-row"><span>Target</span><span style="color:var(--yellow);font-size:11px">1,000 SOL</span></div>
+    <div class="sys-row"><span>Multiplier Needed</span><span style="color:var(--text);font-size:11px">1,667x</span></div>
+    <div class="sys-row"><span>Est. Trades @ 5x</span><span style="color:var(--text);font-size:11px">~5 wins</span></div>
+    <div class="sys-row"><span>Mode</span><span style="color:var(--yellow);font-size:11px">Compound</span></div>
+    <div class="sys-row" style="margin-top:8px"><span>Phase</span><span style="color:var(--red);font-size:11px">🔴 SCANNING</span></div>
+  </div>
+
+</div>
+
+<footer>KINGPIN v2.0 · 24/7 AUTONOMOUS · GOAL: 1000 SOL · Auto-refresh: 30s</footer>
+
+<script>
+const RENDER_URL = 'https://kingpin-server.onrender.com';
+const SOL_WALLET = '3s4DjczzFbGwmD9UaLf4xKSCiFBk97noLdNcbUSxs5Uq';
+let solPrice = 0;
+
+async function fetchServerStatus() {
+  try {
+    const r = await fetch(RENDER_URL + '/health', { signal: AbortSignal.timeout(8000) });
+    const d = await r.json();
+    document.getElementById('serverStatus').textContent = 'SERVER LIVE';
+    document.getElementById('serverStatus').style.color = '#00ff88';
+    document.getElementById('sysServer').textContent = 'LIVE';
+    document.getElementById('sysServer').className = 'sys-status sys-ok';
+    document.getElementById('uptime').textContent = formatUptime(d.uptime);
+
+    // Fetch full status for scanner data
+    const r2 = await fetch(RENDER_URL + '/api/status', { signal: AbortSignal.timeout(8000) });
+    if (r2.ok) {
+      const d2 = await r2.json();
+      document.getElementById('scanned').textContent = (d2.scanned || 0).toLocaleString();
+      document.getElementById('signals').textContent = (d2.signals || 0);
+      document.getElementById('sysScanner').textContent = d2.connected ? 'LIVE' : 'OFF';
+      document.getElementById('sysScanner').className = 'sys-status ' + (d2.connected ? 'sys-ok' : 'sys-err');
+
+      if (d2.topSignals && d2.topSignals.length > 0) {
+        renderSignals(d2.topSignals);
+      }
+    }
+  } catch (e) {
+    document.getElementById('serverStatus').textContent = 'OFFLINE';
+    document.getElementById('serverStatus').style.color = '#ff3333';
+    document.getElementById('sysServer').textContent = 'DOWN';
+    document.getElementById('sysServer').className = 'sys-status sys-err';
+  }
+}
+
+async function fetchWallet() {
+  try {
+    const r = await fetch('https://api.mainnet-beta.solana.com', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ jsonrpc: '2.0', id: 1, method: 'getBalance', params: [SOL_WALLET] }),
+      signal: AbortSignal.timeout(10000)
+    });
+    const d = await r.json();
+    const sol = (d.result.value / 1e9).toFixed(4);
+    const usd = solPrice > 0 ? (sol * solPrice).toFixed(2) : '—';
+
+    document.getElementById('balanceSol').textContent = sol + ' SOL';
+    document.getElementById('balanceUsd').textContent = usd !== '—' ? '$' + usd : 'Loading price...';
+    document.getElementById('walletBig').textContent = sol;
+    document.getElementById('walletUsd').textContent = 'SOL' + (usd !== '—' ? ' ≈ $' + usd : '');
+    document.getElementById('goalCurrent').textContent = sol + ' SOL';
+
+    const pct = (sol / 1000 * 100).toFixed(3);
+    document.getElementById('goalPct').textContent = pct + '%';
+    document.getElementById('goalBar').style.width = Math.max(0.1, pct) + '%';
+    document.getElementById('headerProgress').style.width = Math.max(0.1, pct) + '%';
+    document.getElementById('headerPct').textContent = pct + '%';
+  } catch (e) {}
+}
+
+async function fetchSolPrice() {
+  try {
+    const r = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd', { signal: AbortSignal.timeout(8000) });
+    const d = await r.json();
+    solPrice = d.solana.usd;
+  } catch {}
+}
+
+function renderSignals(signals) {
+  const el = document.getElementById('signalsList');
+  if (!signals.length) { el.innerHTML = '<div class="empty">Watching pump.fun...</div>'; return; }
+  el.innerHTML = signals.slice(0, 6).map(s => `
+    <div class="signal-item">
+      <div>
+        <div class="signal-name">${s.name} <span class="signal-sym">${s.symbol}</span></div>
+        <div class="signal-meta">${s.time} · MCap: ${(s.mcap||0).toFixed(0)} SOL</div>
+      </div>
+      <div class="signal-score ${s.score >= 85 ? 'score-high' : 'score-mid'}">${s.score}/100</div>
+    </div>
+  `).join('');
+}
+
+function formatUptime(s) {
+  if (!s) return '—';
+  const h = Math.floor(s/3600), m = Math.floor((s%3600)/60);
+  return h > 0 ? h + 'h ' + m + 'm' : m + 'm';
+}
+
+async function refresh() {
+  await Promise.all([fetchSolPrice(), fetchWallet(), fetchServerStatus()]);
+}
+
+refresh();
+setInterval(refresh, 30000);
+</script>
+</body>
+</html>
