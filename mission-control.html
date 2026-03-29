@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>KINGPIN — MISSION CONTROL v4</title>
+  <title>KINGPIN — MISSION CONTROL v3.0 COMPOUND</title>
   <style>
     :root {
       --bg:        #000000;
@@ -410,7 +410,7 @@
 <header>
   <div class="logo">
     <div class="logo-title">KINGPIN</div>
-    <div class="logo-sub">MISSION CONTROL v4 · AI TRADING HQ</div>
+    <div class="logo-sub">MISSION CONTROL v3.0 COMPOUND · AI TRADING HQ</div>
   </div>
 
   <div class="header-center">
@@ -509,7 +509,7 @@
   <div class="panel">
     <div class="panel-header">
       <span class="panel-title">⚡ BOT STATUS</span>
-      <span class="panel-badge" id="bot-version">v3.0</span>
+      <span class="panel-badge" id="bot-version">v3.0 COMPOUND</span>
     </div>
     <div class="panel-body">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
@@ -560,35 +560,53 @@
     <div class="panel-body">
       <div class="cfg-row">
         <span class="cfg-key">MODE</span>
-        <span class="cfg-val">WS + DEXSCANNER</span>
+        <span class="cfg-val" style="font-size:9px">WS + DEXSCANNER + DEEPNETS</span>
       </div>
       <div class="cfg-row">
         <span class="cfg-key">BUY SIZE</span>
-        <span class="cfg-val">0.02 SOL</span>
+        <span class="cfg-val">0.04 SOL</span>
       </div>
       <div class="cfg-row">
         <span class="cfg-key">SCORE MIN</span>
-        <span class="cfg-val">60 / 100</span>
+        <span class="cfg-val">65 / 100</span>
       </div>
       <div class="cfg-row">
         <span class="cfg-key">TAKE PROFIT</span>
-        <span class="cfg-val">2.3x TP</span>
+        <span class="cfg-val c-green">+36% (1.36x)</span>
+      </div>
+      <div class="cfg-row">
+        <span class="cfg-key">STOP LOSS</span>
+        <span class="cfg-val c-red">-40%</span>
       </div>
       <div class="cfg-row">
         <span class="cfg-key">SELL SPLIT</span>
         <span class="cfg-val">80% + 20% MOON</span>
       </div>
       <div class="cfg-row">
-        <span class="cfg-key">MAX HOLD (LOSS)</span>
+        <span class="cfg-key">MAX POSITIONS</span>
+        <span class="cfg-val c-yellow">2</span>
+      </div>
+      <div class="cfg-row">
+        <span class="cfg-key">TIMEOUT (LOSS)</span>
         <span class="cfg-val c-red">3 MIN</span>
       </div>
       <div class="cfg-row">
-        <span class="cfg-key">MAX HOLD (GAIN)</span>
+        <span class="cfg-key">TIMEOUT (GAIN)</span>
         <span class="cfg-val c-green">UNLIMITED</span>
       </div>
       <div class="cfg-row">
         <span class="cfg-key">SCANNER INTERVAL</span>
         <span class="cfg-val">60s</span>
+      </div>
+
+      <div style="background:#0d2a1e;border:1px solid #00ff8840;border-radius:4px;padding:10px;margin-top:10px;font-size:11px;">
+        <div style="color:#00ff88;font-weight:700;margin-bottom:6px;letter-spacing:2px">◈ COMPOUND STRATEGY</div>
+        <div style="color:#4d7a62;line-height:1.8">
+          Buy: <span style="color:#00e5ff">0.04 SOL</span> per trade<br>
+          TP: <span style="color:#00ff88">+36%</span> → sell 80%, keep 20% moonbag 🌙<br>
+          SL: <span style="color:#ff3355">-40%</span> OR 3min timeout (losses only)<br>
+          Winners run until +36%, then compound gains
+        </div>
       </div>
     </div>
   </div>
@@ -1009,8 +1027,8 @@ function renderPositions() {
     const pnlColor = isMoon ? 'c-yellow' : (isProfit ? 'c-green' : 'c-red');
     const pnlIcon  = pnlPct > 10 ? '🚀' : (isProfit ? '📈' : '📉');
 
-    // progress toward TP (2.3x = 130% gain)
-    const TP_PCT = 130;
+    // progress toward TP (+36% gain)
+    const TP_PCT = 36;
     const barPct = Math.min(Math.max(pnlPct / TP_PCT * 100, 0), 100);
 
     // sparkline
@@ -1034,7 +1052,7 @@ function renderPositions() {
       <div class="pos-bar-wrap">
         <div class="pos-bar-labels">
           <span>${fmtPct(pnlPct)}</span>
-          <span>TP: +130%</span>
+          <span>TP: +36%</span>
         </div>
         <div class="pos-bar-track">
           <div class="pos-bar-fill ${isProfit?'':'neg'}" style="width:${barPct.toFixed(1)}%"></div>
@@ -1263,7 +1281,7 @@ function renderScanner() {
     const score  = scoreMatch ? parseInt(scoreMatch[1]) : null;
     const mcap   = mcapMatch ? mcapMatch[1] + 'k' : '—';
     const token  = tokenMatch ? tokenMatch[1] : '???';
-    const cls    = score >= 60 ? 'c-green' : (score >= 40 ? 'c-yellow' : 'c-red');
+    const cls    = score >= 65 ? 'c-green' : (score >= 40 ? 'c-yellow' : 'c-red');
     const ts     = l.time || l.timestamp;
     const age    = ts ? fmtAge(Date.now() - new Date(ts).getTime()) : '—';
 
@@ -1385,7 +1403,7 @@ function init() {
   // Countdown ticker
   setInterval(updateCountdown, 1000);
 
-  addLocalLog('KINGPIN MISSION CONTROL v4 initialized', 'green');
+  addLocalLog('KINGPIN MISSION CONTROL v3.0 COMPOUND initialized', 'green');
   addLocalLog('Connecting to VPS ' + VPS_API, 'cyan');
 }
 
