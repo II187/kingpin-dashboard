@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>KINGPIN — MISSION CONTROL v3.0 COMPOUND</title>
+  <title>MOLDUK — Mission Control</title>
   <style>
     :root {
       --bg:        #000000;
@@ -409,8 +409,23 @@
 <!-- ══════════════════════════════════════════════════════════════ -->
 <header>
   <div class="logo">
-    <div class="logo-title">KINGPIN</div>
+    <div class="logo-title">MOLDUK</div>
     <div class="logo-sub">MISSION CONTROL v3.0 COMPOUND · AI TRADING HQ</div>
+  </div>
+
+  <div id="molduk-face" style="
+    font-family: 'Courier New', monospace;
+    font-size: 28px;
+    color: var(--green);
+    text-shadow: 0 0 20px #00ff8888;
+    text-align: center;
+    padding: 10px;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.3s ease;
+  " title="Click me!">
+    <div id="face-expression">( ._.) </div>
+    <div style="font-size:10px;color:var(--text-dim);letter-spacing:2px;margin-top:4px" id="face-mood">SCANNING</div>
   </div>
 
   <div class="header-center">
@@ -1211,6 +1226,7 @@ async function fetchBotStatus() {
     state.botStatus = data;
 
     const running = data?.running === true || data?.running === 'true' || data?.status === 'running' || data?.alive === true || data?.connected === true || (data && Object.keys(data).length > 0);
+    state.botOnline = running;
     const version = data?.version || 'v3.0';
     const scanned = data?.tokensScanned || data?.tokens_scanned || '—';
     const lastBuy = data?.lastBuyAt || data?.last_buy_at;
@@ -1253,6 +1269,7 @@ async function fetchBotStatus() {
     document.getElementById('bot-status-text').style.color = 'var(--red)';
     document.getElementById('bot-status-big').textContent = 'OFFLINE';
     document.getElementById('bot-status-big').className = 'stat-big c-red';
+    state.botOnline = false;
   }
 }
 
@@ -1376,10 +1393,53 @@ async function refresh() {
     ]);
     updateUSDDisplays();
     renderScanner();
+    updateFaceFromState();
     addLocalLog('All data sources refreshed ✓', 'green');
   } catch(e) {
     addLocalLog('Refresh error: ' + e.message, 'red');
   }
+}
+
+// ════════════════════════════════════════════════════════════════
+//  MOLDUK FACE
+// ════════════════════════════════════════════════════════════════
+const FACES = {
+  scanning:  '( ._.) ',
+  bought:    '( ^‿^) ',
+  profit:    '( ◠‿◠) ',
+  loss:      '( ¬_¬) ',
+  offline:   '( x_x) ',
+  moonbag:   '( •‿•)🌙',
+  thinking:  '( ·_·) ',
+};
+
+function updateFace(mood) {
+  const el = document.getElementById('face-expression');
+  const mood_el = document.getElementById('face-mood');
+  if (!el) return;
+  el.textContent = FACES[mood] || FACES.scanning;
+  mood_el.textContent = mood.toUpperCase();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('molduk-face')?.addEventListener('click', () => {
+    const moods = Object.keys(FACES);
+    updateFace(moods[Math.floor(Math.random() * moods.length)]);
+  });
+});
+
+function updateFaceFromState() {
+  const positions = state.positions || [];
+  const hasProfit = positions.some(p => p.pnlPct > 5);
+  const hasLoss = positions.some(p => p.pnlPct < -10);
+  const hasMoonbag = positions.some(p => p.moonbag);
+
+  if (!state.botOnline) updateFace('offline');
+  else if (hasMoonbag) updateFace('moonbag');
+  else if (hasProfit) updateFace('profit');
+  else if (hasLoss) updateFace('loss');
+  else if (positions.length > 0) updateFace('bought');
+  else updateFace('scanning');
 }
 
 // ════════════════════════════════════════════════════════════════
@@ -1405,7 +1465,7 @@ function init() {
   // Countdown ticker
   setInterval(updateCountdown, 1000);
 
-  addLocalLog('KINGPIN MISSION CONTROL v3.0 COMPOUND initialized', 'green');
+  addLocalLog('MOLDUK MISSION CONTROL v3.0 COMPOUND initialized', 'green');
   addLocalLog('Connecting to VPS ' + VPS_API, 'cyan');
 }
 
