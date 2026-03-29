@@ -413,19 +413,27 @@
     <div class="logo-sub">MISSION CONTROL v3.0 COMPOUND · AI TRADING HQ</div>
   </div>
 
-  <div id="molduk-face" style="
-    font-family: 'Courier New', monospace;
-    font-size: 28px;
-    color: var(--green);
-    text-shadow: 0 0 20px #00ff8888;
-    text-align: center;
-    padding: 10px;
-    cursor: pointer;
-    user-select: none;
-    transition: all 0.3s ease;
-  " title="Click me!">
-    <div id="face-expression">( ._.) </div>
-    <div style="font-size:10px;color:var(--text-dim);letter-spacing:2px;margin-top:4px" id="face-mood">SCANNING</div>
+  <div id="molduk-face" title="Click me!" style="cursor:pointer;user-select:none;padding:6px 10px;text-align:center" onclick="rotateFace()">
+    <svg id="face-svg" width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" style="filter:drop-shadow(0 0 8px #00ff8866);transition:all .3s ease">
+      <!-- Head -->
+      <circle cx="32" cy="32" r="28" fill="#050a08" stroke="#00ff88" stroke-width="2"/>
+      <!-- Eyes -->
+      <g id="face-eyes">
+        <circle cx="22" cy="26" r="4" fill="#00ff88"/>
+        <circle cx="42" cy="26" r="4" fill="#00ff88"/>
+        <!-- Pupils -->
+        <circle cx="23" cy="27" r="2" fill="#050a08"/>
+        <circle cx="43" cy="27" r="2" fill="#050a08"/>
+      </g>
+      <!-- Mouth -->
+      <path id="face-mouth" d="M 20 42 Q 32 50 44 42" fill="none" stroke="#00ff88" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- Scan line (animated) -->
+      <line id="face-scan" x1="8" y1="32" x2="56" y2="32" stroke="#00ff8833" stroke-width="1">
+        <animate attributeName="y1" values="10;54;10" dur="2s" repeatCount="indefinite"/>
+        <animate attributeName="y2" values="10;54;10" dur="2s" repeatCount="indefinite"/>
+      </line>
+    </svg>
+    <div style="font-size:9px;color:var(--text-dim);letter-spacing:2px;margin-top:2px" id="face-mood">MOLDUK</div>
   </div>
 
   <div class="header-center">
@@ -1403,30 +1411,66 @@ async function refresh() {
 // ════════════════════════════════════════════════════════════════
 //  MOLDUK FACE
 // ════════════════════════════════════════════════════════════════
-const FACES = {
-  scanning:  '( ._.) ',
-  bought:    '( ^‿^) ',
-  profit:    '( ◠‿◠) ',
-  loss:      '( ¬_¬) ',
-  offline:   '( x_x) ',
-  moonbag:   '( •‿•)🌙',
-  thinking:  '( ·_·) ',
+// SVG Face expressions
+const FACE_STATES = {
+  scanning: {
+    eyes: `<circle cx="22" cy="26" r="4" fill="#00ff88"/><circle cx="42" cy="26" r="4" fill="#00ff88"/><circle cx="23" cy="27" r="2" fill="#050a08"/><circle cx="43" cy="27" r="2" fill="#050a08"/>`,
+    mouth: `M 22 42 Q 32 48 42 42`,
+    color: '#00ff88', label: 'SCANNING'
+  },
+  bought: {
+    eyes: `<circle cx="22" cy="24" r="5" fill="#00ff88"/><circle cx="42" cy="24" r="5" fill="#00ff88"/><circle cx="23" cy="25" r="2.5" fill="#050a08"/><circle cx="43" cy="25" r="2.5" fill="#050a08"/>`,
+    mouth: `M 18 40 Q 32 54 46 40`,
+    color: '#00ff88', label: 'BOUGHT'
+  },
+  profit: {
+    eyes: `<circle cx="22" cy="23" r="5" fill="#00ff88"/><circle cx="42" cy="23" r="5" fill="#00ff88"/><circle cx="23" cy="24" r="2.5" fill="#050a08"/><circle cx="43" cy="24" r="2.5" fill="#050a08"/><line x1="18" y1="20" x2="26" y2="18" stroke="#00ff88" stroke-width="2"/><line x1="38" y1="18" x2="46" y2="20" stroke="#00ff88" stroke-width="2"/>`,
+    mouth: `M 16 40 Q 32 58 48 40`,
+    color: '#00ff88', label: 'PROFIT 🚀'
+  },
+  loss: {
+    eyes: `<line x1="18" y1="22" x2="26" y2="30" stroke="#ff3355" stroke-width="3" stroke-linecap="round"/><line x1="26" y1="22" x2="18" y2="30" stroke="#ff3355" stroke-width="3" stroke-linecap="round"/><line x1="38" y1="22" x2="46" y2="30" stroke="#ff3355" stroke-width="3" stroke-linecap="round"/><line x1="46" y1="22" x2="38" y2="30" stroke="#ff3355" stroke-width="3" stroke-linecap="round"/>`,
+    mouth: `M 20 48 Q 32 38 44 48`,
+    color: '#ff3355', label: 'LOSS'
+  },
+  offline: {
+    eyes: `<line x1="18" y1="22" x2="26" y2="30" stroke="#555" stroke-width="3" stroke-linecap="round"/><line x1="26" y1="22" x2="18" y2="30" stroke="#555" stroke-width="3" stroke-linecap="round"/><line x1="38" y1="22" x2="46" y2="30" stroke="#555" stroke-width="3" stroke-linecap="round"/><line x1="46" y1="22" x2="38" y2="30" stroke="#555" stroke-width="3" stroke-linecap="round"/>`,
+    mouth: `M 22 46 L 42 46`,
+    color: '#555', label: 'OFFLINE'
+  },
+  moonbag: {
+    eyes: `<circle cx="22" cy="26" r="4" fill="#ffcc00"/><circle cx="42" cy="26" r="4" fill="#ffcc00"/><circle cx="23" cy="27" r="2" fill="#050a08"/><circle cx="43" cy="27" r="2" fill="#050a08"/>`,
+    mouth: `M 20 42 Q 32 50 44 42`,
+    color: '#ffcc00', label: '🌙 MOONBAG'
+  },
+  thinking: {
+    eyes: `<circle cx="22" cy="26" r="4" fill="#00e5ff"/><circle cx="42" cy="26" r="4" fill="#00e5ff"/><circle cx="24" cy="25" r="2" fill="#050a08"/><circle cx="44" cy="25" r="2" fill="#050a08"/>`,
+    mouth: `M 24 44 Q 32 48 38 44`,
+    color: '#00e5ff', label: 'THINKING'
+  }
 };
 
+let currentFaceMood = 'scanning';
+const FACE_MOODS = Object.keys(FACE_STATES);
+
 function updateFace(mood) {
-  const el = document.getElementById('face-expression');
-  const mood_el = document.getElementById('face-mood');
-  if (!el) return;
-  el.textContent = FACES[mood] || FACES.scanning;
-  mood_el.textContent = mood.toUpperCase();
+  const s = FACE_STATES[mood] || FACE_STATES.scanning;
+  currentFaceMood = mood;
+  const svg = document.getElementById('face-svg');
+  const moodEl = document.getElementById('face-mood');
+  if (!svg) return;
+  svg.querySelector('#face-eyes').innerHTML = s.eyes;
+  svg.querySelector('#face-mouth').setAttribute('d', s.mouth);
+  svg.querySelector('#face-mouth').setAttribute('stroke', s.color);
+  svg.querySelector('circle:first-child')?.setAttribute('stroke', s.color);
+  svg.style.filter = `drop-shadow(0 0 10px ${s.color}66)`;
+  if (moodEl) moodEl.textContent = s.label;
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('molduk-face')?.addEventListener('click', () => {
-    const moods = Object.keys(FACES);
-    updateFace(moods[Math.floor(Math.random() * moods.length)]);
-  });
-});
+function rotateFace() {
+  const next = FACE_MOODS[(FACE_MOODS.indexOf(currentFaceMood) + 1) % FACE_MOODS.length];
+  updateFace(next);
+}
 
 function updateFaceFromState() {
   const positions = state.positions || [];
