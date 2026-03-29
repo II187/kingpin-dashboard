@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Freelancer OS 2026</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; background: #fff; color: #37352f; display: flex; min-height: 100vh; font-size: 14px; }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: 240px; min-width: 240px; background: #f7f6f3; border-right: 1px solid #e9e8e4;
+    display: flex; flex-direction: column; padding: 12px 0; position: fixed; top: 0; left: 0; height: 100vh; overflow-y: auto; z-index: 100;
+    transition: transform 0.25s ease;
+  }
+  .sidebar-header { padding: 8px 16px 16px; border-bottom: 1px solid #e9e8e4; margin-bottom: 8px; }
+  .sidebar-logo { font-size: 15px; font-weight: 600; color: #37352f; display: flex; align-items: center; gap: 8px; }
+  .sidebar-logo span { font-size: 20px; }
+  .sidebar-subtitle { font-size: 11px; color: #9b9a97; margin-top: 2px; }
+  .nav-item {
+    display: flex; align-items: center; gap: 8px; padding: 5px 16px; cursor: pointer;
+    border-radius: 4px; margin: 1px 8px; color: #37352f; text-decoration: none;
+    font-size: 13.5px; transition: background 0.1s;
+  }
+  .nav-item:hover, .nav-item.active { background: #e9e8e4; }
+  .nav-item .icon { font-size: 16px; width: 20px; text-align: center; }
+  .nav-section { font-size: 11px; font-weight: 600; color: #9b9a97; text-transform: uppercase; letter-spacing: 0.05em; padding: 12px 16px 4px; }
+
+  /* MAIN */
+  .main { margin-left: 240px; flex: 1; padding: 40px 60px; max-width: 1100px; }
+  .page-section { display: none; }
+  .page-section.active { display: block; }
+  .page-title { font-size: 30px; font-weight: 700; margin-bottom: 4px; display: flex; align-items: center; gap: 10px; }
+  .page-subtitle { color: #9b9a97; font-size: 13px; margin-bottom: 32px; }
+
+  /* BLOCKS */
+  .block { margin-bottom: 28px; }
+  .block-title { font-size: 16px; font-weight: 600; margin-bottom: 12px; color: #37352f; }
+
+  /* CHECKBOX ITEMS */
+  .check-item { display: flex; align-items: center; gap: 10px; padding: 6px 0; border-bottom: 1px solid #f1f0ee; }
+  .check-item:last-child { border-bottom: none; }
+  .check-item input[type="checkbox"] { width: 16px; height: 16px; cursor: pointer; accent-color: #2eaadc; flex-shrink: 0; }
+  .check-item label { cursor: pointer; flex: 1; font-size: 14px; }
+  .check-item input:checked + label { text-decoration: line-through; color: #9b9a97; }
+
+  /* QUOTE BOX */
+  .quote-box { background: #f7f6f3; border-left: 3px solid #2eaadc; padding: 14px 18px; border-radius: 4px; font-style: italic; color: #37352f; font-size: 15px; line-height: 1.6; }
+  .quote-author { font-style: normal; font-size: 12px; color: #9b9a97; margin-top: 6px; }
+
+  /* TABLES */
+  .notion-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  .notion-table th { text-align: left; font-size: 11px; font-weight: 600; color: #9b9a97; text-transform: uppercase; letter-spacing: 0.04em; padding: 8px 12px; border-bottom: 1px solid #e9e8e4; background: #f7f6f3; }
+  .notion-table td { padding: 10px 12px; border-bottom: 1px solid #f1f0ee; vertical-align: middle; }
+  .notion-table tr:hover td { background: #f7f6f3; }
+
+  /* STATUS BADGES */
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 500; }
+  .badge-green { background: #d3f4e0; color: #1a7f4b; }
+  .badge-yellow { background: #fef3c7; color: #92400e; }
+  .badge-blue { background: #dbeafe; color: #1e40af; }
+  .badge-red { background: #fee2e2; color: #991b1b; }
+  .badge-gray { background: #f3f4f6; color: #6b7280; }
+  .badge-purple { background: #ede9fe; color: #5b21b6; }
+
+  /* KANBAN */
+  .kanban { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .kanban-col { background: #f7f6f3; border-radius: 8px; padding: 12px; min-height: 300px; }
+  .kanban-col-title { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: #9b9a97; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; }
+  .kanban-col-title .count { background: #e9e8e4; color: #6b7280; font-size: 11px; padding: 1px 6px; border-radius: 10px; }
+  .kanban-card { background: #fff; border: 1px solid #e9e8e4; border-radius: 6px; padding: 10px 12px; margin-bottom: 8px; cursor: pointer; transition: box-shadow 0.15s; }
+  .kanban-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+  .kanban-card-title { font-size: 13px; font-weight: 500; margin-bottom: 6px; }
+  .kanban-card-meta { font-size: 11px; color: #9b9a97; margin-bottom: 4px; }
+  .kanban-card-tags { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 6px; }
+
+  /* INCOME SUMMARY */
+  .income-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
+  .summary-card { background: #f7f6f3; border-radius: 8px; padding: 16px 20px; }
+  .summary-card .label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: #9b9a97; margin-bottom: 6px; }
+  .summary-card .value { font-size: 24px; font-weight: 700; color: #37352f; }
+  .summary-card .value.green { color: #1a7f4b; }
+  .summary-card .value.yellow { color: #d97706; }
+
+  /* WEEKLY PLANNER */
+  .week-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; }
+  .day-col { }
+  .day-header { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: #9b9a97; padding: 6px 0; text-align: center; border-bottom: 1px solid #e9e8e4; margin-bottom: 8px; }
+  .day-header.today { color: #2eaadc; border-bottom-color: #2eaadc; }
+  .day-slot { background: #f7f6f3; border-radius: 4px; padding: 6px 8px; margin-bottom: 6px; font-size: 12px; min-height: 36px; cursor: pointer; border: 1px solid transparent; transition: border-color 0.1s; }
+  .day-slot:hover { border-color: #2eaadc; }
+  .day-slot[contenteditable="true"]:focus { outline: none; border-color: #2eaadc; background: #fff; }
+  .day-slot.filled { background: #dbeafe; color: #1e40af; }
+  .day-slot.filled-green { background: #d3f4e0; color: #1a7f4b; }
+  .day-slot.filled-yellow { background: #fef3c7; color: #92400e; }
+
+  /* GOALS & PROGRESS */
+  .goal-item { margin-bottom: 20px; }
+  .goal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+  .goal-name { font-size: 14px; font-weight: 500; }
+  .goal-pct { font-size: 13px; color: #9b9a97; font-weight: 600; }
+  .progress-bar { height: 8px; background: #e9e8e4; border-radius: 4px; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, #2eaadc, #0ea5e9); transition: width 0.3s; }
+
+  /* HABIT MATRIX */
+  .habit-matrix { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  .habit-matrix th { font-size: 11px; color: #9b9a97; font-weight: 600; text-align: center; padding: 6px 8px; border-bottom: 1px solid #e9e8e4; }
+  .habit-matrix th:first-child { text-align: left; }
+  .habit-matrix td { padding: 8px; text-align: center; border-bottom: 1px solid #f1f0ee; }
+  .habit-matrix td:first-child { text-align: left; font-weight: 500; }
+  .habit-matrix input[type="checkbox"] { width: 16px; height: 16px; cursor: pointer; accent-color: #2eaadc; }
+
+  /* MOBILE TOGGLE */
+  .menu-toggle { display: none; position: fixed; top: 12px; left: 12px; z-index: 200; background: #f7f6f3; border: 1px solid #e9e8e4; border-radius: 6px; padding: 6px 10px; cursor: pointer; font-size: 18px; }
+
+  @media (max-width: 768px) {
+    .sidebar { transform: translateX(-100%); }
+    .sidebar.open { transform: translateX(0); }
+    .main { margin-left: 0; padding: 60px 20px 30px; }
+    .kanban { grid-template-columns: repeat(2, 1fr); }
+    .week-grid { grid-template-columns: repeat(2, 1fr); }
+    .income-summary { grid-template-columns: 1fr; }
+    .menu-toggle { display: block; }
+  }
+</style>
+</head>
+<body>
+
+<button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+
+<!-- SIDEBAR -->
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo"><span>🎯</span> Freelancer OS</div>
+    <div class="sidebar-subtitle">2026 Edition</div>
+  </div>
+
+  <div class="nav-section">Workspace</div>
+  <a class="nav-item active" onclick="showSection('home')">
+    <span class="icon">🏠</span> Home Dashboard
+  </a>
+  <a class="nav-item" onclick="showSection('clients')">
+    <span class="icon">👥</span> Client Tracker
+  </a>
+  <a class="nav-item" onclick="showSection('pipeline')">
+    <span class="icon">📋</span> Project Pipeline
+  </a>
+  <a class="nav-item" onclick="showSection('income')">
+    <span class="icon">💰</span> Income Tracker
+  </a>
+  <a class="nav-item" onclick="showSection('planner')">
+    <span class="icon">📅</span> Weekly Planner
+  </a>
+  <a class="nav-item" onclick="showSection('goals')">
+    <span class="icon">🎯</span> Goals & Habits
+  </a>
+</nav>
+
+<!-- MAIN CONTENT -->
+<main class="main">
+
+  <!-- HOME -->
+  <section id="home" class="page-section active">
+    <div class="page-title"><span>🏠</span> Home Dashboard</div>
+    <div class="page-subtitle">Welcome back — let's have a productive week.</div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+      <div>
+        <div class="block">
+          <div class="block-title">📌 Weekly Goals</div>
+          <div id="weekly-goals">
+            <div class="check-item"><input type="checkbox" id="wg1" onchange="saveCheck('wg1')"><label for="wg1">Land 2 new client contracts</label></div>
+            <div class="check-item"><input type="checkbox" id="wg2" onchange="saveCheck('wg2')"><label for="wg2">Deliver Acme Corp website MVP</label></div>
+            <div class="check-item"><input type="checkbox" id="wg3" onchange="saveCheck('wg3')"><label for="wg3">Send 5 cold outreach proposals</label></div>
+          </div>
+        </div>
+
+        <div class="block">
+          <div class="block-title">⚡ Today's Focus — Top 3</div>
+          <div id="today-tasks">
+            <div class="check-item"><input type="checkbox" id="t1" onchange="saveCheck('t1')"><label for="t1">Finalize homepage mockup for Acme</label></div>
+            <div class="check-item"><input type="checkbox" id="t2" onchange="saveCheck('t2')"><label for="t2">Send invoice to TechFlow GmbH</label></div>
+            <div class="check-item"><input type="checkbox" id="t3" onchange="saveCheck('t3')"><label for="t3">Review contract for new client</label></div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="block">
+          <div class="block-title">💬 Daily Motivation</div>
+          <div class="quote-box" id="daily-quote">
+            "Your time is limited, so don't waste it living someone else's life. Don't be trapped by dogma — which is living with the results of other people's thinking."
+            <div class="quote-author">— Steve Jobs</div>
+          </div>
+        </div>
+
+        <div class="block" style="margin-top: 20px;">
+          <div class="block-title">📊 Quick Stats</div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <div class="summary-card">
+              <div class="label">Active Clients</div>
+              <div class="value">5</div>
+            </div>
+            <div class="summary-card">
+              <div class="label">Open Projects</div>
+              <div class="value">7</div>
+            </div>
+            <div class="summary-card">
+              <div class="label">This Month</div>
+              <div class="value green">€6,800</div>
+            </div>
+            <div class="summary-card">
+              <div class="label">Pending</div>
+              <div class="value yellow">€3,200</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CLIENT TRACKER -->
+  <section id="clients" class="page-section">
+    <div class="page-title"><span>👥</span> Client Tracker</div>
+    <div class="page-subtitle">Manage all your client relationships in one place.</div>
+
+    <div class="block">
+      <table class="notion-table">
+        <thead>
+          <tr>
+            <th>Client Name</th>
+            <th>Project</th>
+            <th>Status</th>
+            <th>Deadline</th>
+            <th>Value</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Acme Corp</strong></td>
+            <td>Website Redesign</td>
+            <td><span class="badge badge-blue">In Progress</span></td>
+            <td>15.04.2026</td>
+            <td>€2,400</td>
+            <td>Feedback ausstehend vom CEO</td>
+          </tr>
+          <tr>
+            <td><strong>TechFlow GmbH</strong></td>
+            <td>Mobile App UI</td>
+            <td><span class="badge badge-green">Completed</span></td>
+            <td>28.03.2026</td>
+            <td>€3,800</td>
+            <td>Invoice sent, payment expected Apr 5</td>
+          </tr>
+          <tr>
+            <td><strong>StartupXYZ</strong></td>
+            <td>Brand Identity</td>
+            <td><span class="badge badge-yellow">Review</span></td>
+            <td>10.04.2026</td>
+            <td>€1,200</td>
+            <td>2nd revision round ongoing</td>
+          </tr>
+          <tr>
+            <td><strong>MediaHouse Berlin</strong></td>
+            <td>Social Media Strategy</td>
+            <td><span class="badge badge-gray">Backlog</span></td>
+            <td>30.04.2026</td>
+            <td>€950</td>
+            <td>Kickoff call scheduled for Apr 3</td>
+          </tr>
+          <tr>
+            <td><strong>EcoShop EU</strong></td>
+            <td>Shopify Development</td>
+            <td><span class="badge badge-red">Overdue</span></td>
+            <td>20.03.2026</td>
+            <td>€5,500</td>
+            <td>Client delay — waiting for assets</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- PROJECT PIPELINE -->
+  <section id="pipeline" class="page-section">
+    <div class="page-title"><span>📋</span> Project Pipeline</div>
+    <div class="page-subtitle">Kanban-style view of all active work.</div>
+
+    <div class="kanban">
+      <!-- BACKLOG -->
+      <div class="kanban-col">
+        <div class="kanban-col-title">Backlog <span class="count">3</span></div>
+        <div class="kanban-card">
+          <div class="kanban-card-title">Landing Page Copy</div>
+          <div class="kanban-card-meta">👤 MediaHouse Berlin</div>
+          <div class="kanban-card-meta">📅 30.04.2026</div>
+          <div class="kanban-card-tags"><span class="badge badge-gray">Low</span></div>
+        </div>
+        <div class="kanban-card">
+          <div class="kanban-card-title">Logo Variations Pack</div>
+          <div class="kanban-card-meta">👤 StartupXYZ</div>
+          <div class="kanban-card-meta">📅 15.04.2026</div>
+          <div class="kanban-card-tags"><span class="badge badge-yellow">Medium</span></div>
+        </div>
+        <div class="kanban-card">
+          <div class="kanban-card-title">SEO Audit</div>
+          <div class="kanban-card-meta">👤 EcoShop EU</div>
+          <div class="kanban-card-meta">📅 05.05.2026</div>
+          <div class="kanban-card-tags"><span class="badge badge-gray">Low</span></div>
+        </div>
+      </div>
+
+      <!-- IN PROGRESS -->
+      <div class="kanban-col">
+        <div class="kanban-col-title">In Progress <span class="count">3</span></div>
+        <div class="kanban-card">
+          <div class="kanban-card-title">Homepage Design</div>
+          <div class="kanban-card-meta">👤 Acme Corp</div>
+          <div class="kanban-card-meta">📅 15.04.2026</div>
+          <div class="kanban-card-tags"><span class="badge badge-red">High</span></div>
+        </div>
+        <div class="kanban-card">
+          <div class="kanban-card-title">Shopify Product Pages</div>
+          <div class="kanban-card-meta">👤 EcoShop EU</div>
+          <div class="kanban-card-meta">📅 28.04.2026</div>
+          <div class="kanban-card-tags"><span class="badge badge-red">High</span></div>
+        </div>
+        <div class="kanban-card">
+          <div class="kanban-card-title">Brand Guidelines Doc</div>
+          <div class="kanban-card-meta">👤 StartupXYZ</div>
+          <div class="kanban-card-meta">📅 10.04.2026</div>
+          <div class="kanban-card-tags"><span class="badge badge-yellow">Medium</span></div>
+        </div>
+      </div>
+
+      <!-- REVIEW -->
+      <div class="kanban-col">
+        <div class="kanban-col-title">Review <span class="count">2</span></div>
+        <div class="kanban-card">
+          <div class="kanban-card-title">App Prototype (v2)</div>
+          <div class="kanban-card-meta">👤 TechFlow GmbH</div>
+          <div class="kanban-card-meta">📅 02.04.2026</div>
+          <div class="kanban-card-tags"><span class="badge badge-yellow">Medium</span></div>
+        </div>
+        <div class="kanban-card">
+          <div class="kanban-card-title">Color System Finalization</div>
+          <div class="kanban-card-meta">👤 StartupXYZ</div>
+          <div class="kanban-card-meta">📅 10.04.2026</div>
+          <div class="kanban-card-tags"><span class="badge badge-blue">In Review</span></div>
+        </div>
+      </div>
+
+      <!-- DONE -->
+      <div class="kanban-col">
+        <div class="kanban-col-title">Done <span class="count">3</span></div>
+        <div class="kanban-card" style="opacity: 0.7;">
+          <div class="kanban-card-title">Mobile App UI Screens</div>
+          <div class="kanban-card-meta">👤 TechFlow GmbH</div>
+          <div class="kanban-card-meta">📅 28.03.2026</div>
+          <div class="kanban-card-tags"><span class="badge badge-green">Done</span></div>
+        </div>
+        <div class="kanban-card" style="opacity: 0.7;">
+          <div class="kanban-card-title">Proposal Deck</div>
+          <div class="kanban-card-meta">👤 MediaHouse Berlin</div>
+          <div class="kanban-card-meta">📅 15.03.2026</div>
+          <div class="kanban-card-tags"><span class="badge badge-green">Done</span></div>
+        </div>
+        <div class="kanban-card" style="opacity: 0.7;">
+          <div class="kanban-card-title">Discovery Call + Scope</div>
+          <div class="kanban-card-meta">👤 EcoShop EU</div>
+          <div class="kanban-card-meta">📅 10.03.2026</div>
+          <div class="kanban-card-tags"><span class="badge badge-green">Done</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INCOME TRACKER -->
+  <section id="income" class="page-section">
+    <div class="page-title"><span>💰</span> Income Tracker</div>
+    <div class="page-subtitle">Track every euro — know exactly where you stand.</div>
+
+    <div class="income-summary">
+      <div class="summary-card">
+        <div class="label">April 2026 Income</div>
+        <div class="value green">€6,800</div>
+      </div>
+      <div class="summary-card">
+        <div class="label">Outstanding</div>
+        <div class="value yellow">€3,200</div>
+      </div>
+      <div class="summary-card">
+        <div class="label">Monthly Goal</div>
+        <div class="value">€10,000</div>
+      </div>
+    </div>
+
+    <div class="block">
+      <div style="background: #f7f6f3; border-radius: 6px; padding: 10px 16px; margin-bottom: 16px; font-size: 13px; color: #6b7280;">
+        📈 Progress: <strong style="color: #1a7f4b;">68%</strong> of monthly goal reached — <strong>€3,200</strong> to go.
+        <div style="margin-top: 8px;"><div class="progress-bar"><div class="progress-fill" style="width: 68%; background: linear-gradient(90deg, #1a7f4b, #22c55e);"></div></div></div>
+      </div>
+      <table class="notion-table">
+        <thead>
+          <tr><th>Date</th><th>Client</th><th>Description</th><th>Amount</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>28.03.2026</td>
+            <td>TechFlow GmbH</td>
+            <td>Mobile App UI — Final Delivery</td>
+            <td><strong>€3,800</strong></td>
+            <td><span class="badge badge-yellow">Pending</span></td>
+          </tr>
+          <tr>
+            <td>20.03.2026</td>
+            <td>StartupXYZ</td>
+            <td>Brand Identity — Milestone 1</td>
+            <td><strong>€600</strong></td>
+            <td><span class="badge badge-green">Paid</span></td>
+          </tr>
+          <tr>
+            <td>15.03.2026</td>
+            <td>EcoShop EU</td>
+            <td>Shopify Kickoff — 50% Deposit</td>
+            <td><strong>€2,750</strong></td>
+            <td><span class="badge badge-green">Paid</span></td>
+          </tr>
+          <tr>
+            <td>10.03.2026</td>
+            <td>Acme Corp</td>
+            <td>Website Redesign — Deposit</td>
+            <td><strong>€1,200</strong></td>
+            <td><span class="badge badge-green">Paid</span></td>
+          </tr>
+          <tr>
+            <td>05.03.2026</td>
+            <td>MediaHouse Berlin</td>
+            <td>Strategy Consultation (2h)</td>
+            <td><strong>€950</strong></td>
+            <td><span class="badge badge-yellow">Pending</span></td>
+          </tr>
+          <tr>
+            <td>01.03.2026</td>
+            <td>TechFlow GmbH</td>
+            <td>App UI — Milestone 1</td>
+            <td><strong>€1,900</strong></td>
+            <td><span class="badge badge-green">Paid</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- WEEKLY PLANNER -->
+  <section id="planner" class="page-section">
+    <div class="page-title"><span>📅</span> Weekly Planner</div>
+    <div class="page-subtitle">Week of March 30 – April 5, 2026</div>
+
+    <div class="block">
+      <div class="week-grid">
+        <div class="day-col">
+          <div class="day-header today">MON<br><small>Mar 30</small></div>
+          <div class="day-slot filled" contenteditable="true">Acme: Homepage wireframes</div>
+          <div class="day-slot filled-yellow" contenteditable="true">Client call 14:00</div>
+          <div class="day-slot" contenteditable="true"></div>
+        </div>
+        <div class="day-col">
+          <div class="day-header">TUE<br><small>Mar 31</small></div>
+          <div class="day-slot filled" contenteditable="true">EcoShop: Product pages</div>
+          <div class="day-slot filled-green" contenteditable="true">Invoice TechFlow</div>
+          <div class="day-slot" contenteditable="true"></div>
+        </div>
+        <div class="day-col">
+          <div class="day-header">WED<br><small>Apr 1</small></div>
+          <div class="day-slot filled-yellow" contenteditable="true">StartupXYZ review call</div>
+          <div class="day-slot filled" contenteditable="true">Brand doc revisions</div>
+          <div class="day-slot" contenteditable="true"></div>
+        </div>
+        <div class="day-col">
+          <div class="day-header">THU<br><small>Apr 2</small></div>
+          <div class="day-slot filled" contenteditable="true">Deep work: Shopify dev</div>
+          <div class="day-slot filled" contenteditable="true">Proposals outreach x2</div>
+          <div class="day-slot" contenteditable="true"></div>
+        </div>
+        <div class="day-col">
+          <div class="day-header">FRI<br><small>Apr 3</small></div>
+          <div class="day-slot filled-yellow" contenteditable="true">MediaHouse kickoff call</div>
+          <div class="day-slot filled-green" contenteditable="true">Weekly review + plan</div>
+          <div class="day-slot" contenteditable="true"></div>
+        </div>
+        <div class="day-col">
+          <div class="day-header">SAT<br><small>Apr 4</small></div>
+          <div class="day-slot" contenteditable="true"></div>
+          <div class="day-slot" contenteditable="true"></div>
+          <div class="day-slot" contenteditable="true"></div>
+        </div>
+        <div class="day-col">
+          <div class="day-header">SUN<br><small>Apr 5</small></div>
+          <div class="day-slot" contenteditable="true"></div>
+          <div class="day-slot" contenteditable="true"></div>
+          <div class="day-slot" contenteditable="true"></div>
+        </div>
+      </div>
+      <p style="font-size: 11px; color: #9b9a97; margin-top: 10px;">💡 Click any slot to edit. Changes auto-save.</p>
+    </div>
+  </section>
+
+  <!-- GOALS & HABITS -->
+  <section id="goals" class="page-section">
+    <div class="page-title"><span>🎯</span> Goals & Habits</div>
+    <div class="page-subtitle">Q2 2026 — April through June</div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px;">
+      <div>
+        <div class="block">
+          <div class="block-title">🏆 Q2 2026 Goals</div>
+
+          <div class="goal-item">
+            <div class="goal-header">
+              <span class="goal-name">💶 Reach €30,000 revenue</span>
+              <span class="goal-pct">68%</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" style="width: 68%;"></div></div>
+            <small style="color: #9b9a97; font-size: 11px;">€20,400 / €30,000 earned</small>
+          </div>
+
+          <div class="goal-item">
+            <div class="goal-header">
+              <span class="goal-name">👥 5 long-term retainer clients</span>
+              <span class="goal-pct">40%</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" style="width: 40%;"></div></div>
+            <small style="color: #9b9a97; font-size: 11px;">2 / 5 retainers secured</small>
+          </div>
+
+          <div class="goal-item">
+            <div class="goal-header">
+              <span class="goal-name">🚀 Launch own digital product</span>
+              <span class="goal-pct">25%</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" style="width: 25%;"></div></div>
+            <small style="color: #9b9a97; font-size: 11px;">Ideation + MVP in progress</small>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="block">
+          <div class="block-title">✅ Daily Habits — Week 13</div>
+          <table class="habit-matrix">
+            <thead>
+              <tr>
+                <th>Habit</th>
+                <th>Mo</th><th>Tu</th><th>We</th><th>Th</th><th>Fr</th><th>Sa</th><th>Su</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>🧘 Morning routine</td>
+                <td><input type="checkbox" id="h1m" onchange="saveCheck('h1m')"></td>
+                <td><input type="checkbox" id="h1t" onchange="saveCheck('h1t')"></td>
+                <td><input type="checkbox" id="h1w" onchange="saveCheck('h1w')"></td>
+                <td><input type="checkbox" id="h1h" onchange="saveCheck('h1h')"></td>
+                <td><input type="checkbox" id="h1f" onchange="saveCheck('h1f')"></td>
+                <td><input type="checkbox" id="h1s" onchange="saveCheck('h1s')"></td>
+                <td><input type="checkbox" id="h1u" onchange="saveCheck('h1u')"></td>
+              </tr>
+              <tr>
+                <td>📚 30min learning</td>
+                <td><input type="checkbox" id="h2m" onchange="saveCheck('h2m')"></td>
+                <td><input type="checkbox" id="h2t" onchange="saveCheck('h2t')"></td>
+                <td><input type="checkbox" id="h2w" onchange="saveCheck('h2w')"></td>
+                <td><input type="checkbox" id="h2h" onchange="saveCheck('h2h')"></td>
+                <td><input type="checkbox" id="h2f" onchange="saveCheck('h2f')"></td>
+                <td><input type="checkbox" id="h2s" onchange="saveCheck('h2s')"></td>
+                <td><input type="checkbox" id="h2u" onchange="saveCheck('h2u')"></td>
+              </tr>
+              <tr>
+                <td>💪 Exercise</td>
+                <td><input type="checkbox" id="h3m" onchange="saveCheck('h3m')"></td>
+                <td><input type="checkbox" id="h3t" onchange="saveCheck('h3t')"></td>
+                <td><input type="checkbox" id="h3w" onchange="saveCheck('h3w')"></td>
+                <td><input type="checkbox" id="h3h" onchange="saveCheck('h3h')"></td>
+                <td><input type="checkbox" id="h3f" onchange="saveCheck('h3f')"></td>
+                <td><input type="checkbox" id="h3s" onchange="saveCheck('h3s')"></td>
+                <td><input type="checkbox" id="h3u" onchange="saveCheck('h3u')"></td>
+              </tr>
+              <tr>
+                <td>✍️ Client outreach</td>
+                <td><input type="checkbox" id="h4m" onchange="saveCheck('h4m')"></td>
+                <td><input type="checkbox" id="h4t" onchange="saveCheck('h4t')"></td>
+                <td><input type="checkbox" id="h4w" onchange="saveCheck('h4w')"></td>
+                <td><input type="checkbox" id="h4h" onchange="saveCheck('h4h')"></td>
+                <td><input type="checkbox" id="h4f" onchange="saveCheck('h4f')"></td>
+                <td><input type="checkbox" id="h4s" onchange="saveCheck('h4s')"></td>
+                <td><input type="checkbox" id="h4u" onchange="saveCheck('h4u')"></td>
+              </tr>
+              <tr>
+                <td>🔕 No social scroll</td>
+                <td><input type="checkbox" id="h5m" onchange="saveCheck('h5m')"></td>
+                <td><input type="checkbox" id="h5t" onchange="saveCheck('h5t')"></td>
+                <td><input type="checkbox" id="h5w" onchange="saveCheck('h5w')"></td>
+                <td><input type="checkbox" id="h5h" onchange="saveCheck('h5h')"></td>
+                <td><input type="checkbox" id="h5f" onchange="saveCheck('h5f')"></td>
+                <td><input type="checkbox" id="h5s" onchange="saveCheck('h5s')"></td>
+                <td><input type="checkbox" id="h5u" onchange="saveCheck('h5u')"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+// ---- NAVIGATION ----
+function showSection(id) {
+  document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.currentTarget.classList.add('active');
+  if (window.innerWidth <= 768) {
+    document.getElementById('sidebar').classList.remove('open');
+  }
+}
+
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+}
+
+// ---- LOCALSTORAGE ----
+function saveCheck(id) {
+  const el = document.getElementById(id);
+  if (el) localStorage.setItem('flos_' + id, el.checked ? '1' : '0');
+}
+
+function loadChecks() {
+  document.querySelectorAll('input[type="checkbox"]').forEach(el => {
+    const val = localStorage.getItem('flos_' + el.id);
+    if (val === '1') el.checked = true;
+  });
+}
+
+// ---- PLANNER AUTO-SAVE ----
+document.querySelectorAll('.day-slot[contenteditable]').forEach((el, i) => {
+  const key = 'flos_slot_' + i;
+  const saved = localStorage.getItem(key);
+  if (saved) el.textContent = saved;
+  el.addEventListener('input', () => localStorage.setItem(key, el.textContent));
+});
+
+// ---- DAILY QUOTE ----
+const quotes = [
+  { text: "Your time is limited, so don't waste it living someone else's life. Don't be trapped by dogma — which is living with the results of other people's thinking.", author: "Steve Jobs" },
+  { text: "The secret of getting ahead is getting started.", author: "Mark Twain" },
+  { text: "Don't watch the clock; do what it does. Keep going.", author: "Sam Levenson" },
+  { text: "The way to get started is to quit talking and begin doing.", author: "Walt Disney" },
+  { text: "Success is not final, failure is not fatal: it is the courage to continue that counts.", author: "Winston Churchill" },
+  { text: "It's not about ideas. It's about making ideas happen.", author: "Scott Belsky" },
+  { text: "Dream big. Start small. Act now.", author: "Robin Sharma" },
+];
+const today = new Date().getDay();
+const q = quotes[today % quotes.length];
+document.getElementById('daily-quote').innerHTML = `"${q.text}" <div class="quote-author">— ${q.author}</div>`;
+
+// ---- INIT ----
+loadChecks();
+</script>
+</body>
+</html>
