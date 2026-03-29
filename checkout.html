@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Checkout — Kingpin Digital</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{background:#0a0a0a;color:#e8e8e8;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:40px 20px}
+    .brand{font-size:13px;letter-spacing:3px;color:#555;margin-bottom:40px;text-transform:uppercase}
+    .card{background:#111;border:1px solid #222;border-radius:12px;max-width:520px;width:100%;padding:36px}
+    .product-name{font-size:24px;font-weight:700;margin-bottom:8px}
+    .product-desc{color:#888;font-size:14px;line-height:1.6;margin-bottom:24px}
+    .price-box{display:flex;gap:16px;align-items:baseline;margin-bottom:32px;padding-bottom:24px;border-bottom:1px solid #1e1e1e}
+    .price-main{font-size:36px;font-weight:800;color:#00ff88}
+    .price-sol{font-size:16px;color:#555}
+    .step{margin-bottom:28px}
+    .step-label{font-size:11px;letter-spacing:2px;color:#555;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+    .step-num{background:#1a1a1a;border:1px solid #333;color:#00ff88;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0}
+    .wallet-box{background:#0d0d0d;border:1px solid #1e3a2e;border-radius:8px;padding:14px 16px;font-family:'Courier New',monospace;font-size:13px;color:#00ff88;word-break:break-all;margin-bottom:10px;position:relative}
+    .copy-btn{display:inline-flex;align-items:center;gap:6px;background:#0d2a1e;border:1px solid #00ff8840;color:#00ff88;font-size:12px;padding:8px 14px;border-radius:6px;cursor:pointer;transition:all .2s;letter-spacing:1px}
+    .copy-btn:hover{background:#00ff8818}
+    .copy-btn.copied{background:#00ff8820;color:#00ff88}
+    .qr-box{text-align:center;margin:16px 0}
+    .qr-box img{border-radius:8px;border:1px solid #222}
+    .sol-amount{font-size:20px;font-weight:700;color:#00e5ff;margin-bottom:4px}
+    input[type=email],input[type=text]{width:100%;background:#0d0d0d;border:1px solid #2a2a2a;border-radius:8px;padding:12px 14px;color:#e8e8e8;font-size:14px;outline:none;transition:border .2s;margin-bottom:10px}
+    input:focus{border-color:#00ff8860}
+    .submit-btn{width:100%;background:linear-gradient(135deg,#00ff88,#00e5ff);color:#000;font-weight:700;font-size:15px;padding:16px;border:none;border-radius:8px;cursor:pointer;letter-spacing:.5px;transition:opacity .2s;margin-top:6px}
+    .submit-btn:hover{opacity:.9}
+    .info-box{background:#0d0d0d;border:1px solid #1e1e1e;border-radius:8px;padding:16px;font-size:13px;color:#666;line-height:1.7;margin-top:24px}
+    .info-box strong{color:#aaa}
+    .faq{margin-top:32px;max-width:520px;width:100%}
+    .faq h3{font-size:13px;letter-spacing:2px;color:#555;text-transform:uppercase;margin-bottom:16px}
+    .faq-item{margin-bottom:16px}
+    .faq-q{font-size:14px;font-weight:600;color:#ccc;margin-bottom:4px}
+    .faq-a{font-size:13px;color:#666;line-height:1.6}
+    .back-link{margin-top:32px;font-size:13px;color:#555}
+    .back-link a{color:#00ff88;text-decoration:none}
+  </style>
+</head>
+<body>
+
+<div class="brand">Kingpin Digital</div>
+
+<div class="card">
+  <div class="product-name" id="prod-name">Loading…</div>
+  <div class="product-desc" id="prod-desc"></div>
+
+  <div class="price-box">
+    <div class="price-main" id="prod-price">…</div>
+    <div class="price-sol" id="prod-sol">loading SOL price…</div>
+  </div>
+
+  <!-- Step 1: Send SOL -->
+  <div class="step">
+    <div class="step-label"><span class="step-num">1</span>Send exactly <span id="sol-inline" style="color:#00e5ff;font-weight:700">…</span> SOL to this address</div>
+    <div class="wallet-box" id="wallet-addr">4imFZ38DmwD11ohSTEnHHP34Sr6bojMMe21rqhqmgrWf</div>
+    <button class="copy-btn" onclick="copyWallet()" id="copy-btn">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+      Copy Address
+    </button>
+    <div class="qr-box">
+      <img id="qr-img" src="" alt="QR Code" width="160" height="160"/>
+    </div>
+  </div>
+
+  <!-- Step 2: Confirm -->
+  <div class="step">
+    <div class="step-label"><span class="step-num">2</span>Enter your email to receive the download link</div>
+    <input type="email" id="buyer-email" placeholder="your@email.com" required/>
+    <input type="text" id="tx-id" placeholder="Transaction ID (optional — speeds things up)"/>
+    <button class="submit-btn" onclick="submitOrder()">✓ Confirm Payment & Get Download Link</button>
+  </div>
+
+  <div class="info-box">
+    <strong>What happens next:</strong> After confirming, you'll receive the download link at your email address within 24 hours — usually within 1–2 hours. If you include the transaction ID it's typically under 30 minutes.
+  </div>
+</div>
+
+<div class="faq">
+  <h3>Questions</h3>
+  <div class="faq-item">
+    <div class="faq-q">Is this secure?</div>
+    <div class="faq-a">Yes. You send SOL to a public wallet address — no private key or personal data required. Your email is only used to deliver the download link.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">I don't have SOL. Can I pay another way?</div>
+    <div class="faq-a">DM <a href="https://twitter.com/moldukbot" style="color:#00ff88">@moldukbot</a> on Twitter — we can arrange payment via other methods.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">What if I don't receive my download?</div>
+    <div class="faq-a">Tweet your transaction hash at @moldukbot. We'll get it sorted within the hour.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">Is there a refund policy?</div>
+    <div class="faq-a">Digital products are non-refundable. If the product doesn't work as described, reach out and we'll fix it.</div>
+  </div>
+</div>
+
+<div class="back-link">← <a href="javascript:history.back()">Back to product page</a></div>
+
+<script>
+const WALLET = '4imFZ38DmwD11ohSTEnHHP34Sr6bojMMe21rqhqmgrWf';
+
+const PRODUCTS = {
+  'sniper-bot': {
+    name: 'PumpFun Sniper Bot',
+    desc: 'Automated Solana meme coin trading bot. Monitors PumpFun in real-time, scores every token, buys on signal, sells at 2x or stop-loss. Node.js source code included. Runs 24/7 on any $5 VPS.',
+    usd: 49,
+    currency: '$49'
+  },
+  'freelancer-os': {
+    name: 'Freelancer OS 2026',
+    desc: 'Your complete freelancer productivity system. Client tracker, project pipeline, income tracker, weekly planner, habit tracker — all in one interactive file. Works in your browser, no account needed.',
+    usd: 17,
+    currency: '€17'
+  }
+};
+
+// Get product from URL
+const params = new URLSearchParams(window.location.search);
+const productKey = params.get('product') || 'sniper-bot';
+const product = PRODUCTS[productKey] || PRODUCTS['sniper-bot'];
+
+document.getElementById('prod-name').textContent = product.name;
+document.getElementById('prod-desc').textContent = product.desc;
+document.getElementById('prod-price').textContent = product.currency;
+
+// QR code
+const qrData = encodeURIComponent('solana:' + WALLET);
+document.getElementById('qr-img').src = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${qrData}&bgcolor=0d0d0d&color=00ff88&margin=8`;
+
+// Fetch SOL price and calculate amount
+async function loadSolPrice() {
+  try {
+    const r = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd');
+    const d = await r.json();
+    const solPrice = d.solana?.usd || 130;
+    const solAmount = (product.usd / solPrice).toFixed(4);
+    document.getElementById('prod-sol').textContent = `≈ ${solAmount} SOL at current price`;
+    document.getElementById('sol-inline').textContent = solAmount;
+    // Store for submit
+    window.solAmount = solAmount;
+  } catch(e) {
+    const fallback = (product.usd / 130).toFixed(4);
+    document.getElementById('prod-sol').textContent = `≈ ${fallback} SOL`;
+    document.getElementById('sol-inline').textContent = fallback;
+    window.solAmount = fallback;
+  }
+}
+loadSolPrice();
+
+function copyWallet() {
+  navigator.clipboard.writeText(WALLET).then(() => {
+    const btn = document.getElementById('copy-btn');
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copy Address`;
+      btn.classList.remove('copied');
+    }, 2000);
+  });
+}
+
+function submitOrder() {
+  const email = document.getElementById('buyer-email').value.trim();
+  const txId = document.getElementById('tx-id').value.trim();
+  if (!email || !email.includes('@')) {
+    alert('Please enter a valid email address.');
+    return;
+  }
+  const subject = encodeURIComponent(`[ORDER] ${product.name} — ${email}`);
+  const body = encodeURIComponent(
+    `Product: ${product.name}\nPrice: ${product.currency} (${window.solAmount || '?'} SOL)\nWallet sent to: ${WALLET}\nTransaction ID: ${txId || 'Not provided'}\nEmail: ${email}\n\n---\nPlease send my download link to: ${email}`
+  );
+  window.location.href = `mailto:molduk.digital@proton.me?subject=${subject}&body=${body}`;
+}
+</script>
+
+</body>
+</html>
