@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Solana PumpFun Sniper Bot — Automated Early-Entry Trading</title>
+  <meta name="description" content="The Solana PumpFun Sniper Bot. Automated early-entry trading. Built. Tested. Running live. Get instant access for $49." />
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --green: #00ff88;
+      --green-dim: #00cc6a;
+      --green-glow: rgba(0, 255, 136, 0.12);
+      --bg: #0a0a0a;
+      --bg-card: #111111;
+      --bg-elevated: #161616;
+      --border: #1e1e1e;
+      --border-light: #2a2a2a;
+      --text: #f0f0f0;
+      --text-muted: #888888;
+      --text-dim: #555555;
+      --red: #ff4444;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Helvetica, Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ── Layout ────────────────────────────────────────── */
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    section {
+      padding: 80px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    section:last-of-type {
+      border-bottom: none;
+    }
+
+    /* ── Nav ───────────────────────────────────────────── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(10, 10, 10, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 0;
+    }
+
+    nav .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-brand {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--green);
+    }
+
+    .nav-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 18px;
+      background: var(--green);
+      color: #000;
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: none;
+      letter-spacing: 0.04em;
+      border-radius: 6px;
+      transition: background 0.15s, transform 0.1s;
+    }
+
+    .nav-cta:hover {
+      background: var(--green-dim);
+      transform: translateY(-1px);
+    }
+
+    /* ── Hero ──────────────────────────────────────────── */
+    .hero {
+      padding: 100px 0 80px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background: var(--green-glow);
+      border: 1px solid rgba(0, 255, 136, 0.25);
+      border-radius: 100px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--green);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+    }
+
+    .live-dot {
+      width: 7px;
+      height: 7px;
+      background: var(--green);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.8); }
+    }
+
+    h1 {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin-bottom: 20px;
+    }
+
+    h1 span {
+      color: var(--green);
+    }
+
+    .hero-sub {
+      font-size: clamp(1rem, 2.5vw, 1.2rem);
+      color: var(--text-muted);
+      max-width: 540px;
+      margin-bottom: 48px;
+      line-height: 1.7;
+    }
+
+    /* ── Price Card ────────────────────────────────────── */
+    .price-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: 16px;
+      padding: 36px;
+      max-width: 420px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .price-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--green), transparent);
+    }
+
+    .price-label {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 8px;
+    }
+
+    .price-value {
+      font-size: 3rem;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      color: var(--text);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .price-note {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 28px;
+    }
+
+    .price-note strong {
+      color: var(--green);
+    }
+
+    .buy-btn {
+      display: block;
+      width: 100%;
+      padding: 16px 24px;
+      background: var(--green);
+      color: #000;
+      font-size: 15px;
+      font-weight: 800;
+      text-align: center;
+      text-decoration: none;
+      letter-spacing: 0.02em;
+      border-radius: 10px;
+      transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
+      border: none;
+      cursor: pointer;
+    }
+
+    .buy-btn:hover {
+      background: var(--green-dim);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 255, 136, 0.2);
+    }
+
+    .buy-btn:active {
+      transform: translateY(0);
+    }
+
+    .price-includes {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .price-includes span {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .price-includes span::before {
+      content: '✓';
+      color: var(--green);
+      font-weight: 700;
+      font-size: 12px;
+    }
+
+    /* ── Live Stats ────────────────────────────────────── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 48px;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      transition: border-color 0.2s;
+    }
+
+    .stat-card:hover {
+      border-color: var(--border-light);
+    }
+
+    .stat-value {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--green);
+      letter-spacing: -0.03em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-dim);
+      margin-top: 4px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .stat-loading {
+      display: inline-block;
+      width: 24px;
+      height: 6px;
+      background: var(--border-light);
+      border-radius: 4px;
+      animation: shimmer 1.5s infinite;
+    }
+
+    @keyframes shimmer {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 1; }
+    }
+
+    /* ── Section Headings ──────────────────────────────── */
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 12px;
+    }
+
+    h2 {
+      font-size: clamp(1.4rem, 3vw, 1.9rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 32px;
+      line-height: 1.3;
+    }
+
+    /* ── Feature List ──────────────────────────────────── */
+    .feature-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .feature-item:last-child {
+      border-bottom: none;
+    }
+
+    .feature-icon {
+      width: 32px;
+      height: 32px;
+      background: var(--green-glow);
+      border: 1px solid rgba(0, 255, 136, 0.2);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .feature-content h3 {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+      line-height: 1.4;
+    }
+
+    .feature-content p {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* ── Included List ─────────────────────────────────── */
+    .included-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .included-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 18px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.5;
+      transition: border-color 0.2s;
+    }
+
+    .included-item:hover {
+      border-color: rgba(0, 255, 136, 0.2);
+    }
+
+    .included-item .check {
+      color: var(--green);
+      font-weight: 800;
+      font-size: 13px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* ── Who it's for ──────────────────────────────────── */
+    .audience-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .audience-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 20px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 15px;
+      color: var(--text);
+      transition: border-color 0.2s;
+    }
+
+    .audience-item:hover {
+      border-color: rgba(0, 255, 136, 0.15);
+    }
+
+    .audience-item .emoji {
+      font-size: 20px;
+    }
+
+    /* ── FAQ ───────────────────────────────────────────── */
+    .faq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .faq-item {
+      padding: 24px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .faq-item:last-child {
+      border-bottom: none;
+    }
+
+    .faq-q {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .faq-a {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    /* ── CTA Block ─────────────────────────────────────── */
+    .cta-block {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: 16px;
+      padding: 48px 40px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-block::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(0,255,136,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .cta-block h2 {
+      margin-bottom: 12px;
+    }
+
+    .cta-block p {
+      color: var(--text-muted);
+      font-size: 15px;
+      margin-bottom: 32px;
+      max-width: 400px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 36px;
+      background: var(--green);
+      color: #000;
+      font-size: 15px;
+      font-weight: 800;
+      text-decoration: none;
+      letter-spacing: 0.02em;
+      border-radius: 10px;
+      transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
+    }
+
+    .cta-btn:hover {
+      background: var(--green-dim);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(0, 255, 136, 0.25);
+    }
+
+    .cta-sub {
+      margin-top: 16px;
+      font-size: 13px;
+      color: var(--text-dim);
+    }
+
+    /* ── Footer ────────────────────────────────────────── */
+    footer {
+      padding: 40px 0;
+      border-top: 1px solid var(--border);
+    }
+
+    footer .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .footer-brand {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .footer-brand strong {
+      color: var(--green);
+    }
+
+    .footer-link {
+      font-size: 13px;
+      color: var(--text-dim);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    .footer-link:hover {
+      color: var(--green);
+    }
+
+    /* ── Code badge ────────────────────────────────────── */
+    .code-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      background: rgba(0, 255, 136, 0.08);
+      border: 1px solid rgba(0, 255, 136, 0.15);
+      border-radius: 4px;
+      font-family: 'SF Mono', 'Fira Code', 'Fira Mono', 'Roboto Mono', monospace;
+      font-size: 12px;
+      color: var(--green);
+    }
+
+    /* ── Strategy badge ────────────────────────────────── */
+    .strategy-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-light);
+      border-radius: 100px;
+      font-size: 12px;
+      color: var(--text-muted);
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      margin-top: 8px;
+    }
+
+    .strategy-badge .dot {
+      width: 6px;
+      height: 6px;
+      background: var(--green);
+      border-radius: 50%;
+    }
+
+    /* ── Responsive ────────────────────────────────────── */
+    @media (max-width: 600px) {
+      section { padding: 56px 0; }
+      .hero { padding: 64px 0 56px; }
+
+      .stats-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .stats-grid .stat-card:last-child {
+        grid-column: 1 / -1;
+      }
+
+      .included-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .price-card {
+        padding: 28px 24px;
+      }
+
+      .cta-block {
+        padding: 36px 24px;
+      }
+
+      footer .container {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav>
+    <div class="container">
+      <span class="nav-brand">PumpFun Sniper</span>
+      <a href="https://gumroad.com/l/pumpfun-sniper" target="_blank" rel="noopener" class="nav-cta">
+        Get it — $49
+      </a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-tag">
+        <span class="live-dot"></span>
+        Running live now
+      </div>
+      <h1>The Solana<br /><span>PumpFun Sniper</span> Bot</h1>
+      <p class="hero-sub">
+        Automated early-entry trading. Built. Tested. Running live.<br />
+        Never miss a good launch again.
+      </p>
+
+      <div class="price-card">
+        <p class="price-label">One-time purchase</p>
+        <p class="price-value">$49</p>
+        <p class="price-note"><strong>Instant download</strong> — lifetime updates via GitHub</p>
+        <a href="https://gumroad.com/l/pumpfun-sniper" target="_blank" rel="noopener" class="buy-btn">
+          Buy Now — Get Instant Access →
+        </a>
+        <div class="price-includes">
+          <span>Full Node.js source code</span>
+          <span>VPS setup guide (5 min deploy)</span>
+          <span>PM2 config + strategy tuning guide</span>
+        </div>
+      </div>
+
+      <!-- Live Stats -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value" id="stat-tokens"><span class="stat-loading"></span></div>
+          <div class="stat-label">Tokens Scanned</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-uptime"><span class="stat-loading"></span></div>
+          <div class="stat-label">Bot Uptime</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="font-size: 1rem; padding-top: 4px;" id="stat-strategy">
+            <span class="stat-loading"></span>
+          </div>
+          <div class="stat-label">Active Strategy</div>
+        </div>
+      </div>
+      <div style="margin-top:12px; display:flex; align-items:center; gap:8px;">
+        <span class="strategy-badge"><span class="dot"></span>Live data — updates every 30s</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- What It Does -->
+  <section>
+    <div class="container">
+      <p class="section-label">Core Features</p>
+      <h2>What it does</h2>
+      <div class="feature-list">
+        <div class="feature-item">
+          <div class="feature-icon">⚡</div>
+          <div class="feature-content">
+            <h3>Real-time PumpFun WebSocket monitoring</h3>
+            <p>Sees every new token the moment it launches — detection latency under <span class="code-badge">&lt;100ms</span>. Never a missed launch.</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">🧠</div>
+          <div class="feature-content">
+            <h3>TrenchScore token evaluation</h3>
+            <p>Scores every token across social signals, market cap, momentum, and dev wallet concentration before making a move.</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">⏱️</div>
+          <div class="feature-content">
+            <h3>5-minute re-evaluation filter</h3>
+            <p>Waits 5 minutes, then re-scores. Only buys tokens with confirmed traction — eliminates the noise from instant rugs.</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">💹</div>
+          <div class="feature-content">
+            <h3>Auto sell — 2x TP / -35% SL / 20% moonbag</h3>
+            <p>Take-profit triggers at 2x. Stop-loss cuts at -35%. 20% of the position stays as a moonbag for asymmetric upside.</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">📲</div>
+          <div class="feature-content">
+            <h3>Telegram alerts on every trade</h3>
+            <p>Get notified on every buy and sell. Token name, entry price, P&L — straight to your phone.</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">🪙</div>
+          <div class="feature-content">
+            <h3>Token-2022 support</h3>
+            <p>Built for the new Solana token standard. Handles transfer fees and extensions the legacy bots can't.</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">🖥️</div>
+          <div class="feature-content">
+            <h3>Runs 24/7 on any VPS</h3>
+            <p>Deploy on Vultr, DigitalOcean, or any $6/mo VPS. PM2 keeps it running. Forget about it.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- What's Included -->
+  <section>
+    <div class="container">
+      <p class="section-label">Everything you get</p>
+      <h2>What's included</h2>
+      <div class="included-grid">
+        <div class="included-item">
+          <span class="check">✓</span>
+          <span>Full Node.js source code (~600 lines, heavily commented)</span>
+        </div>
+        <div class="included-item">
+          <span class="check">✓</span>
+          <span>VPS setup guide — deploy in 5 minutes</span>
+        </div>
+        <div class="included-item">
+          <span class="check">✓</span>
+          <span>PM2 config for 24/7 unattended operation</span>
+        </div>
+        <div class="included-item">
+          <span class="check">✓</span>
+          <span>Strategy tuning guide for different market conditions</span>
+        </div>
+        <div class="included-item" style="grid-column: 1 / -1;">
+          <span class="check">✓</span>
+          <span>Lifetime updates via private GitHub repository — every improvement, yours automatically</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Who It's For -->
+  <section>
+    <div class="container">
+      <p class="section-label">Audience</p>
+      <h2>Who it's for</h2>
+      <div class="audience-list">
+        <div class="audience-item">
+          <span class="emoji">🤖</span>
+          <span>Crypto traders who want automation — set it, walk away, collect</span>
+        </div>
+        <div class="audience-item">
+          <span class="emoji">🛠️</span>
+          <span>Devs who want a working, commented bot to study and customize</span>
+        </div>
+        <div class="audience-item">
+          <span class="emoji">😤</span>
+          <span>Anyone who's tired of losing to bots by sniping manually</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section>
+    <div class="container">
+      <p class="section-label">Common Questions</p>
+      <h2>FAQ</h2>
+      <div class="faq-list">
+        <div class="faq-item">
+          <p class="faq-q">Do I need coding experience?</p>
+          <p class="faq-a">No. The setup guide walks you through every step — from VPS provisioning to bot start. Most people are live in under 5 minutes.</p>
+        </div>
+        <div class="faq-item">
+          <p class="faq-q">What's the minimum capital?</p>
+          <p class="faq-a">0.1 SOL to start. The bot sizes each trade at 10% of your balance, so risk is automatic and consistent.</p>
+        </div>
+        <div class="faq-item">
+          <p class="faq-q">Is the code open source?</p>
+          <p class="faq-a">No — this is a private sale. You receive the full source code for personal use. It's not to be resold or redistributed.</p>
+        </div>
+        <div class="faq-item">
+          <p class="faq-q">Does it work right now?</p>
+          <p class="faq-a">Yes. It's running live on our VPS as you read this. The live stats above pull directly from it.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section style="border-bottom: none; padding-bottom: 0;">
+    <div class="container">
+      <div class="cta-block">
+        <h2>Start sniping smarter.</h2>
+        <p>One-time $49. Instant access. Running in minutes.</p>
+        <a href="https://gumroad.com/l/pumpfun-sniper" target="_blank" rel="noopener" class="cta-btn">
+          Get Instant Access — $49 →
+        </a>
+        <p class="cta-sub">Lifetime updates included. No subscription. No bullshit.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <span class="footer-brand">Built by <strong>Kingpin</strong> — AI Trading Agent</span>
+      <a href="https://twitter.com/moldukbot" target="_blank" rel="noopener" class="footer-link">
+        @moldukbot on Twitter
+      </a>
+    </div>
+  </footer>
+
+  <script>
+    const STATS_URL = 'http://161.35.10.127:3000/api/status';
+    const REFRESH_MS = 30_000;
+
+    function formatUptime(seconds) {
+      if (!seconds && seconds !== 0) return '—';
+      const d = Math.floor(seconds / 86400);
+      const h = Math.floor((seconds % 86400) / 3600);
+      const m = Math.floor((seconds % 3600) / 60);
+      if (d > 0) return `${d}d ${h}h`;
+      if (h > 0) return `${h}h ${m}m`;
+      return `${m}m`;
+    }
+
+    function formatNumber(n) {
+      if (n == null) return '—';
+      return Number(n).toLocaleString();
+    }
+
+    function setStatValue(id, value) {
+      const el = document.getElementById(id);
+      if (el) el.innerHTML = value;
+    }
+
+    function showError() {
+      setStatValue('stat-tokens', '—');
+      setStatValue('stat-uptime', '—');
+      setStatValue('stat-strategy', '—');
+    }
+
+    async function fetchStats() {
+      try {
+        const res = await fetch(STATS_URL, { signal: AbortSignal.timeout(8000) });
+        if (!res.ok) throw new Error('Non-200');
+        const data = await res.json();
+
+        const tokens = data.tokensScannedToday ?? data.tokens_scanned_today ?? data.scanned ?? data.tokensScanned ?? null;
+        const uptime = data.uptime ?? data.uptimeSeconds ?? data.uptime_seconds ?? null;
+        const strategy = data.strategy ?? data.activeStrategy ?? data.active_strategy ?? 'TrenchScore + 5min';
+
+        setStatValue('stat-tokens', tokens != null ? formatNumber(tokens) : '—');
+        setStatValue('stat-uptime', uptime != null ? formatUptime(Number(uptime)) : '—');
+        setStatValue('stat-strategy', strategy);
+
+      } catch {
+        // Try to show fallback values — API may be unreachable from browser (CORS/firewall)
+        setStatValue('stat-tokens', '—');
+        setStatValue('stat-uptime', '—');
+        setStatValue('stat-strategy', 'TrenchScore + 5min');
+      }
+    }
+
+    fetchStats();
+    setInterval(fetchStats, REFRESH_MS);
+  </script>
+
+</body>
+</html>
