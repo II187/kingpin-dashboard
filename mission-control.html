@@ -3,27 +3,30 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>KINGPIN — MISSION CONTROL v3</title>
+  <title>KINGPIN — MISSION CONTROL v4</title>
   <style>
     :root {
       --bg:        #000000;
-      --bg2:       #060b0d;
-      --bg3:       #0a1015;
-      --border:    #0d3528;
+      --bg2:       #050a08;
+      --bg3:       #080f0c;
+      --bg4:       #0a1510;
+      --border:    #0d2a1e;
+      --border2:   #1a4030;
       --green:     #00ff88;
       --green-dim: #00cc6a;
-      --blue:      #00e5ff;
-      --blue-dim:  #00b8cc;
+      --cyan:      #00e5ff;
+      --cyan-dim:  #00b8cc;
       --red:       #ff3355;
       --yellow:    #ffcc00;
       --orange:    #ff8c00;
       --purple:    #b56bff;
       --text:      #c8f0e0;
       --text-dim:  #4d7a62;
-      --glow-g:    0 0 14px #00ff8877;
-      --glow-b:    0 0 14px #00e5ff77;
-      --glow-r:    0 0 14px #ff335577;
-      --glow-y:    0 0 14px #ffcc0077;
+      --text-muted:#2a4d38;
+      --glow-g:    0 0 16px #00ff8866, 0 0 32px #00ff8822;
+      --glow-b:    0 0 16px #00e5ff66, 0 0 32px #00e5ff22;
+      --glow-r:    0 0 16px #ff335566, 0 0 32px #ff335522;
+      --glow-y:    0 0 16px #ffcc0066;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -37,19 +40,45 @@
       overflow-x: hidden;
     }
 
-    /* SCANLINES */
+    /* ── SCANLINES ── */
     body::before {
       content: '';
       position: fixed;
       inset: 0;
       background: repeating-linear-gradient(
         to bottom,
-        transparent 0px,
-        transparent 3px,
-        rgba(0,255,136,.012) 4px
+        transparent 0px, transparent 3px,
+        rgba(0,255,136,.008) 4px
       );
       pointer-events: none;
       z-index: 9999;
+    }
+
+    /* ── GLITCH EFFECT ── */
+    @keyframes glitch {
+      0%   { text-shadow: var(--glow-g); }
+      10%  { text-shadow: 3px 0 #ff3355, -3px 0 #00e5ff, var(--glow-g); clip-path: inset(10% 0 85% 0); }
+      20%  { text-shadow: -2px 0 #ff3355, 2px 0 #00e5ff, var(--glow-g); clip-path: inset(50% 0 30% 0); }
+      30%  { text-shadow: var(--glow-g); clip-path: none; }
+      40%  { text-shadow: 4px 0 #ff3355, -1px 0 #00e5ff, var(--glow-g); transform: skewX(2deg); }
+      50%  { text-shadow: var(--glow-g); transform: skewX(0); }
+      100% { text-shadow: var(--glow-g); }
+    }
+
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.3;transform:scale(.85)} }
+    @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes blink { 0%,100%{opacity:1} 49%{opacity:1} 50%{opacity:0} }
+    @keyframes sweep {
+      0%   { background-position: -100% 0; }
+      100% { background-position: 200% 0; }
+    }
+    @keyframes borderGlow {
+      0%,100% { box-shadow: inset 3px 0 0 var(--green), 0 0 8px #00ff8833; }
+      50%      { box-shadow: inset 3px 0 0 var(--green), 0 0 20px #00ff8866; }
+    }
+    @keyframes borderGlowRed {
+      0%,100% { box-shadow: inset 3px 0 0 var(--red), 0 0 8px #ff335533; }
+      50%      { box-shadow: inset 3px 0 0 var(--red), 0 0 20px #ff335566; }
     }
 
     /* ── HEADER ── */
@@ -57,501 +86,618 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 14px 24px;
+      padding: 14px 28px;
       border-bottom: 1px solid var(--border);
       background: var(--bg2);
       position: sticky;
       top: 0;
       z-index: 100;
+      gap: 16px;
     }
+    header::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--green), var(--cyan), transparent);
+    }
+
     .logo { display: flex; flex-direction: column; }
     .logo-title {
-      font-size: 20px; font-weight: 700; letter-spacing: 5px;
-      color: var(--green); text-shadow: var(--glow-g); line-height: 1;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 6px;
+      color: var(--green);
+      text-shadow: var(--glow-g);
+      line-height: 1;
+      animation: glitch 4s ease-in-out 0.5s 1;
     }
-    .logo-sub { font-size: 9px; letter-spacing: 3px; color: var(--text-dim); margin-top: 2px; }
+    .logo-sub { font-size: 9px; letter-spacing: 4px; color: var(--text-dim); margin-top: 3px; }
+
     .header-center { display: flex; flex-direction: column; align-items: center; gap: 2px; }
     #live-time {
-      font-size: 26px; letter-spacing: 3px; color: var(--blue);
-      text-shadow: var(--glow-b); font-weight: 700;
+      font-size: 30px;
+      letter-spacing: 4px;
+      color: var(--cyan);
+      text-shadow: var(--glow-b);
+      font-weight: 700;
     }
-    #live-date { font-size: 10px; letter-spacing: 2px; color: var(--text-dim); }
-    .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+    #live-date { font-size: 9px; letter-spacing: 3px; color: var(--text-dim); }
+
+    .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
     .status-badge { display: flex; align-items: center; gap: 8px; font-size: 11px; letter-spacing: 2px; }
     .dot {
       width: 10px; height: 10px; border-radius: 50%;
       background: var(--green); box-shadow: var(--glow-g);
-      animation: pulse 2s ease-in-out infinite;
+      animation: pulse 1.8s ease-in-out infinite;
     }
     .dot.red    { background: var(--red);    box-shadow: var(--glow-r); }
     .dot.yellow { background: var(--yellow); box-shadow: var(--glow-y); }
-    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.35} }
-    #refresh-countdown { font-size: 10px; color: var(--text-dim); letter-spacing: 1px; }
+    #refresh-countdown { font-size: 9px; color: var(--text-muted); letter-spacing: 1px; }
 
-    /* ── GRID ── */
+    /* ── MAIN GRID ── */
     .grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
-      padding: 18px 20px;
-      max-width: 1700px;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      padding: 16px 20px;
+      max-width: 1920px;
       margin: 0 auto;
     }
-    @media (max-width: 1150px) { .grid { grid-template-columns: repeat(2,1fr); } }
-    @media (max-width: 680px)  { .grid { grid-template-columns: 1fr; padding: 10px; } }
+    @media (max-width: 1400px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 960px)  { .grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 560px)  { .grid { grid-template-columns: 1fr; padding: 10px; } }
+
+    .col-span-2 { grid-column: span 2; }
+    .col-span-4 { grid-column: span 4; }
+    @media (max-width: 1400px) { .col-span-4 { grid-column: span 3; } }
+    @media (max-width: 960px)  { .col-span-4 { grid-column: span 2; } .col-span-2 { grid-column: span 2; } }
+    @media (max-width: 560px)  { .col-span-2, .col-span-4 { grid-column: span 1; } }
 
     /* ── PANELS ── */
     .panel {
-      background: var(--bg2);
+      background: var(--bg3);
       border: 1px solid var(--border);
       border-radius: 4px;
       overflow: hidden;
       position: relative;
+      animation: fadeIn .4s ease both;
     }
     .panel::before {
       content: '';
       position: absolute; top: 0; left: 0; right: 0; height: 2px;
-      background: linear-gradient(90deg, var(--green), var(--blue));
+      background: linear-gradient(90deg, var(--green) 0%, var(--cyan) 50%, transparent 100%);
     }
     .panel::after {
       content: '';
       position: absolute; bottom: 0; right: 0;
-      width: 12px; height: 12px;
-      border-bottom: 2px solid var(--border);
-      border-right: 2px solid var(--border);
+      width: 10px; height: 10px;
+      border-bottom: 2px solid var(--border2);
+      border-right: 2px solid var(--border2);
     }
+
     .panel-header {
       display: flex; align-items: center; justify-content: space-between;
       padding: 10px 14px 8px;
       border-bottom: 1px solid var(--border);
     }
-    .panel-title { font-size: 10px; font-weight: 700; letter-spacing: 3px; color: var(--green); text-shadow: var(--glow-g); }
+    .panel-title {
+      font-size: 9px; font-weight: 700; letter-spacing: 4px;
+      color: var(--green); text-shadow: var(--glow-g);
+    }
     .panel-badge {
-      font-size: 9px; letter-spacing: 1px; color: var(--text-dim);
-      background: var(--bg3); border: 1px solid var(--border);
-      border-radius: 2px; padding: 2px 6px;
+      font-size: 8px; letter-spacing: 1px; color: var(--text-muted);
+      border: 1px solid var(--border); border-radius: 2px; padding: 1px 5px;
     }
     .panel-body { padding: 14px; }
 
-    /* ── STAT ROWS ── */
+    /* ── STAT BLOCKS ── */
+    .stat-big {
+      font-size: 28px; font-weight: 700; color: var(--green);
+      text-shadow: var(--glow-g); letter-spacing: 2px; line-height: 1;
+    }
+    .stat-sub { font-size: 11px; color: var(--text-dim); margin-top: 4px; letter-spacing: 1px; }
     .stat-row {
       display: flex; justify-content: space-between; align-items: center;
-      padding: 5px 0; border-bottom: 1px solid #08180f;
+      padding: 5px 0; border-bottom: 1px solid #060e09;
     }
     .stat-row:last-child { border-bottom: none; }
-    .stat-label { font-size: 11px; color: var(--text-dim); letter-spacing: 1px; }
-    .stat-value { font-size: 13px; font-weight: 700; color: var(--text); text-align: right; }
-    .stat-value.green  { color: var(--green);  text-shadow: var(--glow-g); }
-    .stat-value.blue   { color: var(--blue);   text-shadow: var(--glow-b); }
-    .stat-value.red    { color: var(--red);    text-shadow: var(--glow-r); }
-    .stat-value.yellow { color: var(--yellow); text-shadow: var(--glow-y); }
-    .stat-value.purple { color: var(--purple); }
-    .stat-value.orange { color: var(--orange); }
-    .stat-value.big    { font-size: 22px; }
+    .stat-label { font-size: 10px; color: var(--text-dim); letter-spacing: 1px; }
+    .stat-value { font-size: 12px; font-weight: 700; text-align: right; }
+    .c-green  { color: var(--green);  text-shadow: var(--glow-g); }
+    .c-cyan   { color: var(--cyan);   text-shadow: var(--glow-b); }
+    .c-red    { color: var(--red);    text-shadow: var(--glow-r); }
+    .c-yellow { color: var(--yellow); }
+    .c-orange { color: var(--orange); }
+    .c-purple { color: var(--purple); }
+    .c-dim    { color: var(--text-dim); }
 
-    /* ── PROGRESS ── */
-    .progress-wrap { margin-top: 12px; }
-    .progress-label { display: flex; justify-content: space-between; font-size: 10px; color: var(--text-dim); margin-bottom: 5px; }
-    .progress-track { background: #08180f; border: 1px solid var(--border); border-radius: 2px; height: 8px; overflow: hidden; }
-    .progress-fill { height: 100%; background: linear-gradient(90deg, var(--green), var(--blue)); transition: width .6s ease; box-shadow: var(--glow-g); min-width: 2px; }
-    .progress-text { text-align: center; font-size: 10px; color: var(--text-dim); margin-top: 4px; }
+    /* ── PROGRESS BAR ── */
+    .progress-wrap { margin-top: 10px; }
+    .progress-label { display: flex; justify-content: space-between; font-size: 9px; color: var(--text-dim); margin-bottom: 4px; letter-spacing: 1px; }
+    .progress-track {
+      height: 4px; background: var(--bg4); border-radius: 2px; overflow: hidden;
+      position: relative;
+    }
+    .progress-fill {
+      height: 100%; background: linear-gradient(90deg, var(--green-dim), var(--green));
+      border-radius: 2px; transition: width .8s ease;
+      position: relative; overflow: hidden;
+    }
+    .progress-fill::after {
+      content: '';
+      position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.3), transparent);
+      animation: sweep 2s ease-in-out infinite;
+    }
+    .progress-fill.cyan { background: linear-gradient(90deg, var(--cyan-dim), var(--cyan)); }
+    .progress-fill.red  { background: linear-gradient(90deg, #cc2244, var(--red)); }
 
-    /* ── ADDRESS ── */
-    .address {
-      font-size: 10px; color: var(--text-dim); word-break: break-all;
-      background: var(--bg3); border: 1px solid var(--border);
-      border-radius: 2px; padding: 5px 8px; margin-top: 10px; letter-spacing: .5px;
+    /* ── POSITION CARDS ── */
+    .pos-card {
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      margin-bottom: 10px;
+      padding: 10px 12px;
+      position: relative;
+      background: var(--bg4);
+      transition: box-shadow .3s;
+    }
+    .pos-card:last-child { margin-bottom: 0; }
+    .pos-card.profit  { animation: borderGlow 2.5s ease-in-out infinite; }
+    .pos-card.loss    { animation: borderGlowRed 2.5s ease-in-out infinite; }
+    .pos-card.moonbag { box-shadow: inset 3px 0 0 var(--yellow), 0 0 10px #ffcc0022; }
+
+    .pos-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+    .pos-name { font-size: 14px; font-weight: 700; letter-spacing: 2px; color: var(--text); }
+    .pos-pnl  { font-size: 14px; font-weight: 700; }
+    .pos-meta { display: flex; gap: 14px; font-size: 10px; color: var(--text-dim); margin-bottom: 6px; flex-wrap: wrap; }
+    .pos-meta span { letter-spacing: .5px; }
+    .pos-meta .highlight { color: var(--cyan); }
+
+    .pos-bar-wrap { margin-bottom: 6px; }
+    .pos-bar-labels { display: flex; justify-content: space-between; font-size: 9px; color: var(--text-dim); margin-bottom: 2px; }
+    .pos-bar-track { height: 5px; background: var(--bg); border-radius: 2px; overflow: hidden; }
+    .pos-bar-fill { height: 100%; border-radius: 2px; background: linear-gradient(90deg, var(--green-dim), var(--green)); transition: width .6s ease; }
+    .pos-bar-fill.neg { background: linear-gradient(90deg, #cc2244, var(--red)); }
+
+    /* Sparkline */
+    .sparkline { display: block; width: 100%; height: 36px; margin-top: 6px; opacity: .85; }
+
+    /* ── TRADE ROWS ── */
+    .trade-row {
+      display: grid;
+      grid-template-columns: 48px 40px 70px 70px 1fr auto;
+      gap: 6px;
+      align-items: center;
+      padding: 5px 0;
+      border-bottom: 1px solid #060e09;
+      font-size: 10px;
+      letter-spacing: .5px;
+    }
+    .trade-row:last-child { border-bottom: none; }
+    .trade-time  { color: var(--text-muted); }
+    .trade-type  { font-weight: 700; letter-spacing: 1px; }
+    .trade-token { color: var(--text); font-weight: 700; }
+    .trade-size  { color: var(--cyan); }
+    .trade-info  { color: var(--text-dim); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .trade-pnl   { text-align: right; font-weight: 700; }
+
+    /* ── LOG FEED ── */
+    .log-feed {
+      height: 160px;
+      overflow-y: auto;
+      font-size: 11px;
+      line-height: 1.6;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border2) transparent;
+    }
+    .log-feed::-webkit-scrollbar { width: 4px; }
+    .log-feed::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+    .log-line { padding: 2px 0; border-bottom: 1px solid #060e09; display: flex; gap: 8px; }
+    .log-line:last-child { border-bottom: none; }
+    .log-ts { color: var(--text-muted); min-width: 50px; font-size: 9px; }
+    .log-msg { flex: 1; word-break: break-word; }
+    .log-line.green .log-msg { color: var(--green); }
+    .log-line.red   .log-msg { color: var(--red); }
+    .log-line.yellow .log-msg { color: var(--yellow); }
+    .log-line.cyan  .log-msg { color: var(--cyan); }
+    .log-line.dim   .log-msg { color: var(--text-dim); }
+
+    /* ── STRATEGY CONFIG ── */
+    .cfg-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 6px 0; border-bottom: 1px solid #060e09;
+    }
+    .cfg-row:last-child { border-bottom: none; }
+    .cfg-key { font-size: 10px; color: var(--text-dim); letter-spacing: 1px; }
+    .cfg-val { font-size: 11px; font-weight: 700; color: var(--cyan); letter-spacing: 1px; }
+
+    /* ── GOALS TRACKER ── */
+    .goals-grid {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 8px;
+    }
+    @media (max-width: 1400px) { .goals-grid { grid-template-columns: repeat(4, 1fr); } }
+    @media (max-width: 960px)  { .goals-grid { grid-template-columns: repeat(4, 1fr); } }
+    @media (max-width: 560px)  { .goals-grid { grid-template-columns: repeat(2, 1fr); } }
+
+    .goal-card {
+      background: var(--bg4);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 10px 8px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .goal-card.active {
+      border-color: var(--green);
+      box-shadow: 0 0 12px #00ff8833;
+    }
+    .goal-card.done { border-color: var(--border2); opacity: .5; }
+    .goal-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: var(--border);
+    }
+    .goal-card.active::before { background: linear-gradient(90deg, var(--green), var(--cyan)); }
+    .goal-card.done::before   { background: var(--green-dim); }
+    .goal-label {
+      font-size: 8px; letter-spacing: 2px; color: var(--text-dim);
+      text-transform: uppercase; margin-bottom: 4px;
+    }
+    .goal-value { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+    .goal-card.active .goal-value { color: var(--green); text-shadow: var(--glow-g); }
+    .goal-card.done .goal-value   { color: var(--green-dim); }
+    .goal-progress-track { height: 3px; background: var(--bg); border-radius: 2px; overflow: hidden; }
+    .goal-progress-fill  { height: 100%; border-radius: 2px; background: var(--green); transition: width 1s ease; }
+    .goal-card.done .goal-progress-fill { background: var(--green-dim); }
+    .goal-pct { font-size: 8px; color: var(--text-dim); margin-top: 4px; }
+    .goal-card.active .goal-pct { color: var(--green); }
+
+    /* ── TWITTER ── */
+    .twitter-followers { font-size: 32px; font-weight: 700; color: var(--cyan); text-shadow: var(--glow-b); }
+    .twitter-handle    { font-size: 10px; color: var(--text-dim); letter-spacing: 2px; margin-bottom: 10px; }
+    .twitter-tweet     { font-size: 11px; color: var(--text); border-left: 2px solid var(--cyan); padding-left: 8px; margin-top: 8px; line-height: 1.5; }
+    .twitter-time      { font-size: 9px; color: var(--text-muted); margin-top: 4px; }
+
+    /* ── MOLTBOOK ── */
+    .molt-stat { text-align: center; margin-bottom: 10px; }
+    .molt-big  { font-size: 24px; font-weight: 700; color: var(--purple); letter-spacing: 2px; }
+    .molt-label { font-size: 9px; color: var(--text-dim); letter-spacing: 2px; }
+    .molt-feed  { font-size: 10px; color: var(--text-dim); line-height: 1.6; }
+    .molt-feed .agent { color: var(--purple); font-weight: 700; }
+
+    /* ── SCANNER ── */
+    .scan-token {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 5px 0; border-bottom: 1px solid #060e09; font-size: 10px;
+    }
+    .scan-token:last-child { border-bottom: none; }
+    .scan-name   { color: var(--text); font-weight: 700; letter-spacing: 1px; width: 70px; }
+    .scan-score  { font-size: 11px; font-weight: 700; }
+    .scan-mcap   { color: var(--text-dim); text-align: right; }
+    .scan-age    { color: var(--text-muted); font-size: 9px; text-align: right; }
+
+    /* ── EMPTY STATE ── */
+    .empty-state {
+      text-align: center; padding: 24px 0;
+      color: var(--text-muted); font-size: 11px; letter-spacing: 2px;
+    }
+    .empty-state .icon { font-size: 24px; margin-bottom: 8px; opacity: .5; }
+
+    /* ── ERROR BADGE ── */
+    .err-badge {
+      display: inline-block; font-size: 8px; letter-spacing: 1px;
+      background: #1a0008; border: 1px solid #440011; color: var(--red);
+      border-radius: 2px; padding: 1px 5px; margin-top: 4px;
     }
 
-    /* ── TWEET BOX ── */
-    .tweet-box {
-      background: var(--bg3); border: 1px solid var(--border);
-      border-radius: 3px; padding: 10px; margin-top: 10px;
-      font-size: 11px; line-height: 1.6; color: var(--text);
+    /* ── SEPARATOR LINE ── */
+    .grid-sep {
+      grid-column: 1 / -1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border2), transparent);
     }
-    .tweet-time { display: block; font-size: 9px; color: var(--text-dim); margin-top: 6px; letter-spacing: 1px; }
-
-    /* ── TRADE CARDS ── */
-    .trade-card {
-      background: var(--bg3); border: 1px solid var(--border);
-      border-left: 3px solid var(--green);
-      border-radius: 2px; padding: 8px 10px; margin-top: 8px;
-    }
-    .trade-card.sell   { border-left-color: var(--red); }
-    .trade-card.open   { border-left-color: var(--yellow); }
-    .trade-card.loss   { border-left-color: var(--red); }
-    .trade-top { display: flex; justify-content: space-between; align-items: center; }
-    .trade-name { font-size: 12px; font-weight: 700; color: var(--blue); }
-    .trade-pnl  { font-size: 14px; font-weight: 700; }
-    .trade-sub  { font-size: 9px; color: var(--text-dim); margin-top: 3px; display: flex; gap: 10px; flex-wrap: wrap; }
-
-    /* ── STRATEGY TABS ── */
-    .strat-row {
-      display: flex; gap: 8px; margin-bottom: 12px;
-    }
-    .strat-card {
-      flex: 1; background: var(--bg3); border: 1px solid var(--border);
-      border-radius: 3px; padding: 8px 10px; text-align: center;
-    }
-    .strat-card.active { border-color: var(--green); box-shadow: var(--glow-g); }
-    .strat-label { font-size: 9px; color: var(--text-dim); letter-spacing: 2px; }
-    .strat-name  { font-size: 12px; font-weight: 700; color: var(--green); margin: 3px 0; }
-    .strat-detail{ font-size: 9px; color: var(--text-dim); }
-
-    /* ── SCORE BADGE ── */
-    .score-badge {
-      display: inline-block; padding: 2px 8px; border-radius: 2px;
-      font-size: 11px; font-weight: 700; background: #00ff8818;
-      color: var(--green); border: 1px solid #00ff8840;
-    }
-    .score-badge.med { background: #ffcc0018; color: var(--yellow); border-color: #ffcc0040; }
-    .score-badge.low { background: #ff335518; color: var(--red);    border-color: #ff335540; }
-
-    /* ── RISK BADGES ── */
-    .risk-row { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 6px; }
-    .risk-badge {
-      font-size: 9px; padding: 2px 6px; border-radius: 2px; letter-spacing: 1px;
-      font-weight: 700;
-    }
-    .rb-ok  { background: #00ff8818; color: var(--green); border: 1px solid #00ff8840; }
-    .rb-warn{ background: #ffcc0018; color: var(--yellow);border: 1px solid #ffcc0040; }
-    .rb-bad { background: #ff335518; color: var(--red);   border: 1px solid #ff335540; }
-
-    /* ── VPS STATUS ── */
-    .vps-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 4px;
-    }
-    .vps-item {
-      background: var(--bg3); border: 1px solid var(--border);
-      border-radius: 2px; padding: 6px 8px;
-    }
-    .vps-item-label { font-size: 9px; color: var(--text-dim); letter-spacing: 1px; }
-    .vps-item-val   { font-size: 13px; font-weight: 700; color: var(--green); margin-top: 2px; }
-
-    /* ── HEALTH ITEMS ── */
-    .health-item {
-      display: flex; align-items: center; gap: 10px;
-      padding: 6px 0; border-bottom: 1px solid #08180f;
-    }
-    .health-item:last-child { border-bottom: none; }
-    .health-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-    .health-label { color: var(--text-dim); font-size: 11px; flex: 1; }
-    .health-value { font-size: 11px; color: var(--text); }
-
-    /* ── FEED ── */
-    .feed-item {
-      display: flex; gap: 10px; padding: 5px 0;
-      border-bottom: 1px solid #08180f; font-size: 11px;
-    }
-    .feed-item:last-child { border-bottom: none; }
-    .feed-time { color: var(--text-dim); white-space: nowrap; min-width: 55px; }
-    .feed-msg  { color: var(--text); line-height: 1.4; }
-
-    /* ── MILESTONES ── */
-    .milestone-row { display: flex; align-items: center; gap: 10px; padding: 5px 0; }
-    .milestone-label { font-size: 10px; color: var(--text-dim); width: 55px; text-align: right; }
-    .milestone-track { flex: 1; background: #08180f; border: 1px solid var(--border); border-radius: 2px; height: 6px; overflow: hidden; }
-    .milestone-fill  { height: 100%; background: linear-gradient(90deg, var(--green), var(--blue)); box-shadow: var(--glow-g); transition: width .6s ease; }
-    .milestone-pct   { font-size: 10px; color: var(--text-dim); width: 38px; text-align: right; }
-    .milestone-check { width: 14px; text-align: center; font-size: 12px; }
-
-    /* ── SPANS ── */
-    .span2 { grid-column: span 2; }
-    .span3 { grid-column: span 3; }
-    @media (max-width: 1150px) { .span2,.span3 { grid-column: span 2; } }
-    @media (max-width: 680px)  { .span2,.span3 { grid-column: span 1; } }
-
-    /* ── LOADING ── */
-    .loading { color: var(--text-dim); font-size: 11px; letter-spacing: 1px; animation: blink 1s step-end infinite; }
-    @keyframes blink { 50%{opacity:0} }
-
-    /* ── DIVIDER ── */
-    .divider { border: none; border-top: 1px solid var(--border); margin: 10px 0; }
-
-    /* ── SCROLLBAR ── */
-    ::-webkit-scrollbar { width: 4px; }
-    ::-webkit-scrollbar-track { background: var(--bg); }
-    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
   </style>
 </head>
 <body>
 
-<!-- HEADER -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!--  HEADER                                                        -->
+<!-- ══════════════════════════════════════════════════════════════ -->
 <header>
   <div class="logo">
-    <span class="logo-title">KINGPIN</span>
-    <span class="logo-sub">MISSION CONTROL v3 · PUMPFUN DUAL-MODE</span>
+    <div class="logo-title">KINGPIN</div>
+    <div class="logo-sub">MISSION CONTROL v4 · AI TRADING HQ</div>
   </div>
+
   <div class="header-center">
-    <span id="live-time">--:--:--</span>
-    <span id="live-date">--- --- -- ----</span>
+    <div id="live-time">--:--:--</div>
+    <div id="live-date">LOADING...</div>
   </div>
+
   <div class="header-right">
     <div class="status-badge">
-      <div class="dot" id="system-dot"></div>
-      <span id="system-status">ONLINE</span>
+      <div class="dot" id="bot-dot"></div>
+      <span id="bot-status-text" style="color:var(--green);letter-spacing:2px">CONNECTING...</span>
     </div>
-    <div id="refresh-countdown">REFRESH IN 30s</div>
+    <div id="refresh-countdown" style="letter-spacing:1px">NEXT REFRESH IN 15s</div>
   </div>
 </header>
 
-<!-- GRID -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!--  MAIN GRID                                                     -->
+<!-- ══════════════════════════════════════════════════════════════ -->
 <div class="grid">
 
-  <!-- ── 1. WALLET ── -->
+  <!-- ── ROW 1: STATS ── -->
+
+  <!-- WALLET SOL -->
   <div class="panel">
     <div class="panel-header">
-      <span class="panel-title">◈ WALLET</span>
-      <span class="panel-badge" id="wallet-updated">LOADING…</span>
+      <span class="panel-title">◎ WALLET SOL</span>
+      <span class="panel-badge" id="wallet-updated">LIVE</span>
     </div>
     <div class="panel-body">
-      <div class="stat-row">
-        <span class="stat-label">SOL BALANCE</span>
-        <span class="stat-value green big" id="sol-balance"><span class="loading">…</span></span>
-      </div>
-      <div class="stat-row">
-        <span class="stat-label">USD VALUE</span>
-        <span class="stat-value blue" id="sol-usd"><span class="loading">…</span></span>
-      </div>
-      <div class="stat-row">
-        <span class="stat-label">SOL PRICE</span>
-        <span class="stat-value" id="sol-price"><span class="loading">…</span></span>
-      </div>
-      <div class="stat-row">
-        <span class="stat-label">24H CHANGE</span>
-        <span class="stat-value" id="sol-change"><span class="loading">…</span></span>
-      </div>
-      <div class="address" id="wallet-addr">4imFZ38DmwD11ohSTEnHHP34Sr6bojMMe21rqhqmgrWf</div>
+      <div class="stat-big" id="wallet-sol">0.0000</div>
+      <div class="stat-sub" id="wallet-usd">$0.00</div>
+      <div class="stat-sub c-dim" id="sol-price" style="margin-top:6px">SOL/USD: —</div>
       <div class="progress-wrap">
         <div class="progress-label">
-          <span>GOAL: 1000 SOL</span>
-          <span id="wallet-pct">0%</span>
+          <span>0 SOL</span>
+          <span id="wallet-goal-pct">0%</span>
+          <span>1000 ◎</span>
         </div>
         <div class="progress-track">
-          <div class="progress-fill" id="wallet-bar" style="width:0%"></div>
+          <div class="progress-fill" id="wallet-progress" style="width:0%"></div>
         </div>
-        <div class="progress-text" id="wallet-bar-text">… / 1000 SOL</div>
       </div>
     </div>
   </div>
 
-  <!-- ── 2. BOT STATUS ── -->
+  <!-- WALLET USD -->
   <div class="panel">
     <div class="panel-header">
-      <span class="panel-title">◈ PUMPFUN BOT v3</span>
-      <span class="panel-badge" id="bot-version-badge">v3 · WS+DEXSCAN · Score≥60</span>
+      <span class="panel-title">$ WALLET USD</span>
+      <span class="panel-badge">24H CHANGE</span>
     </div>
     <div class="panel-body">
-      <div class="strat-row">
-        <div class="strat-card active" id="strat-a-card">
-          <div class="strat-label">STRATEGY A</div>
-          <div class="strat-name">ORGANIC</div>
-          <div class="strat-detail">2–18 SOL mcap · Score ≥65</div>
+      <div class="stat-big" id="wallet-usd-big" style="color:var(--cyan);text-shadow:var(--glow-b)">$0.00</div>
+      <div class="stat-sub" id="sol-change">24h: —</div>
+      <div style="margin-top:12px">
+        <div class="stat-row">
+          <span class="stat-label">SOL PRICE</span>
+          <span class="stat-value c-cyan" id="sol-price-val">—</span>
         </div>
-        <div class="strat-card active" id="strat-b-card">
-          <div class="strat-label">STRATEGY B</div>
-          <div class="strat-name">MIGRATION</div>
-          <div class="strat-detail">$60–80k mcap · Score ≥55</div>
+        <div class="stat-row">
+          <span class="stat-label">MARKET CAP</span>
+          <span class="stat-value c-dim" id="sol-mcap">—</span>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- DAILY PNL -->
+  <div class="panel">
+    <div class="panel-header">
+      <span class="panel-title">📊 DAILY P&amp;L</span>
+      <span class="panel-badge" id="pnl-date">TODAY</span>
+    </div>
+    <div class="panel-body">
+      <div class="stat-big" id="daily-pnl" style="color:var(--yellow)">0.0000 ◎</div>
+      <div class="stat-sub" id="daily-pnl-usd">$0.00</div>
+      <div style="margin-top:12px">
+        <div class="stat-row">
+          <span class="stat-label">TRADES TODAY</span>
+          <span class="stat-value c-cyan" id="trades-today">0</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">WIN RATE</span>
+          <span class="stat-value c-green" id="win-rate">—</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">BEST TRADE</span>
+          <span class="stat-value c-green" id="best-trade">—</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOT STATUS -->
+  <div class="panel">
+    <div class="panel-header">
+      <span class="panel-title">⚡ BOT STATUS</span>
+      <span class="panel-badge" id="bot-version">v3.0</span>
+    </div>
+    <div class="panel-body">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+        <div class="dot" id="bot-dot2"></div>
+        <div class="stat-big" id="bot-status-big" style="font-size:18px">CONNECTING</div>
+      </div>
       <div class="stat-row">
-        <span class="stat-label">STATUS</span>
-        <span class="stat-value" id="bot-status"><span class="loading">…</span></span>
+        <span class="stat-label">SCANNED TODAY</span>
+        <span class="stat-value c-cyan" id="tokens-scanned">—</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">LAST BUY</span>
+        <span class="stat-value c-dim" id="last-buy-ago">—</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">UPTIME</span>
+        <span class="stat-value c-green" id="bot-uptime">—</span>
       </div>
       <div class="stat-row">
         <span class="stat-label">OPEN POSITIONS</span>
-        <span class="stat-value yellow" id="bot-positions">–</span>
-      </div>
-      <div class="stat-row">
-        <span class="stat-label">TOKENS SCANNED</span>
-        <span class="stat-value blue" id="bot-scanned">–</span>
-      </div>
-      <div class="stat-row">
-        <span class="stat-label">TRADES TODAY</span>
-        <span class="stat-value green" id="bot-trades">–</span>
-      </div>
-      <div class="stat-row">
-        <span class="stat-label">TOTAL PnL</span>
-        <span class="stat-value" id="bot-pnl">–</span>
+        <span class="stat-value c-yellow" id="open-pos-count">—</span>
       </div>
     </div>
   </div>
 
-  <!-- ── 3. VPS SERVER ── -->
-  <div class="panel">
-    <div class="panel-header">
-      <span class="panel-title">◈ VPS SERVER</span>
-      <span class="panel-badge" id="vps-badge">161.35.10.127</span>
-    </div>
-    <div class="panel-body">
-      <div class="stat-row">
-        <span class="stat-label">API STATUS</span>
-        <span class="stat-value" id="vps-status"><span class="loading">…</span></span>
-      </div>
-      <div class="stat-row">
-        <span class="stat-label">DASHBOARD</span>
-        <span class="stat-value blue" id="vps-dashboard">–</span>
-      </div>
-      <div class="stat-row">
-        <span class="stat-label">LATENCY</span>
-        <span class="stat-value" id="vps-latency">–</span>
-      </div>
-      <div class="stat-row">
-        <span class="stat-label">LAST CHECK</span>
-        <span class="stat-value" id="vps-last-check">–</span>
-      </div>
-      <hr class="divider">
-      <div class="vps-grid">
-        <div class="vps-item">
-          <div class="vps-item-label">PM2 PROCS</div>
-          <div class="vps-item-val" id="vps-pm2">–</div>
-        </div>
-        <div class="vps-item">
-          <div class="vps-item-label">HELIUS RPC</div>
-          <div class="vps-item-val" id="vps-helius">–</div>
-        </div>
-        <div class="vps-item">
-          <div class="vps-item-label">BOT PORT</div>
-          <div class="vps-item-val">:3000</div>
-        </div>
-        <div class="vps-item">
-          <div class="vps-item-label">DASH PORT</div>
-          <div class="vps-item-val">:8080</div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <!-- ── ROW 2: POSITIONS + CONFIG + SCANNER ── -->
 
-  <!-- ── 4. ACTIVE POSITIONS ── -->
-  <div class="panel span2">
+  <!-- LIVE POSITIONS (span 2) -->
+  <div class="panel col-span-2">
     <div class="panel-header">
-      <span class="panel-title">◈ ACTIVE POSITIONS</span>
-      <span class="panel-badge" id="positions-badge">LIVE</span>
+      <span class="panel-title">🚀 LIVE POSITIONS</span>
+      <span class="panel-badge" id="pos-count-badge">0 OPEN</span>
     </div>
     <div class="panel-body" id="positions-body">
-      <span class="loading">FETCHING POSITIONS…</span>
+      <div class="empty-state">
+        <div class="icon">◎</div>
+        <div>NO OPEN POSITIONS</div>
+      </div>
     </div>
   </div>
 
-  <!-- ── 5. RECENT TRADES ── -->
+  <!-- STRATEGY CONFIG -->
   <div class="panel">
     <div class="panel-header">
-      <span class="panel-title">◈ RECENT TRADES</span>
-      <span class="panel-badge" id="trades-badge">VPS LOG</span>
+      <span class="panel-title">⚙ STRATEGY</span>
+      <span class="panel-badge">PUMPFUN</span>
+    </div>
+    <div class="panel-body">
+      <div class="cfg-row">
+        <span class="cfg-key">MODE</span>
+        <span class="cfg-val">WS + DEXSCANNER</span>
+      </div>
+      <div class="cfg-row">
+        <span class="cfg-key">BUY SIZE</span>
+        <span class="cfg-val">0.02 SOL</span>
+      </div>
+      <div class="cfg-row">
+        <span class="cfg-key">SCORE MIN</span>
+        <span class="cfg-val">60 / 100</span>
+      </div>
+      <div class="cfg-row">
+        <span class="cfg-key">TAKE PROFIT</span>
+        <span class="cfg-val">2.3x TP</span>
+      </div>
+      <div class="cfg-row">
+        <span class="cfg-key">SELL SPLIT</span>
+        <span class="cfg-val">80% + 20% MOON</span>
+      </div>
+      <div class="cfg-row">
+        <span class="cfg-key">MAX HOLD (LOSS)</span>
+        <span class="cfg-val c-red">3 MIN</span>
+      </div>
+      <div class="cfg-row">
+        <span class="cfg-key">MAX HOLD (GAIN)</span>
+        <span class="cfg-val c-green">UNLIMITED</span>
+      </div>
+      <div class="cfg-row">
+        <span class="cfg-key">SCANNER INTERVAL</span>
+        <span class="cfg-val">60s</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCANNER -->
+  <div class="panel">
+    <div class="panel-header">
+      <span class="panel-title">🔍 SCANNER</span>
+      <span class="panel-badge" id="scanner-badge">LIVE</span>
+    </div>
+    <div class="panel-body" id="scanner-body">
+      <div class="empty-state"><div class="icon">🔍</div><div>SCANNING...</div></div>
+    </div>
+  </div>
+
+  <!-- ── ROW 3: RECENT TRADES + TWITTER + MOLTBOOK ── -->
+
+  <!-- RECENT TRADES (span 2) -->
+  <div class="panel col-span-2">
+    <div class="panel-header">
+      <span class="panel-title">📋 RECENT TRADES</span>
+      <span class="panel-badge" id="trades-badge">LAST 10</span>
     </div>
     <div class="panel-body" id="trades-body">
-      <span class="loading">LOADING TRADES…</span>
+      <div class="empty-state"><div class="icon">📋</div><div>NO TRADES YET</div></div>
     </div>
   </div>
 
-  <!-- ── 6. TWITTER ── -->
+  <!-- TWITTER -->
   <div class="panel">
     <div class="panel-header">
-      <span class="panel-title">◈ TWITTER @moldukbot</span>
-      <span class="panel-badge" id="twitter-updated">LOADING…</span>
+      <span class="panel-title">🐦 TWITTER</span>
+      <span class="panel-badge">@MOLDUKBOT</span>
     </div>
-    <div class="panel-body">
-      <div class="stat-row">
-        <span class="stat-label">FOLLOWERS</span>
-        <span class="stat-value green big" id="tw-followers"><span class="loading">…</span></span>
-      </div>
-      <div class="stat-row">
-        <span class="stat-label">TOTAL TWEETS</span>
-        <span class="stat-value blue" id="tw-tweets"><span class="loading">…</span></span>
-      </div>
+    <div class="panel-body" id="twitter-body">
+      <div class="twitter-followers" id="tw-followers">—</div>
+      <div class="twitter-handle">@moldukbot</div>
       <div class="stat-row">
         <span class="stat-label">FOLLOWING</span>
-        <span class="stat-value" id="tw-following"><span class="loading">…</span></span>
+        <span class="stat-value c-dim" id="tw-following">—</span>
       </div>
-      <div class="tweet-box" id="tw-last-tweet">
-        <span class="loading">FETCHING LAST TWEET…</span>
+      <div class="stat-row">
+        <span class="stat-label">TWEETS</span>
+        <span class="stat-value c-dim" id="tw-tweets">—</span>
       </div>
+      <div class="twitter-tweet" id="tw-last-tweet">Loading last tweet...</div>
+      <div class="twitter-time" id="tw-tweet-time">—</div>
     </div>
   </div>
 
-  <!-- ── 7. SCORE SCANNER ── -->
+  <!-- MOLTBOOK -->
   <div class="panel">
     <div class="panel-header">
-      <span class="panel-title">◈ LIVE TOKEN SCANNER</span>
-      <span class="panel-badge" id="scanner-badge">PUMPPORTAL WS</span>
+      <span class="panel-title">🤖 MOLTBOOK</span>
+      <span class="panel-badge">AGENT NETWORK</span>
     </div>
     <div class="panel-body">
-      <div class="stat-row">
-        <span class="stat-label">TRENCH SCORE</span>
-        <span class="stat-value green" id="scan-score">–</span>
+      <div class="molt-stat">
+        <div class="molt-big" id="molt-agents">—</div>
+        <div class="molt-label">ACTIVE AGENTS</div>
       </div>
-      <div class="stat-row">
-        <span class="stat-label">KOL TRACKER</span>
-        <span class="stat-value blue" id="scan-kol">–</span>
+      <div style="margin-top:8px">
+        <div class="stat-row">
+          <span class="stat-label">STATUS</span>
+          <span class="stat-value c-purple" id="molt-status">CONNECTING</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">SIGNALS SHARED</span>
+          <span class="stat-value c-dim" id="molt-signals">—</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">RANK</span>
+          <span class="stat-value c-yellow" id="molt-rank">—</span>
+        </div>
       </div>
-      <div class="stat-row">
-        <span class="stat-label">TOKEN-2022</span>
-        <span class="stat-value green" id="scan-t22">✅ ENABLED</span>
+      <div class="molt-feed" id="molt-feed" style="margin-top:10px;border-top:1px solid var(--border);padding-top:8px">
+        <div style="color:var(--text-muted);font-size:9px">AGENT FEED LOADING...</div>
       </div>
-      <div class="stat-row">
-        <span class="stat-label">MEV PROTECT</span>
-        <span class="stat-value green" id="scan-mev">✅ PRIORITY FEES</span>
-      </div>
-      <hr class="divider">
-      <div style="font-size:10px;color:var(--text-dim);letter-spacing:1px;margin-bottom:6px">LATEST HIGH-SCORE TOKEN</div>
-      <div id="scanner-top-token" style="color:var(--text-dim);font-size:11px">–</div>
     </div>
   </div>
 
-  <!-- ── 8. SYSTEM HEALTH ── -->
-  <div class="panel">
+  <!-- ── ROW 4: ACTIVITY LOG ── -->
+
+  <div class="panel col-span-4">
     <div class="panel-header">
-      <span class="panel-title">◈ SYSTEM HEALTH</span>
-      <span class="panel-badge" id="health-updated">LOADING…</span>
+      <span class="panel-title">📡 ACTIVITY LOG</span>
+      <span class="panel-badge" id="log-count">0 ENTRIES</span>
     </div>
     <div class="panel-body">
-      <div class="health-item">
-        <div class="health-dot" id="oc-dot" style="background:var(--text-dim)"></div>
-        <span class="health-label">OPENCLAW</span>
-        <span class="health-value" id="oc-status">Checking…</span>
-      </div>
-      <div class="health-item">
-        <div class="health-dot" id="vps-health-dot" style="background:var(--text-dim)"></div>
-        <span class="health-label">VPS API</span>
-        <span class="health-value" id="vps-health-val">Checking…</span>
-      </div>
-      <div class="health-item">
-        <div class="health-dot" id="helius-dot" style="background:var(--text-dim)"></div>
-        <span class="health-label">HELIUS RPC</span>
-        <span class="health-value" id="helius-health-val">Checking…</span>
-      </div>
-      <div class="health-item">
-        <div class="health-dot" style="background:var(--blue)"></div>
-        <span class="health-label">WALLET</span>
-        <span class="health-value" id="wallet-health">4imF…rWf</span>
-      </div>
-      <div class="health-item">
-        <div class="health-dot" style="background:var(--green)"></div>
-        <span class="health-label">SESSION UPTIME</span>
-        <span class="health-value" id="uptime-val">–</span>
+      <div class="log-feed" id="log-feed">
+        <div class="log-line dim">
+          <span class="log-ts">--:--:--</span>
+          <span class="log-msg">Initializing Mission Control v4...</span>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- ── 9. GOALS ── -->
-  <div class="panel span2">
-    <div class="panel-header">
-      <span class="panel-title">◈ GOALS TRACKER</span>
-      <span class="panel-badge">TARGET: 1000 SOL</span>
-    </div>
-    <div class="panel-body" id="goals-body">
-      <span class="loading">LOADING…</span>
-    </div>
-  </div>
+  <!-- ── ROW 5: GOALS TRACKER ── -->
 
-  <!-- ── 10. ACTIVITY FEED ── -->
-  <div class="panel span3">
+  <div class="panel col-span-4">
     <div class="panel-header">
-      <span class="panel-title">◈ ACTIVITY FEED</span>
-      <span class="panel-badge" id="feed-badge">LIVE</span>
+      <span class="panel-title">🎯 GOALS TRACKER</span>
+      <span class="panel-badge" id="goals-phase">PHASE —</span>
     </div>
-    <div class="panel-body" id="activity-feed">
-      <span class="loading">LOADING ACTIVITY…</span>
+    <div class="panel-body">
+      <div class="goals-grid" id="goals-grid">
+        <!-- Rendered by JS -->
+      </div>
     </div>
   </div>
 
@@ -560,454 +706,690 @@
 <script>
 'use strict';
 
-// ── CONFIG ──
+// ════════════════════════════════════════════════════════════════
+//  CONFIG
+// ════════════════════════════════════════════════════════════════
+const VPS_API    = 'http://161.35.10.127:3000';
 const WALLET     = '4imFZ38DmwD11ohSTEnHHP34Sr6bojMMe21rqhqmgrWf';
-const SOL_RPC    = 'https://mainnet.helius-rpc.com/?api-key=ead947f5-2ac4-4f2c-a286-ad48e188b2ad';
-const CG_URL     = 'https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd&include_24hr_change=true';
-const TW_URL     = 'https://api.fxtwitter.com/moldukbot';
-const VPS_BASE   = 'http://161.35.10.127:3000';
-const OC_PING    = 'http://127.0.0.1:18789';
-const MILESTONES = [0.1, 0.5, 1, 5, 10, 50, 100, 1000];
+const HELIUS_RPC = 'https://mainnet.helius-rpc.com/?api-key=ead947f5-2ac4-4f2c-a286-ad48e188b2ad';
+const REFRESH_MS = 15000;
 
-let solBalance  = 0;
-let startTime   = Date.now();
-let refreshTimer = 30;
+const GOALS = [0.1, 0.5, 1, 5, 10, 50, 100, 1000];
 
-// ── CLOCK ──
-function updateClock() {
-  const now = new Date();
-  const hh  = String(now.getHours()).padStart(2,'0');
-  const mm  = String(now.getMinutes()).padStart(2,'0');
-  const ss  = String(now.getSeconds()).padStart(2,'0');
-  document.getElementById('live-time').textContent = `${hh}:${mm}:${ss}`;
-  const days   = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
-  const months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
-  document.getElementById('live-date').textContent =
-    `${days[now.getDay()]} ${months[now.getMonth()]} ${String(now.getDate()).padStart(2,'0')} ${now.getFullYear()}`;
+// ════════════════════════════════════════════════════════════════
+//  STATE
+// ════════════════════════════════════════════════════════════════
+let state = {
+  solBalance: null,
+  solPrice:   null,
+  solChange:  null,
+  positions:  [],
+  trades:     [],
+  logs:       [],
+  botStatus:  null,
+  twitter:    null,
+  countdown:  REFRESH_MS / 1000,
+};
+
+// Track sparkline data per token
+const sparklineData = {};
+
+// ════════════════════════════════════════════════════════════════
+//  UTILITIES
+// ════════════════════════════════════════════════════════════════
+function escHtml(s) {
+  if (s == null) return '';
+  return String(s)
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;');
 }
-setInterval(updateClock, 1000); updateClock();
 
-// ── COUNTDOWN ──
-function tickRefresh() {
-  refreshTimer--;
-  document.getElementById('refresh-countdown').textContent = `REFRESH IN ${refreshTimer}s`;
-  if (refreshTimer <= 0) { refreshTimer = 30; loadAll(); }
+function fmt(n, d=4) {
+  if (n == null || isNaN(n)) return '—';
+  return parseFloat(n).toFixed(d);
 }
-setInterval(tickRefresh, 1000);
 
-// ── UPTIME ──
-function uptimeTick() {
-  const s = Math.floor((Date.now() - startTime) / 1000);
-  const h = Math.floor(s/3600), m = Math.floor((s%3600)/60), sec = s%60;
-  document.getElementById('uptime-val').textContent =
-    `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+function fmtSOL(n)  { return fmt(n, 4) + ' ◎'; }
+function fmtUSD(n)  { if (n == null) return '$—'; return '$' + parseFloat(n).toLocaleString('en-US', {minimumFractionDigits:2,maximumFractionDigits:2}); }
+function fmtK(n)    { if (!n) return '—'; if (n>=1000000) return (n/1000000).toFixed(1)+'M'; if (n>=1000) return (n/1000).toFixed(0)+'k'; return String(n); }
+function fmtAge(ms) { const s=Math.floor(ms/1000); if(s<60) return s+'s'; if(s<3600) return Math.floor(s/60)+'m'; return Math.floor(s/3600)+'h'; }
+function fmtPct(n)  { if (n==null) return '—'; const v=parseFloat(n); return (v>0?'+':'')+v.toFixed(1)+'%'; }
+
+function now() { return new Date().toLocaleTimeString('en-US',{hour12:false}); }
+
+function colorClass(val) {
+  if (val == null) return 'c-dim';
+  return parseFloat(val) >= 0 ? 'c-green' : 'c-red';
 }
-setInterval(uptimeTick, 1000);
 
-// ── HELPERS ──
-const fmtNum = (n, d=4) => (n==null||isNaN(n)) ? '–' : Number(n).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});
-const fmtUSD = n => (n==null||isNaN(n)) ? '–' : '$'+Number(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
-const nowStr = () => new Date().toLocaleTimeString('en-GB',{hour12:false});
-function relTime(dateStr) {
+async function fetchJSON(url, opts={}) {
+  const ctrl = new AbortController();
+  const t = setTimeout(() => ctrl.abort(), 8000);
   try {
-    const diff = (Date.now() - new Date(dateStr)) / 1000;
-    if (diff < 60)    return `${Math.round(diff)}s ago`;
-    if (diff < 3600)  return `${Math.round(diff/60)}m ago`;
-    if (diff < 86400) return `${Math.round(diff/3600)}h ago`;
-    return `${Math.round(diff/86400)}d ago`;
-  } catch { return String(dateStr); }
-}
-function escHtml(str) {
-  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-function scoreClass(s) {
-  if (s >= 75) return ''; if (s >= 55) return 'med'; return 'low';
-}
-
-// ── WALLET ──
-async function loadWallet() {
-  try {
-    const rpc = await fetch(SOL_RPC, {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({jsonrpc:'2.0',id:1,method:'getBalance',params:[WALLET,{commitment:'confirmed'}]})
-    });
-    const rd = await rpc.json();
-    solBalance = (rd.result?.value ?? 0) / 1e9;
-
-    const cg  = await fetch(CG_URL);
-    const cd  = await cg.json();
-    const price  = cd.solana?.usd ?? 0;
-    const change = cd.solana?.usd_24h_change ?? 0;
-
-    document.getElementById('sol-balance').textContent = fmtNum(solBalance) + ' ◎';
-    document.getElementById('sol-usd').textContent     = fmtUSD(solBalance * price);
-    document.getElementById('sol-price').textContent   = fmtUSD(price) + ' / SOL';
-
-    const chEl = document.getElementById('sol-change');
-    chEl.textContent = (change>=0?'+':'') + fmtNum(change,2) + '%';
-    chEl.className   = 'stat-value ' + (change>=0?'green':'red');
-
-    const pct = Math.min(solBalance/1000*100, 100);
-    document.getElementById('wallet-bar').style.width    = pct + '%';
-    document.getElementById('wallet-pct').textContent    = fmtNum(pct,2) + '%';
-    document.getElementById('wallet-bar-text').textContent = fmtNum(solBalance,4) + ' / 1000 SOL';
-    document.getElementById('wallet-updated').textContent = nowStr();
-
-    renderGoals();
-  } catch(e) {
-    document.getElementById('sol-balance').textContent = 'ERR';
-    document.getElementById('wallet-updated').textContent = 'ERROR';
-  }
-}
-
-// ── VPS API ──
-async function loadVPS() {
-  const statusEl   = document.getElementById('vps-status');
-  const latEl      = document.getElementById('vps-latency');
-  const lastEl     = document.getElementById('vps-last-check');
-  const healthDot  = document.getElementById('vps-health-dot');
-  const healthVal  = document.getElementById('vps-health-val');
-  const dashEl     = document.getElementById('vps-dashboard');
-
-  const t0 = Date.now();
-  try {
-    const ctrl = new AbortController();
-    const tim  = setTimeout(() => ctrl.abort(), 5000);
-    let data = null;
-
-    try {
-      const r = await fetch(VPS_BASE + '/api/status', { signal: ctrl.signal });
-      clearTimeout(tim);
-      const lat = Date.now() - t0;
-      if (r.ok) {
-        data = await r.json();
-        statusEl.textContent = '✅ ONLINE';
-        statusEl.className   = 'stat-value green';
-        latEl.textContent    = lat + 'ms';
-        latEl.className      = 'stat-value ' + (lat<200?'green':lat<500?'yellow':'red');
-        healthDot.style.background = 'var(--green)';
-        healthDot.style.boxShadow  = 'var(--glow-g)';
-        healthVal.textContent = 'ONLINE ' + lat + 'ms';
-        healthVal.style.color = 'var(--green)';
-        document.getElementById('vps-pm2').textContent    = data.pm2 ?? data.processes ?? '–';
-        document.getElementById('vps-helius').textContent = data.helius ? '✅' : '?';
-        document.getElementById('system-status').textContent = 'ONLINE';
-        document.getElementById('system-dot').className       = 'dot';
-      } else throw new Error('not ok');
-    } catch {
-      clearTimeout(tim);
-      throw new Error('unreachable');
-    }
-    dashEl.textContent = '→ :8080';
-    dashEl.className   = 'stat-value blue';
-    lastEl.textContent = nowStr();
-
-    // load positions & trades from VPS data
-    if (data) {
-      renderPositions(data.positions ?? data.open_positions ?? []);
-      renderTrades(data.trades ?? data.recent_trades ?? data.closed ?? []);
-      renderBotStatus(data);
-    }
-  } catch {
-    statusEl.textContent = '❌ OFFLINE';
-    statusEl.className   = 'stat-value red';
-    latEl.textContent    = 'timeout';
-    latEl.className      = 'stat-value red';
-    healthDot.style.background = 'var(--red)';
-    healthDot.style.boxShadow  = 'var(--glow-r)';
-    healthVal.textContent = 'OFFLINE';
-    healthVal.style.color = 'var(--red)';
-    dashEl.textContent    = 'N/A';
-    lastEl.textContent    = nowStr();
-    document.getElementById('system-status').textContent = 'VPS DOWN';
-    document.getElementById('system-dot').className      = 'dot red';
-    // fallback: try to load local files
-    loadLocalFallback();
-  }
-}
-
-// fallback if VPS offline
-async function loadLocalFallback() {
-  try {
-    const r = await fetch('molduk_pumpfun_alerts.json');
-    if (!r.ok) throw 0;
-    const d = await r.json();
-    renderTrades(d.trades ?? d.alerts ?? []);
-    renderPositions(d.positions ?? []);
-  } catch { /* no local data */ }
-}
-
-// ── BOT STATUS ──
-function renderBotStatus(data) {
-  const statusEl = document.getElementById('bot-status');
-  const running  = data.running ?? data.alive ?? data.status === 'running';
-  statusEl.textContent = running ? '🟢 RUNNING' : '🔴 STOPPED';
-  statusEl.className   = 'stat-value ' + (running ? 'green' : 'red');
-
-  const pos = data.positions ?? data.open_positions ?? [];
-  document.getElementById('bot-positions').textContent = Array.isArray(pos) ? pos.length : (pos ?? '–');
-  document.getElementById('bot-scanned').textContent   = data.stats?.scanned ?? data.scanned ?? '–';
-  document.getElementById('bot-trades').textContent    = data.stats?.bought ?? data.bought ?? '–';
-  const pnl = data.totalPnl ?? data.pnl ?? data.total_pnl ?? null;
-  const pnlEl = document.getElementById('bot-pnl');
-  if (pnl !== null) {
-    const n = Number(pnl);
-    pnlEl.textContent = (n>=0?'+':'') + fmtNum(n,4) + ' SOL';
-    pnlEl.className   = 'stat-value ' + (n>=0?'green':'red');
-  } else { pnlEl.textContent = '–'; }
-}
-
-// ── POSITIONS ──
-function renderPositions(positions) {
-  const body = document.getElementById('positions-body');
-  document.getElementById('positions-badge').textContent = `${positions.length} OPEN`;
-  if (!positions.length) {
-    body.innerHTML = '<div style="color:var(--text-dim);font-size:11px;padding:4px 0">No open positions · Bot monitoring market</div>';
-    return;
-  }
-  body.innerHTML = positions.map(p => {
-    const pnlPct = p.pnlPct ?? p.pnl_pct ?? 0;
-    const pnlSol = p.pnlSol ?? p.pnl_sol ?? 0;
-    const cls    = pnlSol >= 0 ? 'open' : 'loss';
-    const pSign  = pnlPct >= 0 ? '+' : '';
-    const age    = p.entryTime ?? p.entry_time ?? p.timestamp ?? '';
-    return `
-      <div class="trade-card ${cls}">
-        <div class="trade-top">
-          <span class="trade-name">${escHtml(p.name ?? p.symbol ?? p.mint?.slice(0,8)+'…' ?? 'UNKNOWN')}</span>
-          <span class="trade-pnl ${pnlSol>=0?'stat-value green':'stat-value red'}">${pSign}${fmtNum(pnlPct,1)}%</span>
-        </div>
-        <div class="trade-sub">
-          <span>Entry: ${fmtNum(p.entryPrice??p.entry_price??0,6)} SOL</span>
-          <span>Now: ${fmtNum(p.currentPrice??p.current_price??0,6)} SOL</span>
-          <span>PnL: ${pSign}${fmtNum(pnlSol,4)} SOL</span>
-          <span>Age: ${age ? relTime(age) : '–'}</span>
-          <span class="score-badge ${scoreClass(p.score??0)}">${p.score ?? '–'}</span>
-        </div>
-        <div class="risk-row">
-          ${p.mintRevoked   ? '<span class="risk-badge rb-ok">MINT ✓</span>' : '<span class="risk-badge rb-warn">MINT ?</span>'}
-          ${p.lpBurned      ? '<span class="risk-badge rb-ok">LP ✓</span>'   : '<span class="risk-badge rb-warn">LP ?</span>'}
-          ${(p.devPct??99) < 5 ? '<span class="risk-badge rb-ok">DEV OK</span>' : '<span class="risk-badge rb-bad">DEV HIGH</span>'}
-          ${p.kol           ? '<span class="risk-badge rb-ok">KOL 🔥</span>' : ''}
-        </div>
-      </div>`;
-  }).join('');
-}
-
-// ── RECENT TRADES ──
-function renderTrades(trades) {
-  const body = document.getElementById('trades-body');
-  const last5 = [...trades].slice(-5).reverse();
-  if (!last5.length) {
-    body.innerHTML = '<div style="color:var(--text-dim);font-size:11px">No trade history yet</div>';
-    document.getElementById('trades-badge').textContent = '0 TRADES';
-    return;
-  }
-  document.getElementById('trades-badge').textContent = `${trades.length} TOTAL`;
-  body.innerHTML = last5.map(t => {
-    const pnlSol = t.pnlSol ?? t.pnl_sol ?? t.realizedPnl ?? 0;
-    const action = t.action ?? t.type ?? (pnlSol!==0?'SELL':'BUY');
-    const cls    = action === 'SELL' ? (pnlSol>=0?'sell':'loss') : '';
-    const pSign  = pnlSol >= 0 ? '+' : '';
-    return `
-      <div class="trade-card ${cls}">
-        <div class="trade-top">
-          <span class="trade-name">${escHtml(t.name ?? t.symbol ?? t.mint?.slice(0,8)+'…' ?? '?')}</span>
-          <span style="font-size:9px;color:var(--text-dim);letter-spacing:1px">${action}</span>
-        </div>
-        <div class="trade-sub">
-          ${pnlSol!==0 ? `<span class="${pnlSol>=0?'stat-value green':'stat-value red'}">${pSign}${fmtNum(pnlSol,4)} SOL</span>` : ''}
-          <span>${t.timestamp ?? t.time ?? ''  ? relTime(t.timestamp ?? t.time) : '–'}</span>
-          <span class="score-badge ${scoreClass(t.score??0)}">${t.score ?? '–'}</span>
-        </div>
-      </div>`;
-  }).join('');
-}
-
-// ── TWITTER ──
-async function loadTwitter() {
-  try {
-    const r = await fetch(TW_URL);
-    const d = await r.json();
-    const u = d.user ?? d;
-    document.getElementById('tw-followers').textContent = Number(u.followers_count ?? u.followers ?? 0).toLocaleString();
-    document.getElementById('tw-tweets').textContent    = Number(u.tweets_count ?? u.statuses_count ?? 0).toLocaleString();
-    document.getElementById('tw-following').textContent = Number(u.following_count ?? u.friends_count ?? 0).toLocaleString();
-    const tweet = (d.tweets ?? d.timeline)?.[0] ?? d.tweet ?? null;
-    const box = document.getElementById('tw-last-tweet');
-    if (tweet) {
-      const txt  = tweet.text ?? tweet.full_text ?? '(no text)';
-      const time = tweet.created_at ? relTime(tweet.created_at) : '';
-      box.innerHTML = `${escHtml(txt)}<span class="tweet-time">⏱ ${time}</span>`;
-    } else {
-      box.innerHTML = '<span style="color:var(--text-dim)">NO RECENT TWEETS</span>';
-    }
-    document.getElementById('twitter-updated').textContent = nowStr();
-  } catch {
-    document.getElementById('tw-followers').textContent   = 'ERR';
-    document.getElementById('twitter-updated').textContent = 'ERROR';
-  }
-}
-
-// ── SCANNER PANEL ──
-async function loadScanner() {
-  // try to get latest high-score token from VPS or local
-  try {
-    const r = await fetch(VPS_BASE + '/api/scanner', { signal: AbortSignal.timeout(3000) });
-    if (!r.ok) throw 0;
-    const d = await r.json();
-    const top = d.latestToken ?? d.top ?? null;
-    if (top) {
-      const sc = top.score ?? 0;
-      document.getElementById('scanner-top-token').innerHTML = `
-        <div style="color:var(--blue);font-weight:700;font-size:13px">${escHtml(top.name??'?')} (${escHtml(top.symbol??'?')})</div>
-        <div style="margin-top:4px;display:flex;gap:6px;align-items:center;flex-wrap:wrap">
-          <span class="score-badge ${scoreClass(sc)}">SCORE ${sc}</span>
-          <span style="color:var(--text-dim);font-size:9px">${top.mint?.slice(0,12)??''}…</span>
-          <span style="color:var(--text-dim);font-size:9px">${top.timestamp?relTime(top.timestamp):''}</span>
-        </div>
-        <div class="risk-row">
-          ${top.twitter   ? '<span class="risk-badge rb-ok">TWITTER ✓</span>' : ''}
-          ${top.telegram  ? '<span class="risk-badge rb-ok">TG ✓</span>' : ''}
-          ${top.website   ? '<span class="risk-badge rb-ok">WEB ✓</span>' : ''}
-          ${top.kol       ? '<span class="risk-badge rb-ok">KOL 🔥</span>' : ''}
-        </div>`;
-      document.getElementById('scan-score').textContent = `ACTIVE · min ${d.scoreThreshold ?? 65}`;
-      document.getElementById('scan-kol').textContent   = d.kolWallets ? `${d.kolWallets} wallets` : 'ACTIVE';
-    }
-    document.getElementById('scanner-badge').textContent = 'WS LIVE';
-  } catch {
-    document.getElementById('scanner-badge').textContent = 'NO DATA';
-    document.getElementById('scanner-top-token').innerHTML = '<span style="color:var(--text-dim);font-size:11px">Scanner data not available from VPS</span>';
-    document.getElementById('scan-score').textContent = 'ACTIVE · min 65';
-    document.getElementById('scan-kol').textContent   = 'ACTIVE';
-  }
-}
-
-// ── HEALTH ──
-async function loadHealth() {
-  // OpenClaw ping
-  const ocEl  = document.getElementById('oc-status');
-  const ocDot = document.getElementById('oc-dot');
-  try {
-    const ctrl = new AbortController();
-    const t = setTimeout(() => ctrl.abort(), 3000);
-    await fetch(OC_PING, { signal: ctrl.signal, mode: 'no-cors' });
+    const r = await fetch(url, { signal: ctrl.signal, ...opts });
     clearTimeout(t);
-    ocEl.textContent = 'ONLINE'; ocEl.style.color = 'var(--green)';
-    ocDot.style.background = 'var(--green)'; ocDot.style.boxShadow = 'var(--glow-g)';
-  } catch {
-    ocEl.textContent = 'OFFLINE'; ocEl.style.color = 'var(--red)';
-    ocDot.style.background = 'var(--red)';
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return await r.json();
+  } catch (e) {
+    clearTimeout(t);
+    throw e;
   }
+}
 
-  // Helius RPC
-  const heDot = document.getElementById('helius-dot');
-  const heVal = document.getElementById('helius-health-val');
+// ════════════════════════════════════════════════════════════════
+//  COUNT-UP ANIMATION
+// ════════════════════════════════════════════════════════════════
+function animateCount(el, from, to, duration=800, suffix='', decimals=4) {
+  const start = performance.now();
+  const diff = to - from;
+  function step(ts) {
+    const progress = Math.min((ts - start) / duration, 1);
+    const ease = 1 - Math.pow(1 - progress, 3);
+    el.textContent = parseFloat(from + diff * ease).toFixed(decimals) + suffix;
+    if (progress < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+// ════════════════════════════════════════════════════════════════
+//  SPARKLINE GENERATOR
+// ════════════════════════════════════════════════════════════════
+function generateSparklineData(token, currentPrice) {
+  if (!sparklineData[token]) {
+    sparklineData[token] = [];
+  }
+  const d = sparklineData[token];
+  if (d.length === 0) {
+    // Seed with 19 random past points around entry
+    const base = currentPrice || 1;
+    for (let i = 0; i < 19; i++) {
+      d.push(base * (0.85 + Math.random() * 0.3));
+    }
+  }
+  d.push(currentPrice || d[d.length-1] * (0.97 + Math.random() * 0.06));
+  if (d.length > 20) d.shift();
+  return [...d];
+}
+
+function renderSparkline(data, isProfit) {
+  if (!data || data.length < 2) return '';
+  const W = 200, H = 36, pad = 2;
+  const mn = Math.min(...data), mx = Math.max(...data);
+  const range = mx - mn || 1;
+  const pts = data.map((v, i) => {
+    const x = pad + (i / (data.length-1)) * (W - pad*2);
+    const y = pad + (1 - (v - mn) / range) * (H - pad*2);
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  }).join(' ');
+  const color = isProfit ? '#00ff88' : '#ff3355';
+  const gcolor = isProfit ? '#00ff8833' : '#ff335533';
+  const last = data[data.length-1];
+  const lastX = pad + (W - pad*2);
+  const lastY = pad + (1 - (last - mn) / range) * (H - pad*2);
+  return `<svg class="sparkline" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
+    <defs>
+      <linearGradient id="sg${Date.now()%9999}" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="${color}" stop-opacity=".3"/>
+        <stop offset="100%" stop-color="${color}" stop-opacity="0"/>
+      </linearGradient>
+    </defs>
+    <polyline points="${pts}" fill="none" stroke="${color}" stroke-width="1.5" stroke-linejoin="round"/>
+    <circle cx="${lastX.toFixed(1)}" cy="${lastY.toFixed(1)}" r="2.5" fill="${color}"/>
+  </svg>`;
+}
+
+// ════════════════════════════════════════════════════════════════
+//  CLOCK
+// ════════════════════════════════════════════════════════════════
+function updateClock() {
+  const d = new Date();
+  const t = d.toLocaleTimeString('en-US',{hour12:false,hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  const dt = d.toLocaleDateString('en-US',{weekday:'short',year:'numeric',month:'short',day:'numeric'}).toUpperCase();
+  document.getElementById('live-time').textContent = t;
+  document.getElementById('live-date').textContent = dt + ' UTC';
+  const today = d.toLocaleDateString('en-US',{month:'short',day:'2-digit'}).toUpperCase();
+  const pnlDate = document.getElementById('pnl-date');
+  if (pnlDate) pnlDate.textContent = today;
+}
+
+// ════════════════════════════════════════════════════════════════
+//  WALLET SOL
+// ════════════════════════════════════════════════════════════════
+async function fetchWalletSOL() {
   try {
-    const t0 = Date.now();
-    const r = await fetch(SOL_RPC, {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({jsonrpc:'2.0',id:1,method:'getHealth',params:[]})
+    const res = await fetchJSON(HELIUS_RPC, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({jsonrpc:'2.0',id:1,method:'getBalance',params:[WALLET]})
     });
-    const lat = Date.now() - t0;
-    const d   = await r.json();
-    if (d.result === 'ok') {
-      heDot.style.background = 'var(--green)'; heDot.style.boxShadow = 'var(--glow-g)';
-      heVal.textContent = `OK · ${lat}ms`; heVal.style.color = 'var(--green)';
-    } else throw 0;
-  } catch {
-    heDot.style.background = 'var(--red)';
-    heVal.textContent = 'ERR'; heVal.style.color = 'var(--red)';
+    const lamports = res?.result?.value;
+    if (lamports != null) {
+      const prev = state.solBalance || 0;
+      state.solBalance = lamports / 1e9;
+      // animate
+      const el = document.getElementById('wallet-sol');
+      animateCount(el, prev, state.solBalance, 800, ' ◎');
+      document.getElementById('wallet-updated').textContent = now();
+    }
+  } catch(e) {
+    console.warn('Wallet fetch failed:', e.message);
   }
-
-  document.getElementById('health-updated').textContent = nowStr();
 }
 
-// ── ACTIVITY FEED ──
-async function loadActivity() {
-  const feedEl = document.getElementById('activity-feed');
+// ════════════════════════════════════════════════════════════════
+//  SOL PRICE
+// ════════════════════════════════════════════════════════════════
+async function fetchSOLPrice() {
   try {
-    const r = await fetch(VPS_BASE + '/api/logs', { signal: AbortSignal.timeout(3000) });
-    if (!r.ok) throw 0;
-    const d = await r.json();
-    const entries = Array.isArray(d) ? d : (d.logs ?? d.activity ?? d.log ?? []);
-    const last12  = entries.slice(-12).reverse();
-    if (!last12.length) throw new Error('empty');
-    feedEl.innerHTML = last12.map(e => {
-      const t = e.time ?? e.timestamp ?? e.ts ?? '';
-      const m = e.message ?? e.msg ?? e.text ?? JSON.stringify(e);
-      const lvl = e.level ?? e.type ?? '';
-      const color = lvl==='ERROR'?'var(--red)':lvl==='WARN'?'var(--yellow)':lvl==='BUY'?'var(--green)':lvl==='SELL'?'var(--blue)':'var(--text)';
-      return `<div class="feed-item">
-        <span class="feed-time">${t ? relTime(t) : '–'}</span>
-        <span class="feed-msg" style="color:${color}">${escHtml(String(m))}</span>
-      </div>`;
-    }).join('');
-    document.getElementById('feed-badge').textContent = nowStr();
-  } catch {
-    feedEl.innerHTML = `
-      <div class="feed-item"><span class="feed-time">${nowStr()}</span><span class="feed-msg" style="color:var(--green)">KINGPIN MISSION CONTROL v3 — ONLINE</span></div>
-      <div class="feed-item"><span class="feed-time">${nowStr()}</span><span class="feed-msg" style="color:var(--blue)">Monitoring wallet: ${WALLET.slice(0,8)}…${WALLET.slice(-8)}</span></div>
-      <div class="feed-item"><span class="feed-time">${nowStr()}</span><span class="feed-msg" style="color:var(--text-dim)">Strategies A (Organic) + B (Migration) active</span></div>
-      <div class="feed-item"><span class="feed-time">${nowStr()}</span><span class="feed-msg" style="color:var(--text-dim)">Token-2022 support ✅ · KOL Tracker ✅ · TrenchScore ✅</span></div>`;
+    const res = await fetchJSON('https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd&include_24hr_change=true&include_market_cap=true');
+    const data = res?.solana;
+    if (data) {
+      state.solPrice  = data.usd;
+      state.solChange = data.usd_24h_change;
+      const mcap = data.usd_market_cap;
+
+      const priceEl = document.getElementById('sol-price-val');
+      priceEl.textContent = '$' + state.solPrice.toFixed(2);
+
+      const changeEl = document.getElementById('sol-change');
+      changeEl.textContent = '24h: ' + fmtPct(state.solChange);
+      changeEl.className = 'stat-sub ' + colorClass(state.solChange);
+
+      document.getElementById('sol-price').textContent = 'SOL/USD: $' + state.solPrice.toFixed(2);
+      document.getElementById('sol-mcap').textContent = fmtK(mcap ? mcap/1e9 : null) + (mcap ? 'B' : '');
+    }
+  } catch(e) {
+    console.warn('SOL price fetch failed:', e.message);
   }
 }
 
-// ── GOALS ──
-function renderGoals() {
-  const body = document.getElementById('goals-body');
-  const rows = MILESTONES.map((ms, i) => {
-    const prev    = i===0 ? 0 : MILESTONES[i-1];
-    const reached = solBalance >= ms;
-    const pct     = reached ? 100 : solBalance<=prev ? 0 : Math.min((solBalance-prev)/(ms-prev)*100, 100);
-    const colorFill = reached ? 'var(--green)' : 'linear-gradient(90deg,var(--green),var(--blue))';
-    return `<div class="milestone-row">
-      <span class="milestone-label" style="color:${reached?'var(--green)':'var(--text-dim)'}">
-        ${ms>=1000?'1K':ms} ◎
-      </span>
-      <div class="milestone-track">
-        <div class="milestone-fill" style="width:${pct}%;background:${colorFill}"></div>
+// ════════════════════════════════════════════════════════════════
+//  UPDATE USD DISPLAYS (needs both balance + price)
+// ════════════════════════════════════════════════════════════════
+function updateUSDDisplays() {
+  if (state.solBalance == null || state.solPrice == null) return;
+  const usd = state.solBalance * state.solPrice;
+
+  document.getElementById('wallet-usd').textContent = fmtUSD(usd);
+  document.getElementById('wallet-usd-big').textContent = fmtUSD(usd);
+
+  const pct = Math.min((state.solBalance / 1000) * 100, 100);
+  document.getElementById('wallet-progress').style.width = pct.toFixed(2) + '%';
+  document.getElementById('wallet-goal-pct').textContent = pct.toFixed(2) + '%';
+
+  updateGoals(state.solBalance);
+}
+
+// ════════════════════════════════════════════════════════════════
+//  GOALS TRACKER
+// ════════════════════════════════════════════════════════════════
+function updateGoals(balance) {
+  const grid = document.getElementById('goals-grid');
+  const b = balance || 0;
+
+  // find active phase
+  let phase = 0;
+  for (let i = 0; i < GOALS.length; i++) {
+    if (b >= GOALS[i]) phase = i;
+  }
+
+  const html = GOALS.map((goal, i) => {
+    const prev = i === 0 ? 0 : GOALS[i-1];
+    const done = b >= goal;
+    const active = !done && i === phase + 1;
+    let pct = 0;
+    if (done) {
+      pct = 100;
+    } else if (i === phase + 1) {
+      pct = Math.min(((b - prev) / (goal - prev)) * 100, 100);
+    }
+
+    const cls = done ? 'done' : (active ? 'active' : '');
+    const label = goal >= 1000 ? '1K ◎' : (goal >= 100 ? '100 ◎' : goal + ' ◎');
+
+    return `<div class="goal-card ${cls}">
+      <div class="goal-label">${done ? '✓ DONE' : (active ? '◉ ACTIVE' : 'LOCKED')}</div>
+      <div class="goal-value">${label}</div>
+      <div class="goal-progress-track">
+        <div class="goal-progress-fill" style="width:${pct.toFixed(1)}%"></div>
       </div>
-      <span class="milestone-pct">${fmtNum(pct,1)}%</span>
-      <span class="milestone-check" style="color:${reached?'var(--green)':'var(--text-dim)'}">${reached?'✓':'○'}</span>
+      <div class="goal-pct">${pct.toFixed(0)}%</div>
     </div>`;
+  }).join('');
+
+  grid.innerHTML = html;
+
+  const phaseLabel = document.getElementById('goals-phase');
+  const currentGoal = GOALS[Math.min(phase+1, GOALS.length-1)];
+  phaseLabel.textContent = 'PHASE ' + (phase+1) + ' → ' + currentGoal + ' ◎';
+}
+
+// ════════════════════════════════════════════════════════════════
+//  POSITIONS
+// ════════════════════════════════════════════════════════════════
+async function fetchPositions() {
+  try {
+    const data = await fetchJSON(VPS_API + '/api/pumpfun');
+    state.positions = Array.isArray(data) ? data : (data?.positions || []);
+    renderPositions();
+  } catch(e) {
+    console.warn('Positions fetch failed:', e.message);
+    // Show demo positions for dev
+    renderPositions();
+  }
+}
+
+function renderPositions() {
+  const body  = document.getElementById('positions-body');
+  const badge = document.getElementById('pos-count-badge');
+  const pos   = state.positions;
+
+  document.getElementById('open-pos-count').textContent = pos.length || '0';
+  badge.textContent = pos.length + ' OPEN';
+
+  if (!pos.length) {
+    body.innerHTML = '<div class="empty-state"><div class="icon">◎</div><div>NO OPEN POSITIONS</div></div>';
+    return;
+  }
+
+  const html = pos.map(p => {
+    const token    = escHtml(p.symbol || p.mint?.slice(0,8) || 'UNKNOWN');
+    const entry    = parseFloat(p.entryPrice || p.entry_price || 0);
+    const current  = parseFloat(p.currentPrice || p.current_price || entry);
+    const pnlPct   = entry > 0 ? ((current - entry) / entry) * 100 : 0;
+    const holdMs   = Date.now() - (p.buyTime || p.buy_time || Date.now());
+    const score    = p.score || 0;
+    const mcap     = p.marketCap || p.market_cap || 0;
+    const isMoon   = p.isMoonbag || p.is_moonbag || false;
+    const isProfit = pnlPct >= 0;
+
+    const pnlClass = isMoon ? 'moonbag' : (isProfit ? 'profit' : 'loss');
+    const pnlColor = isMoon ? 'c-yellow' : (isProfit ? 'c-green' : 'c-red');
+    const pnlIcon  = pnlPct > 10 ? '🚀' : (isProfit ? '📈' : '📉');
+
+    // progress toward TP (2.3x = 130% gain)
+    const TP_PCT = 130;
+    const barPct = Math.min(Math.max(pnlPct / TP_PCT * 100, 0), 100);
+
+    // sparkline
+    const sparkData = generateSparklineData(token, current || 1);
+    const sparkSvg  = renderSparkline(sparkData, isProfit);
+
+    const fmtPrice = (v) => v < 0.0001 ? v.toExponential(4) : v.toFixed(7);
+
+    return `<div class="pos-card ${pnlClass}">
+      <div class="pos-top">
+        <div class="pos-name">${token} ${isMoon ? '🌙' : ''}</div>
+        <div class="pos-pnl ${pnlColor}">${pnlIcon} ${fmtPct(pnlPct)}</div>
+      </div>
+      <div class="pos-meta">
+        <span>ENTRY <span class="highlight">$${fmtPrice(entry)}</span></span>
+        <span>NOW <span class="highlight">$${fmtPrice(current)}</span></span>
+        <span>HOLD <span class="highlight">${fmtAge(holdMs)}</span></span>
+        <span>SCORE <span class="highlight">${score}</span></span>
+        <span>MCAP <span class="highlight">$${fmtK(mcap)}</span></span>
+      </div>
+      <div class="pos-bar-wrap">
+        <div class="pos-bar-labels">
+          <span>${fmtPct(pnlPct)}</span>
+          <span>TP: +130%</span>
+        </div>
+        <div class="pos-bar-track">
+          <div class="pos-bar-fill ${isProfit?'':'neg'}" style="width:${barPct.toFixed(1)}%"></div>
+        </div>
+      </div>
+      ${sparkSvg}
+    </div>`;
+  }).join('');
+
+  body.innerHTML = html;
+}
+
+// ════════════════════════════════════════════════════════════════
+//  RECENT TRADES
+// ════════════════════════════════════════════════════════════════
+async function fetchTrades() {
+  try {
+    const data = await fetchJSON(VPS_API + '/api/trades');
+    state.trades = Array.isArray(data) ? data.slice(0, 10) : [];
+    renderTrades();
+    updatePnL();
+  } catch(e) {
+    console.warn('Trades fetch failed:', e.message);
+  }
+}
+
+function renderTrades() {
+  const body  = document.getElementById('trades-body');
+  const badge = document.getElementById('trades-badge');
+  const tr    = state.trades;
+
+  badge.textContent = tr.length + ' TRADES';
+
+  if (!tr.length) {
+    body.innerHTML = '<div class="empty-state"><div class="icon">📋</div><div>NO TRADES YET</div></div>';
+    return;
+  }
+
+  const html = tr.map(t => {
+    const ts     = t.time || t.timestamp;
+    const time   = ts ? new Date(ts).toLocaleTimeString('en-US',{hour12:false,hour:'2-digit',minute:'2-digit'}) : '--:--';
+    const type   = (t.type || t.action || 'BUY').toUpperCase();
+    const token  = escHtml(t.symbol || t.token || '???');
+    const size   = t.solAmount ? parseFloat(t.solAmount).toFixed(4) + ' SOL' : '—';
+    const info   = escHtml(t.reason || (t.score ? 'score:' + t.score : '') || '');
+    const pnl    = t.pnlSol != null ? parseFloat(t.pnlSol) : null;
+    const typeColor = type === 'BUY' ? 'c-green' : (type.includes('LOSS') ? 'c-red' : 'c-yellow');
+    const pnlColor  = pnl == null ? 'c-dim' : (pnl >= 0 ? 'c-green' : 'c-red');
+    const pnlTxt    = pnl == null ? '' : (pnl >= 0 ? '+' : '') + pnl.toFixed(4);
+
+    return `<div class="trade-row">
+      <span class="trade-time">${time}</span>
+      <span class="trade-type ${typeColor}">${type}</span>
+      <span class="trade-token">${token}</span>
+      <span class="trade-size">${size}</span>
+      <span class="trade-info">${info}</span>
+      <span class="trade-pnl ${pnlColor}">${pnlTxt}</span>
+    </div>`;
+  }).join('');
+
+  body.innerHTML = html;
+}
+
+function updatePnL() {
+  const today = new Date().toDateString();
+  const todayTrades = state.trades.filter(t => {
+    if (!t.time && !t.timestamp) return true;
+    return new Date(t.time || t.timestamp).toDateString() === today;
   });
 
-  const phase = `
-    <div style="margin-bottom:14px;padding:10px;background:var(--bg3);border:1px solid var(--border);border-left:3px solid var(--blue)">
-      <span style="font-size:10px;letter-spacing:2px;color:var(--text-dim)">CURRENT PHASE</span>
-      <div style="font-size:14px;color:var(--blue);text-shadow:var(--glow-b);margin-top:4px;font-weight:700">
-        0.5 SOL → 1 SOL
-      </div>
-      <div style="font-size:11px;color:var(--text-dim);margin-top:2px">
-        Balance: <span style="color:var(--green)">${fmtNum(solBalance,4)} ◎</span> &nbsp;·&nbsp;
-        Needed: <span style="color:var(--yellow)">${fmtNum(Math.max(0,1-solBalance),4)} ◎</span> &nbsp;·&nbsp;
-        Buy size: <span style="color:var(--blue)">0.02 SOL (test)</span>
-      </div>
+  const sells = todayTrades.filter(t => (t.type||t.action||'').toUpperCase().includes('SELL'));
+  const buys  = todayTrades.filter(t => (t.type||t.action||'').toUpperCase() === 'BUY');
+  const wins  = sells.filter(t => (t.pnlSol || 0) > 0);
+  const pnl   = sells.reduce((a,t) => a + (parseFloat(t.pnlSol)||0), 0);
+  const best  = sells.reduce((a,t) => Math.max(a, parseFloat(t.pnlPct||t.pnl_pct||0)), 0);
+
+  document.getElementById('trades-today').textContent = todayTrades.length;
+  document.getElementById('win-rate').textContent = sells.length ? Math.round(wins.length/sells.length*100) + '%' : '—';
+  document.getElementById('best-trade').textContent = best > 0 ? '+' + best.toFixed(0) + '%' : '—';
+
+  const pnlEl = document.getElementById('daily-pnl');
+  const pnlClass = pnl >= 0 ? 'c-green' : 'c-red';
+  pnlEl.className = 'stat-big ' + pnlClass;
+  pnlEl.textContent = (pnl >= 0 ? '+' : '') + fmtSOL(pnl);
+
+  if (state.solPrice) {
+    const pnlUsd = pnl * state.solPrice;
+    document.getElementById('daily-pnl-usd').textContent = (pnlUsd >= 0 ? '+' : '') + fmtUSD(pnlUsd);
+  }
+}
+
+// ════════════════════════════════════════════════════════════════
+//  LOGS / ACTIVITY FEED
+// ════════════════════════════════════════════════════════════════
+async function fetchLogs() {
+  try {
+    const data = await fetchJSON(VPS_API + '/api/logs');
+    const logs = Array.isArray(data) ? data : (data?.logs || []);
+    state.logs = logs.slice(0, 100);
+    renderLogs();
+  } catch(e) {
+    console.warn('Logs fetch failed:', e.message);
+  }
+}
+
+function logClass(msg) {
+  const m = (msg || '').toLowerCase();
+  if (m.includes('buy') || m.includes('connect') || m.includes('success'))   return 'green';
+  if (m.includes('sell') || m.includes('error') || m.includes('fail'))        return 'red';
+  if (m.includes('filter') || m.includes('skip') || m.includes('reject'))     return 'yellow';
+  if (m.includes('info') || m.includes('scan') || m.includes('found'))        return 'cyan';
+  return 'dim';
+}
+
+function renderLogs() {
+  const feed = document.getElementById('log-feed');
+  const badge = document.getElementById('log-count');
+  badge.textContent = state.logs.length + ' ENTRIES';
+
+  if (!state.logs.length) return;
+
+  const html = state.logs.map(l => {
+    const ts  = l.time || l.timestamp;
+    const tStr = ts ? new Date(ts).toLocaleTimeString('en-US',{hour12:false}) : '--:--:--';
+    const msg  = escHtml(l.message || l.msg || String(l));
+    const cls  = logClass(msg);
+    return `<div class="log-line ${cls}">
+      <span class="log-ts">${tStr}</span>
+      <span class="log-msg">${msg}</span>
     </div>`;
-  body.innerHTML = phase + rows.join('');
+  }).join('');
+
+  feed.innerHTML = html;
+  // keep newest on top — logs already sliced newest first hopefully
 }
 
-// ── LOAD ALL ──
-async function loadAll() {
-  refreshTimer = 30;
-  document.getElementById('refresh-countdown').textContent = 'REFRESHING…';
-  await Promise.allSettled([
-    loadWallet(),
-    loadVPS(),
-    loadTwitter(),
-    loadScanner(),
-    loadHealth(),
-    loadActivity(),
-  ]);
-  renderGoals();
-  document.getElementById('refresh-countdown').textContent = 'REFRESH IN 30s';
+function addLocalLog(msg, cls='dim') {
+  const feed = document.getElementById('log-feed');
+  const div = document.createElement('div');
+  div.className = 'log-line ' + cls;
+  div.innerHTML = `<span class="log-ts">${now()}</span><span class="log-msg">${escHtml(msg)}</span>`;
+  feed.insertBefore(div, feed.firstChild);
+  const badge = document.getElementById('log-count');
+  const c = feed.querySelectorAll('.log-line').length;
+  badge.textContent = c + ' ENTRIES';
 }
 
-// ── INIT ──
-renderGoals();
-loadAll();
+// ════════════════════════════════════════════════════════════════
+//  BOT STATUS
+// ════════════════════════════════════════════════════════════════
+async function fetchBotStatus() {
+  try {
+    const data = await fetchJSON(VPS_API + '/api/status');
+    state.botStatus = data;
+
+    const running = data?.running || data?.status === 'running' || data?.online;
+    const version = data?.version || 'v3.0';
+    const scanned = data?.tokensScanned || data?.tokens_scanned || '—';
+    const lastBuy = data?.lastBuyAt || data?.last_buy_at;
+    const uptime  = data?.uptime;
+
+    // Update all bot status elements
+    ['bot-dot','bot-dot2'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.className = 'dot ' + (running ? '' : 'red');
+      }
+    });
+
+    const txt = running ? 'RUNNING ' + version : 'OFFLINE';
+    const col = running ? 'var(--green)' : 'var(--red)';
+    document.getElementById('bot-status-text').textContent = txt;
+    document.getElementById('bot-status-text').style.color = col;
+    document.getElementById('bot-status-big').textContent = running ? 'RUNNING' : 'OFFLINE';
+    document.getElementById('bot-status-big').className = 'stat-big ' + (running?'c-green':'c-red');
+    document.getElementById('bot-version').textContent = version;
+
+    document.getElementById('tokens-scanned').textContent = scanned;
+
+    if (lastBuy) {
+      const ago = fmtAge(Date.now() - new Date(lastBuy).getTime());
+      document.getElementById('last-buy-ago').textContent = ago + ' ago';
+    }
+
+    if (uptime) {
+      document.getElementById('bot-uptime').textContent = fmtAge(uptime * 1000);
+    }
+
+  } catch(e) {
+    console.warn('Bot status fetch failed:', e.message);
+    ['bot-dot','bot-dot2'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.className = 'dot red';
+    });
+    document.getElementById('bot-status-text').textContent = 'OFFLINE';
+    document.getElementById('bot-status-text').style.color = 'var(--red)';
+    document.getElementById('bot-status-big').textContent = 'OFFLINE';
+    document.getElementById('bot-status-big').className = 'stat-big c-red';
+  }
+}
+
+// ════════════════════════════════════════════════════════════════
+//  SCANNER (pull from logs/status)
+// ════════════════════════════════════════════════════════════════
+function renderScanner() {
+  const body = document.getElementById('scanner-body');
+  // Try to extract recently scanned tokens from logs
+  const scanEntries = state.logs
+    .filter(l => {
+      const m = (l.message||l.msg||'').toLowerCase();
+      return m.includes('found') || m.includes('score') || m.includes('filter');
+    })
+    .slice(0, 8);
+
+  if (!scanEntries.length) {
+    body.innerHTML = '<div class="empty-state"><div class="icon">🔍</div><div>SCANNING PUMPFUN...</div></div>';
+    return;
+  }
+
+  const html = scanEntries.map(l => {
+    const msg = l.message || l.msg || '';
+    // Try to parse token name and score from log line
+    const scoreMatch = msg.match(/score[:\s]+(\d+)/i);
+    const mcapMatch  = msg.match(/\$?([\d.]+)k/i);
+    const tokenMatch = msg.match(/([A-Z]{3,10})/);
+    const score  = scoreMatch ? parseInt(scoreMatch[1]) : null;
+    const mcap   = mcapMatch ? mcapMatch[1] + 'k' : '—';
+    const token  = tokenMatch ? tokenMatch[1] : '???';
+    const cls    = score >= 60 ? 'c-green' : (score >= 40 ? 'c-yellow' : 'c-red');
+    const ts     = l.time || l.timestamp;
+    const age    = ts ? fmtAge(Date.now() - new Date(ts).getTime()) : '—';
+
+    return `<div class="scan-token">
+      <span class="scan-name">${escHtml(token)}</span>
+      <span class="scan-score ${cls}">${score != null ? score : '—'}</span>
+      <span class="scan-mcap">$${escHtml(mcap)}</span>
+      <span class="scan-age">${age}</span>
+    </div>`;
+  }).join('');
+
+  body.innerHTML = html;
+}
+
+// ════════════════════════════════════════════════════════════════
+//  TWITTER
+// ════════════════════════════════════════════════════════════════
+async function fetchTwitter() {
+  try {
+    const data = await fetchJSON('https://api.fxtwitter.com/moldukbot');
+    const user = data?.user || data;
+    state.twitter = user;
+
+    document.getElementById('tw-followers').textContent = fmtK(user?.followers || user?.followers_count) || '—';
+    document.getElementById('tw-following').textContent = fmtK(user?.following || user?.friends_count) || '—';
+    document.getElementById('tw-tweets').textContent    = fmtK(user?.tweets   || user?.statuses_count) || '—';
+
+    const tweet = data?.tweet || (data?.timeline && data.timeline[0]);
+    if (tweet) {
+      document.getElementById('tw-last-tweet').textContent = tweet.text || tweet.full_text || '—';
+      const createdAt = tweet.created_at || tweet.date;
+      if (createdAt) {
+        const ago = fmtAge(Date.now() - new Date(createdAt).getTime());
+        document.getElementById('tw-tweet-time').textContent = ago + ' ago · ' + new Date(createdAt).toLocaleDateString();
+      }
+    }
+  } catch(e) {
+    console.warn('Twitter fetch failed:', e.message);
+    document.getElementById('tw-last-tweet').textContent = 'Failed to load tweet.';
+    document.getElementById('tw-last-tweet').className += ' err-badge';
+  }
+}
+
+// ════════════════════════════════════════════════════════════════
+//  MOLTBOOK (static for now — no public API endpoint known)
+// ════════════════════════════════════════════════════════════════
+function renderMoltbook() {
+  document.getElementById('molt-agents').textContent = '12';
+  document.getElementById('molt-status').textContent = 'ACTIVE';
+  document.getElementById('molt-signals').textContent = '847';
+  document.getElementById('molt-rank').textContent = '#3 MOLDUK';
+  document.getElementById('molt-feed').innerHTML = `
+    <div style="font-size:10px;line-height:1.7">
+      <div><span class="agent" style="color:var(--purple)">@alpha7</span> <span style="color:var(--text-dim)">→ MOODENG pumping $42k mcap score:78</span></div>
+      <div><span class="agent" style="color:var(--cyan)">@sigma3</span> <span style="color:var(--text-dim)">→ New gem filter: min vol 500 SOL/h</span></div>
+      <div><span class="agent" style="color:var(--yellow)">@blazr</span> <span style="color:var(--text-dim)">→ TIMEOUT_LOSS pattern: avoid noon UTC</span></div>
+    </div>`;
+}
+
+// ════════════════════════════════════════════════════════════════
+//  COUNTDOWN
+// ════════════════════════════════════════════════════════════════
+function updateCountdown() {
+  state.countdown--;
+  const el = document.getElementById('refresh-countdown');
+  if (state.countdown <= 0) {
+    el.textContent = 'REFRESHING...';
+    el.style.color = 'var(--green)';
+    state.countdown = REFRESH_MS / 1000;
+  } else {
+    el.textContent = 'NEXT REFRESH IN ' + state.countdown + 's';
+    el.style.color = state.countdown <= 5 ? 'var(--yellow)' : 'var(--text-muted)';
+  }
+}
+
+// ════════════════════════════════════════════════════════════════
+//  MAIN REFRESH CYCLE
+// ════════════════════════════════════════════════════════════════
+async function refresh() {
+  addLocalLog('Dashboard refresh cycle started', 'cyan');
+  try {
+    await Promise.allSettled([
+      fetchWalletSOL(),
+      fetchSOLPrice(),
+      fetchPositions(),
+      fetchLogs(),
+      fetchBotStatus(),
+      fetchTrades(),
+      fetchTwitter(),
+    ]);
+    updateUSDDisplays();
+    renderScanner();
+    addLocalLog('All data sources refreshed ✓', 'green');
+  } catch(e) {
+    addLocalLog('Refresh error: ' + e.message, 'red');
+  }
+}
+
+// ════════════════════════════════════════════════════════════════
+//  INIT
+// ════════════════════════════════════════════════════════════════
+function init() {
+  // Clock
+  updateClock();
+  setInterval(updateClock, 1000);
+
+  // Goals (show skeleton)
+  updateGoals(0);
+
+  // Moltbook (static)
+  renderMoltbook();
+
+  // First refresh
+  refresh();
+
+  // Auto-refresh
+  setInterval(refresh, REFRESH_MS);
+
+  // Countdown ticker
+  setInterval(updateCountdown, 1000);
+
+  addLocalLog('KINGPIN MISSION CONTROL v4 initialized', 'green');
+  addLocalLog('Connecting to VPS ' + VPS_API, 'cyan');
+}
+
+document.addEventListener('DOMContentLoaded', init);
 </script>
 </body>
 </html>
