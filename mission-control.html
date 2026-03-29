@@ -750,9 +750,10 @@
 // ════════════════════════════════════════════════════════════════
 //  CONFIG
 // ════════════════════════════════════════════════════════════════
-// Dashboard läuft am besten direkt auf VPS: http://161.35.10.127:8080
-// GitHub Pages hat Mixed-Content-Problem (HTTPS→HTTP geblockt)
-const VPS_API    = window.location.hostname === '161.35.10.127' ? 'http://161.35.10.127:3000' : 'http://161.35.10.127:3000';
+// HTTPS Cloudflare Tunnel für GitHub Pages (kein Mixed Content)
+const VPS_API    = window.location.hostname === '161.35.10.127'
+  ? 'http://161.35.10.127:3000'
+  : 'https://tools-rough-motels-match.trycloudflare.com';
 const WALLET     = '4imFZ38DmwD11ohSTEnHHP34Sr6bojMMe21rqhqmgrWf';
 const HELIUS_RPC = 'https://mainnet.helius-rpc.com/?api-key=ead947f5-2ac4-4f2c-a286-ad48e188b2ad';
 const REFRESH_MS = 15000;
