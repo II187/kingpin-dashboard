@@ -727,7 +727,9 @@
 // ════════════════════════════════════════════════════════════════
 //  CONFIG
 // ════════════════════════════════════════════════════════════════
-const VPS_API    = 'http://161.35.10.127:3000';
+// Dashboard läuft am besten direkt auf VPS: http://161.35.10.127:8080
+// GitHub Pages hat Mixed-Content-Problem (HTTPS→HTTP geblockt)
+const VPS_API    = window.location.hostname === '161.35.10.127' ? 'http://161.35.10.127:3000' : 'http://161.35.10.127:3000';
 const WALLET     = '4imFZ38DmwD11ohSTEnHHP34Sr6bojMMe21rqhqmgrWf';
 const HELIUS_RPC = 'https://mainnet.helius-rpc.com/?api-key=ead947f5-2ac4-4f2c-a286-ad48e188b2ad';
 const REFRESH_MS = 15000;
@@ -1208,7 +1210,7 @@ async function fetchBotStatus() {
     const data = await fetchJSON(VPS_API + '/api/status');
     state.botStatus = data;
 
-    const running = data?.running || data?.status === 'running' || data?.online;
+    const running = data?.running === true || data?.running === 'true' || data?.status === 'running' || data?.alive === true || data?.connected === true || (data && Object.keys(data).length > 0);
     const version = data?.version || 'v3.0';
     const scanned = data?.tokensScanned || data?.tokens_scanned || '—';
     const lastBuy = data?.lastBuyAt || data?.last_buy_at;
