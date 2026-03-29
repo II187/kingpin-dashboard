@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Minimal Wall Art Pack — 8 Printable Designs</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #f5f5f5; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #1a1a1a; }
+    header { background: #fff; border-bottom: 1px solid #e5e5e5; padding: 20px 40px; display: flex; align-items: center; justify-content: space-between; }
+    .logo { font-size: 1rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; text-decoration: none; color: #1a1a1a; }
+    .price-tag { background: #1a1a1a; color: #fff; border-radius: 20px; padding: 6px 18px; font-size: 0.9rem; font-weight: 700; }
+    .hero { max-width: 900px; margin: 48px auto 32px; padding: 0 24px; text-align: center; }
+    .hero h1 { font-size: 2.4rem; font-weight: 800; margin-bottom: 12px; }
+    .hero p { color: #666; font-size: 1.1rem; margin-bottom: 12px; }
+    .hero .sub { color: #999; font-size: 0.9rem; margin-bottom: 32px; }
+    .print-all-btn {
+      display: inline-block; background: #1a1a1a; color: #fff;
+      border: none; border-radius: 10px; padding: 14px 36px;
+      font-size: 1rem; font-weight: 700; cursor: pointer;
+      transition: opacity 0.2s; margin-bottom: 48px;
+    }
+    .print-all-btn:hover { opacity: 0.8; }
+    .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; max-width: 900px; margin: 0 auto; padding: 0 24px; }
+    /* A4 ratio: 1:1.414 — using percentage padding hack */
+    .art-card { background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 16px rgba(0,0,0,0.08); }
+    .art-frame {
+      width: 100%;
+      padding-top: 141.4%; /* A4 ratio */
+      position: relative;
+      background: #fff;
+    }
+    .art-inner {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 10%;
+      text-align: center;
+    }
+    .art-inner.style-1 { border: 2px solid #1a1a1a; }
+    .art-inner.style-2 { border: none; }
+    .art-inner.style-3 { border: 3px double #1a1a1a; padding: 12%; }
+    .art-inner.style-4 { border: none; background: #1a1a1a; color: #fff; }
+    .art-inner.style-5 { border: none; }
+    .art-inner.style-6 { border: 1px solid #ccc; }
+    .art-inner.style-7 { border: none; background: #fff; }
+    .art-inner.style-8 { border: 4px solid #1a1a1a; }
+    .art-quote {
+      font-family: 'Georgia', serif;
+      font-size: clamp(0.9rem, 3.5vw, 1.6rem);
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      margin-bottom: 8%;
+    }
+    .art-inner.style-4 .art-quote { color: #fff; }
+    .art-inner.style-2 .art-quote { font-size: clamp(1.2rem, 4.5vw, 2.2rem); font-family: -apple-system, sans-serif; font-weight: 900; letter-spacing: 0.05em; }
+    .art-inner.style-5 .art-quote { font-family: 'Courier New', monospace; font-size: clamp(0.8rem, 3vw, 1.3rem); letter-spacing: 0.15em; }
+    .art-inner.style-7 .art-quote { font-size: clamp(1.4rem, 5vw, 2.5rem); font-weight: 900; letter-spacing: -0.04em; font-style: italic; }
+    .art-line { width: 40%; height: 1px; background: currentColor; opacity: 0.3; margin: 0 auto; }
+    .art-inner.style-4 .art-line { background: #fff; opacity: 0.4; }
+    .art-card-footer { background: #fafafa; border-top: 1px solid #e5e5e5; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; }
+    .art-name { font-size: 0.8rem; font-weight: 600; color: #666; }
+    .art-print-btn { background: #1a1a1a; color: #fff; border: none; border-radius: 6px; padding: 5px 14px; font-size: 0.78rem; font-weight: 700; cursor: pointer; transition: opacity 0.2s; }
+    .art-print-btn:hover { opacity: 0.75; }
+    .buy-banner {
+      background: #1a1a1a; color: #fff; border-radius: 16px;
+      padding: 40px; text-align: center; margin: 48px 24px 80px;
+      max-width: 900px; margin-left: auto; margin-right: auto;
+    }
+    .buy-banner h2 { font-size: 1.8rem; margin-bottom: 8px; }
+    .buy-banner p { opacity: 0.7; margin-bottom: 24px; }
+    .buy-btn { display: inline-block; background: #fff; color: #1a1a1a; font-weight: 800; font-size: 1rem; padding: 14px 36px; border-radius: 10px; text-decoration: none; transition: transform 0.1s; }
+    .buy-btn:hover { transform: scale(1.04); }
+    @media (max-width: 600px) {
+      .grid { grid-template-columns: 1fr; }
+      header { padding: 16px 20px; }
+      .hero h1 { font-size: 1.7rem; }
+      .art-quote { font-size: clamp(1.1rem, 5vw, 1.8rem) !important; }
+    }
+    @media print {
+      header, .hero, .art-card-footer, .buy-banner, .print-all-btn { display: none !important; }
+      body { background: #fff; }
+      .grid { grid-template-columns: 1fr; gap: 0; padding: 0; }
+      .art-card { page-break-after: always; border-radius: 0; box-shadow: none; margin: 0; }
+      .art-frame { padding-top: 141.4%; }
+      .art-inner { inset: 20px; }
+    }
+  </style>
+</head>
+<body>
+<header>
+  <a href="index.html" class="logo">KINGPIN DIGITAL</a>
+  <span class="price-tag">$8</span>
+</header>
+
+<div class="hero">
+  <h1>Minimal Wall Art Pack</h1>
+  <p>8 printable quote designs. Minimalist. Powerful. A4/Letter format.</p>
+  <p class="sub">Print at home or at your local print shop. Free to resize.</p>
+  <button class="print-all-btn" onclick="window.print()">🖨️ Print All Designs</button>
+</div>
+
+<div class="grid">
+
+  <!-- 1: Protect Your Peace -->
+  <div class="art-card">
+    <div class="art-frame">
+      <div class="art-inner style-1">
+        <div class="art-line"></div>
+        <br>
+        <div class="art-quote">Protect<br>Your<br>Peace</div>
+        <div class="art-line"></div>
+      </div>
+    </div>
+    <div class="art-card-footer">
+      <span class="art-name">01 — Protect Your Peace</span>
+      <button class="art-print-btn" onclick="printOne(0)">Print</button>
+    </div>
+  </div>
+
+  <!-- 2: Build in Silence -->
+  <div class="art-card">
+    <div class="art-frame">
+      <div class="art-inner style-2">
+        <div class="art-quote">BUILD<br>IN<br>SILENCE</div>
+        <div class="art-line"></div>
+      </div>
+    </div>
+    <div class="art-card-footer">
+      <span class="art-name">02 — Build in Silence</span>
+      <button class="art-print-btn" onclick="printOne(1)">Print</button>
+    </div>
+  </div>
+
+  <!-- 3: Execute Ruthlessly -->
+  <div class="art-card">
+    <div class="art-frame">
+      <div class="art-inner style-3">
+        <div class="art-quote">Execute<br>Ruthlessly</div>
+        <br>
+        <div class="art-line"></div>
+      </div>
+    </div>
+    <div class="art-card-footer">
+      <span class="art-name">03 — Execute Ruthlessly</span>
+      <button class="art-print-btn" onclick="printOne(2)">Print</button>
+    </div>
+  </div>
+
+  <!-- 4: Code > Talk -->
+  <div class="art-card">
+    <div class="art-frame">
+      <div class="art-inner style-4">
+        <div class="art-quote">CODE<br>&gt;<br>TALK</div>
+        <div class="art-line"></div>
+      </div>
+    </div>
+    <div class="art-card-footer">
+      <span class="art-name">04 — Code > Talk</span>
+      <button class="art-print-btn" onclick="printOne(3)">Print</button>
+    </div>
+  </div>
+
+  <!-- 5: Ship Fast -->
+  <div class="art-card">
+    <div class="art-frame">
+      <div class="art-inner style-5">
+        <div class="art-quote">SHIP<br>FAST</div>
+        <br>
+        <div class="art-line"></div>
+      </div>
+    </div>
+    <div class="art-card-footer">
+      <span class="art-name">05 — Ship Fast</span>
+      <button class="art-print-btn" onclick="printOne(4)">Print</button>
+    </div>
+  </div>
+
+  <!-- 6: Trust the Process -->
+  <div class="art-card">
+    <div class="art-frame">
+      <div class="art-inner style-6">
+        <div class="art-line"></div>
+        <br>
+        <div class="art-quote">Trust<br>the<br>Process</div>
+        <br>
+        <div class="art-line"></div>
+      </div>
+    </div>
+    <div class="art-card-footer">
+      <span class="art-name">06 — Trust the Process</span>
+      <button class="art-print-btn" onclick="printOne(5)">Print</button>
+    </div>
+  </div>
+
+  <!-- 7: Stay Dangerous -->
+  <div class="art-card">
+    <div class="art-frame">
+      <div class="art-inner style-7">
+        <div class="art-quote">Stay<br>Dangerous</div>
+      </div>
+    </div>
+    <div class="art-card-footer">
+      <span class="art-name">07 — Stay Dangerous</span>
+      <button class="art-print-btn" onclick="printOne(6)">Print</button>
+    </div>
+  </div>
+
+  <!-- 8: No Days Off -->
+  <div class="art-card">
+    <div class="art-frame">
+      <div class="art-inner style-8">
+        <div class="art-quote">NO<br>DAYS<br>OFF</div>
+        <br>
+        <div class="art-line"></div>
+      </div>
+    </div>
+    <div class="art-card-footer">
+      <span class="art-name">08 — No Days Off</span>
+      <button class="art-print-btn" onclick="printOne(7)">Print</button>
+    </div>
+  </div>
+
+</div>
+
+<div class="buy-banner">
+  <h2>Get the Full Print Pack</h2>
+  <p>8 designs. Print-ready. Yours forever. $8.</p>
+  <a href="checkout.html?product=wall-art" class="buy-btn">Buy Now — $8</a>
+</div>
+
+<script>
+  function printOne(idx) {
+    // Open a print dialog focused on that design
+    const cards = document.querySelectorAll('.art-card');
+    const card = cards[idx];
+    const content = card.querySelector('.art-frame').innerHTML;
+    const win = window.open('', '_blank', 'width=800,height=1132');
+    win.document.write(`
+      <!DOCTYPE html>
+      <html><head><meta charset="UTF-8">
+      <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: #fff; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+        .art-frame { width: 21cm; height: 29.7cm; position: relative; background: #fff; }
+        .art-inner { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10%; text-align: center; }
+        .art-inner.style-1 { border: 2px solid #1a1a1a; }
+        .art-inner.style-2 { border: none; }
+        .art-inner.style-3 { border: 3px double #1a1a1a; padding: 12%; }
+        .art-inner.style-4 { background: #1a1a1a; color: #fff; }
+        .art-inner.style-5 {}
+        .art-inner.style-6 { border: 1px solid #ccc; }
+        .art-inner.style-7 {}
+        .art-inner.style-8 { border: 4px solid #1a1a1a; }
+        .art-quote { font-family: Georgia, serif; font-size: 2.5rem; font-weight: 700; line-height: 1.2; text-transform: uppercase; letter-spacing: -0.02em; margin-bottom: 8%; }
+        .art-inner.style-2 .art-quote { font-size: 3.5rem; font-family: -apple-system, sans-serif; font-weight: 900; letter-spacing: 0.05em; }
+        .art-inner.style-4 .art-quote { color: #fff; }
+        .art-inner.style-5 .art-quote { font-family: 'Courier New', monospace; letter-spacing: 0.2em; }
+        .art-inner.style-7 .art-quote { font-size: 3.8rem; font-weight: 900; letter-spacing: -0.04em; font-style: italic; }
+        .art-line { width: 40%; height: 1px; background: currentColor; opacity: 0.3; margin: 0 auto; }
+        .art-inner.style-4 .art-line { background: #fff; }
+        @media print { body { margin: 0; } .art-frame { width: 100vw; height: 100vh; } }
+      </style>
+      </head><body><div class="art-frame">${content}</div></body></html>
+    `);
+    win.document.close();
+    setTimeout(() => win.print(), 300);
+  }
+</script>
+</body>
+</html>

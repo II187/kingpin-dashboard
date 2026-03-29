@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Prompt Pack 2026 — 100 Curated Prompts</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #ffffff;
+      --surface: #f7f7f7;
+      --border: #e5e5e5;
+      --text: #1a1a1a;
+      --muted: #888;
+      --accent: #1a1a1a;
+      --tag-bg: #f0f0f0;
+      --price: #7c3aed;
+    }
+    body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.6; }
+    header { border-bottom: 1px solid var(--border); padding: 24px 40px; display: flex; align-items: center; justify-content: space-between; }
+    .logo { font-size: 1rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; text-decoration: none; color: var(--text); }
+    .price-tag { background: var(--price); color: #fff; border-radius: 20px; padding: 6px 18px; font-size: 0.9rem; font-weight: 700; }
+    .hero { max-width: 760px; margin: 60px auto 40px; padding: 0 24px; }
+    .hero h1 { font-size: 2.6rem; font-weight: 800; line-height: 1.15; margin-bottom: 16px; }
+    .hero p { color: var(--muted); font-size: 1.1rem; margin-bottom: 24px; }
+    .tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 32px; }
+    .tag { background: var(--tag-bg); border-radius: 6px; padding: 4px 12px; font-size: 0.8rem; font-weight: 600; color: var(--muted); }
+    .stats { display: flex; gap: 32px; margin-bottom: 48px; }
+    .stat-num { font-size: 2rem; font-weight: 800; display: block; }
+    .stat-label { color: var(--muted); font-size: 0.85rem; }
+    .container { max-width: 760px; margin: 0 auto; padding: 0 24px 80px; }
+    .category { margin-bottom: 8px; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+    .category-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 20px; cursor: pointer; background: var(--surface);
+      font-weight: 700; font-size: 1rem; user-select: none;
+    }
+    .category-header:hover { background: #efefef; }
+    .cat-meta { display: flex; align-items: center; gap: 12px; }
+    .cat-icon { font-size: 1.3rem; }
+    .cat-count { background: var(--border); border-radius: 20px; padding: 2px 10px; font-size: 0.78rem; color: var(--muted); font-weight: 600; }
+    .cat-chevron { transition: transform 0.2s; font-size: 0.85rem; color: var(--muted); }
+    .category.open .cat-chevron { transform: rotate(180deg); }
+    .prompts-list { display: none; }
+    .category.open .prompts-list { display: block; }
+    .prompt-item {
+      border-top: 1px solid var(--border);
+      padding: 16px 20px;
+      display: flex; align-items: flex-start; gap: 16px;
+      background: #fff;
+    }
+    .prompt-item:hover { background: #fafafa; }
+    .prompt-num { font-size: 0.75rem; color: var(--muted); font-weight: 700; min-width: 28px; padding-top: 2px; }
+    .prompt-text { flex: 1; font-size: 0.92rem; line-height: 1.6; color: var(--text); }
+    .copy-prompt-btn {
+      flex-shrink: 0; background: var(--accent); color: #fff;
+      border: none; border-radius: 6px; padding: 5px 12px;
+      font-size: 0.78rem; font-weight: 600; cursor: pointer;
+      transition: opacity 0.2s; white-space: nowrap;
+    }
+    .copy-prompt-btn:hover { opacity: 0.8; }
+    .copy-prompt-btn.copied { background: #22c55e; }
+    .buy-banner {
+      background: linear-gradient(135deg, #7c3aed, #4f46e5);
+      color: #fff; border-radius: 16px; padding: 40px;
+      text-align: center; margin: 48px 0 0;
+    }
+    .buy-banner h2 { font-size: 1.8rem; margin-bottom: 8px; }
+    .buy-banner p { opacity: 0.85; margin-bottom: 24px; }
+    .buy-btn {
+      display: inline-block; background: #fff; color: #7c3aed;
+      font-weight: 800; font-size: 1rem; padding: 14px 36px;
+      border-radius: 10px; text-decoration: none; transition: transform 0.1s;
+    }
+    .buy-btn:hover { transform: scale(1.04); }
+    @media (max-width: 600px) {
+      header { padding: 16px 20px; }
+      .hero { margin: 32px auto 24px; }
+      .hero h1 { font-size: 1.8rem; }
+      .stats { gap: 20px; }
+    }
+  </style>
+</head>
+<body>
+<header>
+  <a href="index.html" class="logo">KINGPIN DIGITAL</a>
+  <span class="price-tag">$19</span>
+</header>
+
+<div class="hero">
+  <h1>AI Prompt Pack 2026</h1>
+  <p>100 battle-tested prompts across 5 categories. Copy, paste, dominate.</p>
+  <div class="tags">
+    <span class="tag">✍️ Copywriting</span>
+    <span class="tag">💻 Coding</span>
+    <span class="tag">📊 Business</span>
+    <span class="tag">🎨 Image Gen</span>
+    <span class="tag">⚡ Productivity</span>
+  </div>
+  <div class="stats">
+    <div><span class="stat-num">100</span><span class="stat-label">Curated Prompts</span></div>
+    <div><span class="stat-num">5</span><span class="stat-label">Categories</span></div>
+    <div><span class="stat-num">$19</span><span class="stat-label">One-time</span></div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- COPYWRITING -->
+  <div class="category open" id="cat-copy">
+    <div class="category-header" onclick="toggleCat('cat-copy')">
+      <div class="cat-meta"><span class="cat-icon">✍️</span> Copywriting <span class="cat-count">20 prompts</span></div>
+      <span class="cat-chevron">▼</span>
+    </div>
+    <div class="prompts-list">
+      <div class="prompt-item"><span class="prompt-num">01</span><span class="prompt-text">Write a high-converting sales email for [product] targeting [audience]. Use PAS framework (Problem, Agitate, Solution). Max 200 words. Include a strong CTA.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">02</span><span class="prompt-text">Write 5 attention-grabbing Twitter/X hooks about [topic]. Each under 280 chars. Use curiosity, controversy, or bold claims. Make them scroll-stoppers.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">03</span><span class="prompt-text">Rewrite this copy to sound more persuasive: [paste copy]. Keep the same length. Make it more specific, emotional, and action-oriented.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">04</span><span class="prompt-text">Write a landing page headline + subheadline for [product]. The headline must be under 10 words. Make it outcome-focused, not feature-focused.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">05</span><span class="prompt-text">Write 10 subject line variations for an email about [topic]. Mix curiosity, urgency, and personalization. Include open rate predictions for each.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">06</span><span class="prompt-text">Create a product description for [product] using AIDA formula. Highlight 3 key benefits, address the main objection, and close with urgency.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">07</span><span class="prompt-text">Write a 3-part LinkedIn post series about [topic]. Post 1: hook/problem. Post 2: insight/process. Post 3: outcome/CTA. Each under 150 words.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">08</span><span class="prompt-text">Generate 20 FAQ questions a skeptical buyer would ask about [product]. Then write concise, reassuring answers for each.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">09</span><span class="prompt-text">Write a case study in 300 words: Client had [problem], used [solution], achieved [result]. Use specific numbers. Structure: Challenge → Approach → Results.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">10</span><span class="prompt-text">Create a 7-email nurture sequence for [product]. Map each email to a buyer journey stage. Include subject lines, preview text, and body copy.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">11</span><span class="prompt-text">Write ad copy for Facebook/Instagram for [product]. 3 versions: short (25 words), medium (75 words), long (150 words). Each with a different angle.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">12</span><span class="prompt-text">Identify the top 5 objections for [product/service] and write a rebuttal for each. Keep each rebuttal under 50 words. Make them sound human, not salesy.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">13</span><span class="prompt-text">Write a viral-worthy thread about [topic] for X/Twitter. Start with a counterintuitive statement. 10 tweets, each adding a new insight. End with a CTA.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">14</span><span class="prompt-text">Rewrite this headline 10 different ways: [headline]. Vary the angle: fear, aspiration, curiosity, social proof, speed, ease, results, authority, scarcity, humor.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">15</span><span class="prompt-text">Write a YouTube video script intro (60 seconds) for a video about [topic]. Hook in first 5 seconds. Promise a specific outcome. Build anticipation for the rest.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">16</span><span class="prompt-text">Create a scarcity/urgency section for a sales page. Include a countdown rationale, limited spots messaging, and what they miss if they don't act now.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">17</span><span class="prompt-text">Write 5 testimonial templates for [product] that sound authentic, not corporate. Each from a different customer persona. Include specific results and emotions.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">18</span><span class="prompt-text">Write a "before and after" copy block for [product]. Before: paint the painful reality. After: paint the dream outcome. Keep it visceral and specific.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">19</span><span class="prompt-text">Create a referral program email that sounds exciting, not corporate. Subject line included. Make sharing feel like giving a gift, not hawking a product.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">20</span><span class="prompt-text">Write a "founder story" section for a brand. Authentic, vulnerable, compelling. 200 words. Start with a specific moment, not a mission statement.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+    </div>
+  </div>
+
+  <!-- CODING -->
+  <div class="category" id="cat-code">
+    <div class="category-header" onclick="toggleCat('cat-code')">
+      <div class="cat-meta"><span class="cat-icon">💻</span> Coding <span class="cat-count">20 prompts</span></div>
+      <span class="cat-chevron">▼</span>
+    </div>
+    <div class="prompts-list">
+      <div class="prompt-item"><span class="prompt-num">21</span><span class="prompt-text">Review this code for bugs, security issues, and performance problems: [paste code]. List issues by severity. Provide fixed code for each issue.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">22</span><span class="prompt-text">You are a senior [language] developer. Refactor this code to be more readable, maintainable, and efficient: [paste code]. Explain each change made.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">23</span><span class="prompt-text">Write unit tests for this function: [paste function]. Cover: happy path, edge cases, error cases, boundary conditions. Use [testing framework].</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">24</span><span class="prompt-text">Debug this error: [paste error + code]. Explain what caused it, how to fix it, and how to prevent it in the future.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">25</span><span class="prompt-text">Write a [language] function that [description]. Requirements: handles errors gracefully, has JSDoc/docstring comments, follows best practices. Include usage example.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">26</span><span class="prompt-text">Convert this [language A] code to [language B]: [paste code]. Keep the same logic and structure. Add language-idiomatic improvements where appropriate.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">27</span><span class="prompt-text">Design a database schema for [app type]. Include: tables, relationships, indexes, constraints. Provide SQL CREATE statements and explain design decisions.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">28</span><span class="prompt-text">Write a REST API endpoint in [framework] for [action]. Include: input validation, error handling, authentication middleware, and OpenAPI/Swagger docs.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">29</span><span class="prompt-text">Optimize this SQL query for performance: [paste query]. Explain what's slow, show the optimized version, and suggest relevant indexes.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">30</span><span class="prompt-text">Explain this code to a junior developer in simple terms: [paste code]. Then identify 3 things they could learn from studying it deeper.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">31</span><span class="prompt-text">Write a complete Docker setup for a [tech stack] app. Include: Dockerfile, docker-compose.yml, .env.example, and deployment instructions.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">32</span><span class="prompt-text">Create a GitHub Actions CI/CD pipeline for [project type]. Include: lint, test, build, and deploy stages. Add caching for dependencies.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">33</span><span class="prompt-text">Implement [design pattern] in [language] for this use case: [description]. Explain why this pattern fits, show the implementation, and note tradeoffs.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">34</span><span class="prompt-text">Write a web scraper in [language] that extracts [data] from [site type]. Handle: pagination, rate limiting, error retries, and export to JSON/CSV.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">35</span><span class="prompt-text">Build a CLI tool in [language] that [description]. Include: argument parsing, help text, error messages, and a progress indicator for long operations.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">36</span><span class="prompt-text">Write integration tests for this API: [paste endpoints]. Test: auth flows, CRUD operations, error responses, and rate limiting. Use [test framework].</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">37</span><span class="prompt-text">Audit this code for security vulnerabilities: [paste code]. Check for: injection attacks, insecure dependencies, exposed secrets, auth bypass, XSS/CSRF.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">38</span><span class="prompt-text">Generate TypeScript types/interfaces for this JSON structure: [paste JSON]. Make them strict, nested properly, and add JSDoc comments for each field.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">39</span><span class="prompt-text">Implement caching for this function using [Redis/memory cache]: [paste function]. Include: TTL logic, cache invalidation, and hit/miss logging.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">40</span><span class="prompt-text">Write a technical README for this project: [describe project]. Include: overview, installation, usage, API reference, contributing guide, and license section.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+    </div>
+  </div>
+
+  <!-- BUSINESS -->
+  <div class="category" id="cat-biz">
+    <div class="category-header" onclick="toggleCat('cat-biz')">
+      <div class="cat-meta"><span class="cat-icon">📊</span> Business <span class="cat-count">20 prompts</span></div>
+      <span class="cat-chevron">▼</span>
+    </div>
+    <div class="prompts-list">
+      <div class="prompt-item"><span class="prompt-num">41</span><span class="prompt-text">Analyze this business idea: [describe idea]. Assess: market size, competition, monetization potential, risks, and required resources. Rate it 1-10 with reasoning.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">42</span><span class="prompt-text">Create a lean 1-page business plan for [business idea]. Include: problem, solution, target market, revenue model, key metrics, and 90-day milestones.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">43</span><span class="prompt-text">Write a competitive analysis for [product/company]. Compare top 5 competitors across: pricing, features, marketing, weaknesses, and market positioning.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">44</span><span class="prompt-text">Create pricing strategy options for [product/service]. Show 3 tiers with names, prices, features, and target personas. Recommend the best option and why.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">45</span><span class="prompt-text">Write a cold outreach message for [service] targeting [ICP]. Keep it under 100 words. Personalized opener, specific value prop, soft CTA. Not salesy.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">46</span><span class="prompt-text">Generate 30 content ideas for [brand/niche]. Mix: educational, entertaining, promotional, and community-building content. For each, suggest the best platform.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">47</span><span class="prompt-text">Design a customer onboarding flow for [product]. Map: Day 0, 1, 3, 7, 30 touchpoints. Include email content, in-app messages, and success milestones.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">48</span><span class="prompt-text">Write a project proposal for [project] targeting [client type]. Include: executive summary, scope, timeline, team, pricing, and ROI projections.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">49</span><span class="prompt-text">Create a 90-day growth plan for [business at current stage]. Weekly sprints, key focus areas, success metrics, and resource requirements.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">50</span><span class="prompt-text">Identify 10 growth levers for [business]. Rate each by: effort (1-5), impact (1-5), and speed to results. Recommend the top 3 to execute first.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">51</span><span class="prompt-text">Write a SaaS churn reduction plan. Identify top 5 churn reasons, propose solutions for each, and create a win-back email sequence.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">52</span><span class="prompt-text">Create a partnership pitch for [brand A] approaching [brand B]. Value prop for both sides, proposed structure, revenue share model, and next steps.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">53</span><span class="prompt-text">Write a SWOT analysis for [company/idea]. Make it honest, specific, and actionable. For each weakness and threat, suggest a mitigation strategy.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">54</span><span class="prompt-text">Design an affiliate program for [product]. Commission structure, recruitment pitch, promotional materials provided, tracking method, and payout terms.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">55</span><span class="prompt-text">Create a launch checklist for [product type]. Pre-launch (30 days), launch week, and post-launch follow-up. Include marketing, ops, and customer success tasks.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">56</span><span class="prompt-text">Write a job posting for [role] at a startup. Sell the role and company culture. Be specific about impact, not just duties. Avoid corporate jargon.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">57</span><span class="prompt-text">Build a dashboard KPI framework for [business type]. List 10 key metrics, define each, explain how to calculate it, and set benchmark targets.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">58</span><span class="prompt-text">Create a customer persona for [product]. Include: demographics, goals, pain points, objections, preferred channels, and buying triggers. Make it feel real.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">59</span><span class="prompt-text">Write an investor update email for a startup. Include: key metrics, wins this month, challenges, ask/needs, and next month's goals. Professional but direct.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">60</span><span class="prompt-text">Design a referral system for [product] that incentivizes both referrer and referee. Mechanics, reward structure, email copy, and tracking approach.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+    </div>
+  </div>
+
+  <!-- IMAGE GEN -->
+  <div class="category" id="cat-img">
+    <div class="category-header" onclick="toggleCat('cat-img')">
+      <div class="cat-meta"><span class="cat-icon">🎨</span> Image Generation <span class="cat-count">20 prompts</span></div>
+      <span class="cat-chevron">▼</span>
+    </div>
+    <div class="prompts-list">
+      <div class="prompt-item"><span class="prompt-num">61</span><span class="prompt-text">Cinematic product photo of [product] on a dark marble surface, dramatic side lighting, bokeh background, shot with 85mm lens, photorealistic, 8K, commercial photography style</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">62</span><span class="prompt-text">Minimalist logo design for a tech startup called [name], geometric mark, black and white, scalable, clean lines, professional, SVG-ready, Swiss design style</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">63</span><span class="prompt-text">Portrait of a [profession] in a modern office, confident pose, natural window light, shallow depth of field, Fujifilm look, muted earth tones, editorial style</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">64</span><span class="prompt-text">Abstract digital art: [concept/emotion], fluid shapes, neon on dark background, cyberpunk aesthetic, ultra-detailed, generative art style, 4K, no text</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">65</span><span class="prompt-text">Social media post background for [brand], clean gradient from [color 1] to [color 2], subtle texture, space for text overlay, 1080x1080, modern design</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">66</span><span class="prompt-text">Isometric 3D illustration of [scene/concept], flat colors, clean shadows, tech/startup aesthetic, white background, icon style, vector-like quality</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">67</span><span class="prompt-text">Luxury brand mockup: [product] with gold foil packaging, black velvet background, dramatic spotlight, high-end retail aesthetic, photorealistic render</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">68</span><span class="prompt-text">Book cover design for [title/genre], [color palette], [mood: dark/bright/mysterious], bold typography space at top, illustration-heavy, bestseller aesthetic</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">69</span><span class="prompt-text">Hero image for SaaS landing page, abstract concept of [feature], soft purples and blues, clean UI elements floating, 16:9, professional, no faces</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">70</span><span class="prompt-text">Street photography style: [scene description], candid moment, golden hour light, film grain, Leica aesthetic, black and white with selective color</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">71</span><span class="prompt-text">Character concept art for [character description], full body, front view, anime/manga style, clean line art, flat colors, white background, game design ready</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">72</span><span class="prompt-text">Dashboard UI screenshot mockup for [app type], dark mode, data visualization, clean design system, professional SaaS aesthetic, MacBook frame</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">73</span><span class="prompt-text">Architectural visualization of [building/space], interior design, [style: Scandinavian/industrial/luxury], natural light streaming in, photorealistic render, 4K</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">74</span><span class="prompt-text">Food photography: [dish], styled on [surface], overhead flat lay, natural daylight, fresh ingredients surrounding, editorial food magazine style, 8K</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">75</span><span class="prompt-text">Wallpaper design: [theme], seamless pattern, [color palette], suitable for phone and desktop backgrounds, geometric or organic, repeat tile ready</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">76</span><span class="prompt-text">NFT art concept: [theme], digital glitch aesthetic, vibrant colors on black, unique character with [traits], collectible art style, high contrast</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">77</span><span class="prompt-text">Infographic layout for [topic], modern flat design, icon-driven, [color scheme], clear hierarchy, minimal text areas, white space, print-ready</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">78</span><span class="prompt-text">YouTube thumbnail for video about [topic], bold text space, high contrast, emotion-driven face (if applicable), viral thumbnail style, 1280x720</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">79</span><span class="prompt-text">Sci-fi landscape: [setting description], twin suns, alien flora, dramatic sky, cinematic composition, used as movie concept art, Blade Runner aesthetic</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">80</span><span class="prompt-text">Tattoo design: [concept/symbol], black ink line art, fine detail, suitable for [placement], traditional/geometric/minimalist style, no shading, clean lines</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+    </div>
+  </div>
+
+  <!-- PRODUCTIVITY -->
+  <div class="category" id="cat-prod">
+    <div class="category-header" onclick="toggleCat('cat-prod')">
+      <div class="cat-meta"><span class="cat-icon">⚡</span> Productivity <span class="cat-count">20 prompts</span></div>
+      <span class="cat-chevron">▼</span>
+    </div>
+    <div class="prompts-list">
+      <div class="prompt-item"><span class="prompt-num">81</span><span class="prompt-text">Create a weekly schedule template for [role/goals]. Time-block deep work, meetings, admin, and personal time. Optimize for flow state and energy levels.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">82</span><span class="prompt-text">Summarize this document in 5 bullet points, highlighting only actionable insights: [paste document]. Each point must lead to a clear next action.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">83</span><span class="prompt-text">Turn these rough notes into a clean, structured meeting summary with: key decisions, action items (owner + deadline), and open questions: [paste notes]</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">84</span><span class="prompt-text">Prioritize this task list using the Eisenhower Matrix. Assign each task to: Do Now / Schedule / Delegate / Delete. Justify each placement: [paste tasks]</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">85</span><span class="prompt-text">Write a professional email declining [request] while preserving the relationship. Be clear, kind, and leave the door open. No corporate fluff. Under 100 words.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">86</span><span class="prompt-text">Create a daily review template I can use in 5 minutes. Include: wins, blockers, energy check-in, tomorrow's top 3, and one lesson learned.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">87</span><span class="prompt-text">Break down this project into a detailed task list with time estimates: [describe project]. Group by phase. Flag dependencies and potential blockers.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">88</span><span class="prompt-text">Rewrite this email to be shorter and clearer. Cut fluff, keep all key info, fix tone if needed: [paste email]. Target: 50% of original length.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">89</span><span class="prompt-text">Create a personal OKR framework for Q[X] [year]. 3 Objectives, 3 Key Results each. Align with: career, finances, health, and relationships.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">90</span><span class="prompt-text">Build a Notion database structure for tracking [workflow: projects / habits / finances / content]. Include: properties, views (table/kanban/calendar), and filters.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">91</span><span class="prompt-text">I have [X hours] to complete [task]. Create a focused work plan: time blocks, specific deliverables per block, break schedule, and a definition of done.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">92</span><span class="prompt-text">Review my resume/portfolio and suggest 5 specific improvements: [paste content]. Focus on: clarity, impact metrics, keyword optimization, and first impression.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">93</span><span class="prompt-text">Create a Standard Operating Procedure (SOP) for [recurring task]. Step-by-step, with screenshots notes. Format so anyone can follow it without prior knowledge.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">94</span><span class="prompt-text">Generate 10 interview questions for [role], with ideal answer frameworks. Mix: behavioral, situational, and technical. Include red flag signals to watch for.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">95</span><span class="prompt-text">Write a negotiation script for [salary/contract/deal]. Include: opening anchor, counterpoints for common pushbacks, and walk-away conditions. Assertive but professional.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">96</span><span class="prompt-text">Create a learning plan for [skill] over 30 days. Week-by-week breakdown, daily time commitment, resources list, milestone projects, and progress metrics.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">97</span><span class="prompt-text">Analyze my workday: [describe typical day]. Identify time wasters, suggest eliminations, and redesign my day for maximum output in minimum time.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">98</span><span class="prompt-text">Write a clear project brief for [project] that I can hand to a freelancer or team. Include: objective, scope, deliverables, timeline, budget, and success criteria.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">99</span><span class="prompt-text">Create a decision framework for [recurring decision type]. What factors to consider, how to weight them, and a scoring system I can use consistently.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+      <div class="prompt-item"><span class="prompt-num">100</span><span class="prompt-text">Design my ideal morning routine for peak performance. Duration: [X minutes]. Goals: [energy/focus/health]. Make it realistic, science-backed, and sustainable.</span><button class="copy-prompt-btn" onclick="copyPrompt(this)">Copy</button></div>
+    </div>
+  </div>
+
+  <div class="buy-banner">
+    <h2>Get All 100 Prompts</h2>
+    <p>Copy-paste ready. Yours forever. One-time $19.</p>
+    <a href="checkout.html?product=prompt-pack" class="buy-btn">Buy Now — $19</a>
+  </div>
+
+</div>
+
+<script>
+  function toggleCat(id) {
+    document.getElementById(id).classList.toggle('open');
+  }
+  function copyPrompt(btn) {
+    const text = btn.previousElementSibling.textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = '✓ Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+    });
+  }
+</script>
+</body>
+</html>

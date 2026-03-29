@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tech Resume Pack 2026 — 3 ATS-Ready Templates</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f8f8f8;
+      --text: #1a1a1a;
+      --muted: #666;
+      --border: #e0e0e0;
+      --accent: #2563eb;
+      --price: #7c3aed;
+    }
+    body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    header { background: #fff; border-bottom: 1px solid var(--border); padding: 20px 40px; display: flex; align-items: center; justify-content: space-between; }
+    .logo { font-size: 1rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; text-decoration: none; color: var(--text); }
+    .price-tag { background: var(--price); color: #fff; border-radius: 20px; padding: 6px 18px; font-size: 0.9rem; font-weight: 700; }
+    .hero { max-width: 900px; margin: 48px auto 32px; padding: 0 24px; text-align: center; }
+    .hero h1 { font-size: 2.4rem; font-weight: 800; margin-bottom: 12px; }
+    .hero p { color: var(--muted); font-size: 1.1rem; margin-bottom: 24px; }
+    .badges { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 40px; }
+    .badge { background: #fff; border: 1px solid var(--border); border-radius: 20px; padding: 6px 16px; font-size: 0.82rem; font-weight: 600; color: var(--muted); }
+    .tabs { display: flex; gap: 0; max-width: 900px; margin: 0 auto 32px; padding: 0 24px; }
+    .tab-btn { flex: 1; padding: 12px; border: 1px solid var(--border); background: #fff; cursor: pointer; font-size: 0.9rem; font-weight: 600; color: var(--muted); transition: all 0.2s; }
+    .tab-btn:first-child { border-radius: 8px 0 0 8px; }
+    .tab-btn:last-child { border-radius: 0 8px 8px 0; }
+    .tab-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .template-section { display: none; max-width: 900px; margin: 0 auto; padding: 0 24px; }
+    .template-section.active { display: block; }
+    .copy-all-bar { display: flex; align-items: center; justify-content: space-between; background: #fff; border: 1px solid var(--border); border-radius: 12px 12px 0 0; padding: 16px 20px; }
+    .copy-all-bar h2 { font-size: 1rem; font-weight: 700; }
+    .copy-all-btn { background: var(--accent); color: #fff; border: none; border-radius: 8px; padding: 8px 20px; font-size: 0.85rem; font-weight: 700; cursor: pointer; transition: opacity 0.2s; }
+    .copy-all-btn:hover { opacity: 0.85; }
+    .copy-all-btn.copied { background: #22c55e; }
+    .resume-block {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-top: none;
+      border-radius: 0 0 12px 12px;
+      padding: 40px 48px;
+      font-family: Georgia, serif;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      margin-bottom: 32px;
+      color: #111;
+    }
+    /* Template 1 dark */
+    .resume-block.dark { background: #111; color: #e8e8e8; border-color: #333; font-family: 'SF Mono', 'Courier New', monospace; font-size: 0.88rem; }
+    /* Template 2 modern */
+    .resume-block.modern { font-family: -apple-system, 'Segoe UI', sans-serif; border-left: 4px solid var(--accent); }
+    /* Template 3 corporate */
+    .resume-block.corporate { font-family: 'Times New Roman', serif; border-top: 4px solid #1e3a5f; border-radius: 0 0 12px 12px; }
+    .buy-banner {
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      color: #fff; border-radius: 16px; padding: 40px;
+      text-align: center; margin: 48px auto 80px; max-width: 900px; padding-left: 24px; padding-right: 24px;
+    }
+    .buy-banner { margin: 0 24px 80px; max-width: 900px; }
+    .buy-banner h2 { font-size: 1.8rem; margin-bottom: 8px; }
+    .buy-banner p { opacity: 0.85; margin-bottom: 24px; }
+    .buy-btn { display: inline-block; background: #fff; color: #2563eb; font-weight: 800; font-size: 1rem; padding: 14px 36px; border-radius: 10px; text-decoration: none; transition: transform 0.1s; }
+    .buy-btn:hover { transform: scale(1.04); }
+    @media (max-width: 600px) {
+      header { padding: 16px 20px; }
+      .resume-block { padding: 24px 20px; }
+      .hero h1 { font-size: 1.7rem; }
+    }
+  </style>
+</head>
+<body>
+<header>
+  <a href="index.html" class="logo">KINGPIN DIGITAL</a>
+  <span class="price-tag">$12</span>
+</header>
+
+<div class="hero">
+  <h1>Tech Resume Pack 2026</h1>
+  <p>3 ATS-optimized templates for tech professionals. Instantly customizable. Actually hired.</p>
+  <div class="badges">
+    <span class="badge">✅ ATS-Friendly</span>
+    <span class="badge">💻 Software Engineer</span>
+    <span class="badge">🧑‍💼 Freelancer/Consultant</span>
+    <span class="badge">📋 Product Manager</span>
+    <span class="badge">📄 Copy-Paste Ready</span>
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="showTab(0)">Template 1: Software Engineer</button>
+  <button class="tab-btn" onclick="showTab(1)">Template 2: Freelancer</button>
+  <button class="tab-btn" onclick="showTab(2)">Template 3: Product Manager</button>
+</div>
+
+<!-- TEMPLATE 1: SOFTWARE ENGINEER -->
+<div class="template-section active" id="tab-0">
+  <div class="copy-all-bar">
+    <h2>🖥️ Software Engineer — Minimal Dark</h2>
+    <button class="copy-all-btn" onclick="copyAll(0)">Copy All</button>
+  </div>
+  <div class="resume-block dark" id="resume-0">ALEX CHEN
+alex.chen@email.com | github.com/alexchen | linkedin.com/in/alexchen | San Francisco, CA
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+SUMMARY
+Full-stack engineer with 5+ years building high-traffic distributed systems.
+Specialized in Node.js, TypeScript, and React. Led teams of 4-8 engineers.
+Obsessed with clean code, fast deploys, and shipping products users love.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+EXPERIENCE
+
+Senior Software Engineer | Stripe, Inc.                        2022 – Present
+• Redesigned payment webhook system handling 50M+ events/day → 99.98% reliability
+• Led migration from REST to GraphQL API serving 12M monthly active users
+• Built internal developer tooling reducing deployment time by 62%
+• Mentored 4 junior engineers; 3 promoted within 18 months
+• Tech: TypeScript, Node.js, Go, PostgreSQL, Redis, Kubernetes
+
+Software Engineer II | Figma                                   2020 – 2022
+• Implemented real-time collaboration feature used by 2M+ teams globally
+• Optimized canvas rendering engine → 40% faster load times on low-end devices
+• Shipped 3 major features from zero to GA in under 6 months each
+• Tech: TypeScript, React, WebSockets, WebAssembly, C++
+
+Junior Software Engineer | Notion                              2019 – 2020
+• Built custom block editor components (rich text, database, kanban views)
+• Reduced bundle size by 28% through code splitting and lazy loading
+• Wrote 300+ unit and integration tests; increased coverage from 45% to 79%
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+TECHNICAL SKILLS
+
+Languages:    TypeScript, JavaScript, Python, Go, Rust (learning), SQL
+Frontend:     React, Next.js, Vue 3, Tailwind CSS, WebAssembly
+Backend:      Node.js, Express, FastAPI, GraphQL, REST, gRPC
+Databases:    PostgreSQL, MongoDB, Redis, DynamoDB, Supabase
+DevOps:       Docker, Kubernetes, AWS (EC2/S3/Lambda), CI/CD, Terraform
+Tools:        Git, GitHub Actions, Datadog, Sentry, Linear, Figma
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PROJECTS
+
+OpenCharts — Open-source charting library                      github.com/alexchen/opencharts
+• 4,200+ GitHub stars | 180+ contributors | used by 600+ production apps
+• Built with TypeScript + Canvas API; zero external dependencies
+
+SolTrader — Solana trading dashboard                           personal project
+• Real-time DEX aggregator processing 10k+ transactions/min
+• Full-stack: Next.js + Rust backend + Helius RPC
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+EDUCATION
+
+B.S. Computer Science | UC Berkeley                            2015 – 2019
+GPA: 3.8 | Relevant: Algorithms, Distributed Systems, Machine Learning</div>
+</div>
+
+<!-- TEMPLATE 2: FREELANCER -->
+<div class="template-section" id="tab-1">
+  <div class="copy-all-bar">
+    <h2>🧑‍💼 Freelancer/Consultant — Clean Modern</h2>
+    <button class="copy-all-btn" onclick="copyAll(1)">Copy All</button>
+  </div>
+  <div class="resume-block modern" id="resume-1">MAYA RODRIGUEZ
+Freelance Software Consultant & Technical Lead
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+maya@mayatech.io | +1 (555) 890-1234 | mayatech.io | Austin, TX
+LinkedIn: /in/mayarodriguez | Toptal Top 3% | Upwork Top Rated Plus
+
+WHAT I DO
+I help funded startups and scale-ups build production-grade web applications.
+From MVP to Series B architecture. I've shipped 40+ projects across fintech,
+healthtech, and SaaS. No agency overhead. Just senior engineering that delivers.
+
+EXPERTISE
+✦ Full-Stack Development: React, Next.js, Node.js, PostgreSQL
+✦ System Architecture: Microservices, API design, database optimization
+✦ Team Leadership: Tech lead for distributed teams up to 12 engineers
+✦ Consulting: Code audits, performance reviews, tech stack decisions
+
+SELECTED CLIENT WORK
+
+HealthBridge (Series A, $8M raised)                           2023 – 2024
+Technical Lead & Senior Engineer — Remote
+• Architected HIPAA-compliant patient data platform from scratch
+• Reduced API response time from 2.3s → 180ms (12x improvement)
+• Led team of 5 engineers through successful Series A due diligence
+• Tech: Next.js, Node.js, PostgreSQL, AWS, Stripe, Twilio
+• Outcome: Platform now serves 45,000+ patients across 12 states
+
+FinDash (YC W23)                                              2023
+Full-Stack Consultant — Contract (6 months)
+• Built real-time financial analytics dashboard for institutional traders
+• Integrated 14 brokerage APIs with unified data normalization layer
+• Shipped MVP in 10 weeks; company grew to 200 paying customers by month 4
+• Tech: React, FastAPI, TimescaleDB, WebSockets, Redis
+
+PayStream (Stripe partner)                                    2022 – 2023
+Senior Engineer — Part-time retainer
+• Rebuilt payment reconciliation engine handling $50M+/month
+• Automated 90% of manual accounting workflows (saved 200 hrs/month)
+• Tech: Node.js, TypeScript, PostgreSQL, Stripe API, QuickBooks API
+
+PREVIOUS FULL-TIME
+
+Lead Engineer | TechCorp Solutions                            2019 – 2022
+Junior → Senior → Lead in 3 years. Managed tech roadmap, hired 6 engineers.
+
+TOOLS & TECHNOLOGIES
+Languages: TypeScript, JavaScript, Python, SQL
+Frontend:  React, Next.js, Tailwind, Framer Motion
+Backend:   Node.js, FastAPI, GraphQL, REST
+Data:      PostgreSQL, MongoDB, Redis, BigQuery
+Infra:     AWS, Vercel, Docker, Terraform, GitHub Actions
+Comms:     Linear, Notion, Loom, Slack, Figma
+
+EDUCATION & CREDENTIALS
+B.S. Software Engineering | University of Texas at Austin     2015 – 2019
+AWS Certified Solutions Architect — Associate                 2022
+Google Cloud Professional Developer                           2023
+
+RATES & AVAILABILITY
+Hourly: $150–200/hr | Project-based available
+Availability: 3-4 clients/month | Starting: immediate
+References: 12 case studies available at mayatech.io/work</div>
+</div>
+
+<!-- TEMPLATE 3: PRODUCT MANAGER -->
+<div class="template-section" id="tab-2">
+  <div class="copy-all-bar">
+    <h2>📋 Product Manager — Structured Corporate</h2>
+    <button class="copy-all-btn" onclick="copyAll(2)">Copy All</button>
+  </div>
+  <div class="resume-block corporate" id="resume-2">                           JORDAN PARK
+                    Senior Product Manager | B2B SaaS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   jordan.park@gmail.com  |  (415) 555-7823  |  New York, NY 10001
+   LinkedIn: linkedin.com/in/jordanpark  |  Portfolio: jordanpark.pm
+
+PROFESSIONAL SUMMARY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Results-driven Senior Product Manager with 7 years of experience in B2B SaaS,
+enterprise software, and developer tools. Track record of launching products that
+achieve measurable business outcomes. Data-informed decision maker who bridges
+technical complexity and business strategy. Managed products with $0 to $12M ARR.
+
+PROFESSIONAL EXPERIENCE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+SENIOR PRODUCT MANAGER | Datadog                     New York, NY | 2021 – Present
+Platform & Integrations Team (500+ integrations, 26,000+ enterprise customers)
+
+KEY ACHIEVEMENTS:
+• Launched Datadog's CI Visibility product: grew from 0 to $4.2M ARR in 18 months
+• Drove 34% increase in integration adoption through redesigned marketplace UX
+• Reduced customer time-to-value from 14 days → 3 days via onboarding overhaul
+• Partnered with Sales to create enterprise expansion playbook (avg deal: +$180K)
+• Managed backlog for 8-person engineering team across 3 geographic time zones
+
+METHODS: Jobs-to-be-Done, OKRs, A/B testing, user interviews (50+/quarter)
+METRICS: DAU/MAU, activation rate, NPS, expansion revenue, churn rate
+
+PRODUCT MANAGER | Intercom                           San Francisco, CA | 2019 – 2021
+Messenger & Mobile Team
+
+KEY ACHIEVEMENTS:
+• Shipped in-app survey feature: 85% adoption within 90 days of launch
+• Increased mobile DAU by 28% through redesigned notification strategy
+• Ran 40+ A/B experiments generating $2.3M in incremental annual revenue
+• Built product specs for 6 major features; all shipped on time and on budget
+• Collaborated with 4 engineering squads and 2 design leads simultaneously
+
+ASSOCIATE PRODUCT MANAGER | HubSpot                  Cambridge, MA | 2017 – 2019
+CRM & Contacts Team (APM rotational program)
+
+KEY ACHIEVEMENTS:
+• Redesigned contact import flow → reduced drop-off rate by 41%
+• Shipped bulk action tooling used by 180,000+ businesses
+• Presented roadmap to C-suite quarterly; consistently met 92% of commitments
+
+CORE COMPETENCIES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Product Strategy:      Roadmapping, prioritization frameworks, OKR setting
+Research & Discovery:  User interviews, surveys, market analysis, competitor research
+Data & Analytics:      SQL (intermediate), Mixpanel, Amplitude, Looker, A/B testing
+Technical:             API concepts, data modeling, engineering sprint planning
+Stakeholder Mgmt:      Executive presentations, cross-functional alignment, GTM
+Tools:                 Jira, Linear, Notion, Figma, Miro, Confluence, Productboard
+
+EDUCATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+M.B.A., Technology Management | Columbia Business School        2017
+B.S., Information Systems       | NYU Stern School of Business  2015
+Certified Scrum Product Owner (CSPO)                            2020
+Product School — Product Management Certificate                 2019
+
+ADDITIONAL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+• Speaker: ProductCon 2024 — "Measuring What Matters in Platform Products"
+• Mentor: Product Buds (mentoring 3 aspiring PMs since 2022)
+• Writing: productthinking.substack.com (4,200 subscribers)</div>
+</div>
+
+<div class="buy-banner" style="margin: 0 24px 80px; border-radius: 16px; padding: 40px; text-align: center; background: linear-gradient(135deg, #2563eb, #7c3aed); color: #fff;">
+  <h2>Get All 3 Templates</h2>
+  <p>ATS-optimized. Fully editable. Land your next role. $12.</p>
+  <a href="checkout.html?product=resume-pack" class="buy-btn">Buy Now — $12</a>
+</div>
+
+<script>
+  function showTab(idx) {
+    document.querySelectorAll('.template-section').forEach((s, i) => {
+      s.classList.toggle('active', i === idx);
+    });
+    document.querySelectorAll('.tab-btn').forEach((b, i) => {
+      b.classList.toggle('active', i === idx);
+    });
+  }
+  function copyAll(idx) {
+    const text = document.getElementById('resume-' + idx).textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      const btns = document.querySelectorAll('.copy-all-btn');
+      btns[idx].textContent = '✓ Copied!';
+      btns[idx].classList.add('copied');
+      setTimeout(() => { btns[idx].textContent = 'Copy All'; btns[idx].classList.remove('copied'); }, 2000);
+    });
+  }
+</script>
+</body>
+</html>
