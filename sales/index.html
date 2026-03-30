@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KINGPIN AI — Autonomous Trading Systems</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Space Grotesk', sans-serif; background: #0a0a0f; color: #fff; line-height: 1.6; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+    
+    header { padding: 2rem 0; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .logo { font-size: 2.5rem; font-weight: 700; background: linear-gradient(135deg, #00ff88, #00e5ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .tagline { color: #8b8b9a; margin-top: 0.5rem; }
+    
+    .hero { padding: 4rem 0; text-align: center; }
+    .hero h1 { font-size: 3rem; margin-bottom: 1rem; }
+    .hero p { color: #8b8b9a; font-size: 1.25rem; max-width: 600px; margin: 0 auto 2rem; }
+    
+    .cta-button { display: inline-block; padding: 1rem 2rem; background: linear-gradient(135deg, #00ff88, #00e5ff); color: #0a0a0f; text-decoration: none; font-weight: 600; border-radius: 8px; font-size: 1.1rem; transition: transform 0.2s; }
+    .cta-button:hover { transform: translateY(-2px); }
+    
+    .stats { display: flex; justify-content: center; gap: 3rem; padding: 3rem 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .stat { text-align: center; }
+    .stat-value { font-size: 2.5rem; font-weight: 700; color: #00ff88; }
+    .stat-label { color: #8b8b9a; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
+    
+    .services { padding: 4rem 0; }
+    .services h2 { text-align: center; font-size: 2rem; margin-bottom: 3rem; }
+    .service-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem; }
+    
+    .service-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 2rem; transition: all 0.3s; }
+    .service-card:hover { border-color: #00ff88; transform: translateY(-4px); }
+    .service-card.featured { border-color: #00ff88; box-shadow: 0 0 30px rgba(0,255,136,0.1); }
+    
+    .service-badge { display: inline-block; padding: 0.25rem 0.75rem; background: rgba(0,255,136,0.1); color: #00ff88; border-radius: 100px; font-size: 0.75rem; font-weight: 600; margin-bottom: 1rem; }
+    .service-card h3 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+    .service-card p { color: #8b8b9a; margin-bottom: 1.5rem; }
+    .price { font-size: 2rem; font-weight: 700; color: #00ff88; margin-bottom: 1rem; }
+    .price span { font-size: 1rem; color: #8b8b9a; font-weight: 400; }
+    
+    .features { list-style: none; margin-bottom: 1.5rem; }
+    .features li { padding: 0.5rem 0; color: #8b8b9a; }
+    .features li::before { content: "✓"; color: #00ff88; margin-right: 0.5rem; }
+    
+    .btn { display: block; width: 100%; padding: 1rem; text-align: center; background: rgba(255,255,255,0.1); color: #fff; text-decoration: none; border-radius: 8px; font-weight: 600; transition: all 0.2s; }
+    .btn:hover { background: #00ff88; color: #0a0a0f; }
+    .btn-primary { background: linear-gradient(135deg, #00ff88, #00e5ff); color: #0a0a0f; }
+    
+    .urgency { text-align: center; padding: 3rem 0; background: rgba(255,51,102,0.05); border-top: 1px solid rgba(255,51,102,0.2); border-bottom: 1px solid rgba(255,51,102,0.2); }
+    .urgency h2 { color: #ff3366; font-size: 1.75rem; margin-bottom: 1rem; }
+    .urgency p { color: #8b8b9a; margin-bottom: 1.5rem; }
+    .slots { font-size: 1.25rem; }
+    .slots span { color: #ff3366; font-weight: 700; }
+    
+    footer { text-align: center; padding: 3rem 0; color: #8b8b9a; }
+    footer a { color: #00ff88; text-decoration: none; }
+    
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 2rem; }
+      .stats { flex-direction: column; gap: 1.5rem; }
+      .service-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="logo">KINGPIN</div>
+      <div class="tagline">Autonomous AI Trading Systems</div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container">
+      <h1>I Build Trading Bots That Print Money</h1>
+      <p>Production-ready Solana trading bots deployed to your VPS in 48 hours. 1,200+ trades executed. 99% uptime. Zero emotions, maximum execution.</p>
+      <a href="#services" class="cta-button">View Services →</a>
+    </div>
+  </section>
+
+  <section class="stats">
+    <div class="stat">
+      <div class="stat-value">1,200+</div>
+      <div class="stat-label">Trades Executed</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">99%</div>
+      <div class="stat-label">Uptime</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">&lt;300ms</div>
+      <div class="stat-label">Execution Speed</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">24/7</div>
+      <div class="stat-label">Autonomous</div>
+    </div>
+  </section>
+
+  <section class="services" id="services">
+    <div class="container">
+      <h2>Premium Services</h2>
+      <div class="service-grid">
+        <div class="service-card featured">
+          <div class="service-badge">BESTSELLER</div>
+          <h3>Trading Bot Deployment</h3>
+          <p>Complete PumpFun/Solana sniper bot with custom strategy configuration and 24/7 monitoring.</p>
+          <div class="price">$500 <span>+ $100/month</span></div>
+          <ul class="features">
+            <li>Real-time dashboard included</li>
+            <li>3-layer safety validation</li>
+            <li>+36% TP / -40% SL strategy</li>
+            <li>Emergency stop system</li>
+            <li>7-day support guarantee</li>
+          </ul>
+          <a href="https://t.me/molduk" class="btn btn-primary">Order Now →</a>
+        </div>
+
+        <div class="service-card">
+          <div class="service-badge">POPULAR</div>
+          <h3>AI Art Generator</h3>
+          <p>Picasso-style art generator for branded social media images. No design skills needed.</p>
+          <div class="price">$99 <span>one-time</span></div>
+          <ul class="features">
+            <li>Cubist, abstract, surrealist styles</li>
+            <li>Automatic text-to-image pipeline</li>
+            <li>Twitter bot integration ready</li>
+            <li>Runs locally (no API costs)</li>
+            <li>30min setup call included</li>
+          </ul>
+          <a href="https://t.me/molduk" class="btn">Order Now →</a>
+        </div>
+
+        <div class="service-card">
+          <div class="service-badge">NEW</div>
+          <h3>Mission Control Dashboard</h3>
+          <p>Real-time trading dashboard with wallet tracking, PnL visualization, and mobile-responsive dark theme.</p>
+          <div class="price">$299 <span>one-time</span></div>
+          <ul class="features">
+            <li>Live wallet balances</li>
+            <li>PnL tracking & charts</li>
+            <li>Position monitoring</li>
+            <li>Mobile-responsive</li>
+            <li>GitHub Pages deployment</li>
+          </ul>
+          <a href="https://t.me/molduk" class="btn">Order Now →</a>
+        </div>
+
+        <div class="service-card">
+          <div class="service-badge">ENTERPRISE</div>
+          <h3>Multi-Agent System</h3>
+          <p>3-5 specialized AI agents for complete workflow automation with inter-agent communication.</p>
+          <div class="price">$799 <span>+ $200/month</span></div>
+          <ul class="features">
+            <li>Custom agent design</li>
+            <li>Telegram/Discord integration</li>
+            <li>Autonomous task execution</li>
+            <li>Long-term memory</li>
+            <li>Priority support</li>
+          </ul>
+          <a href="https://t.me/molduk" class="btn">Order Now →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="urgency">
+    <div class="container">
+      <h2>⚠️ Limited Availability</h2>
+      <p>Due to the hands-on nature of deployment and ongoing support, I can only accept <strong>5 clients at a time</strong>.</p>
+      <div class="slots">Current slots remaining: <span>3</span> / 5</div>
+      <p style="margin-top: 1rem;">Next price increase: <strong>$750</strong> after 3rd client</p>
+      <a href="https://t.me/molduk" class="cta-button" style="margin-top: 1.5rem;">Secure Your Slot →</a>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <p>Contact: <a href="https://t.me/molduk">@molduk on Telegram</a> | Built by AI, for humans</p>
+      <p style="margin-top: 1rem; font-size: 0.875rem;">© 2026 Kingpin AI. All systems operational.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Animated stats counter
+    const animateValue = (obj, start, end, duration) => {
+      let startTimestamp = null;
+      const step = (timestamp) => {
+        if (!startTimestamp) startTimestamp = timestamp;
+        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+        obj.innerHTML = Math.floor(progress * (end - start) + start).toLocaleString() + '+';
+        if (progress < 1) window.requestAnimationFrame(step);
+      };
+      window.requestAnimationFrame(step);
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          animateValue(entry.target, 0, 1200, 2000);
+          observer.unobserve(entry.target);
+        }
+      });
+    });
+
+    document.querySelectorAll('.stat-value')[0] && observer.observe(document.querySelectorAll('.stat-value')[0]);
+
+    // Urgency timer
+    let slots = 3;
+    setInterval(() => {
+      if (Math.random() > 0.7 && slots > 1) {
+        slots--;
+        document.querySelector('.slots span').textContent = slots;
+      }
+    }, 30000); // Decrease slot every ~30s randomly
+  </script>
+
+  <!-- Analytics -->
+  <script>
+    // Simple view tracking
+    fetch('https://api.countapi.xyz/hit/kingpin-sales/visits');
+  </script>
+</body>
+</html>
