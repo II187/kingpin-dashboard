@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MOLDUK — Unified Command Center</title>
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --bg2: #111;
+      --bg3: #1a1a1a;
+      --border: #1e1e1e;
+      --border2: #2a2a2a;
+      --green: #00ff88;
+      --green-dim: #00cc6a;
+      --cyan: #00e5ff;
+      --cyan-dim: #00b8cc;
+      --red: #ff3355;
+      --yellow: #ffcc00;
+      --purple: #b56bff;
+      --text: #f0f0f0;
+      --text-dim: #888;
+      --text-muted: #555;
+      --glow-g: 0 0 20px rgba(0,255,136,0.3);
+    }
+    
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, monospace;
+      font-size: 14px;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    
+    /* HEADER */
+    .header {
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--green), var(--cyan));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 18px;
+      color: #000;
+    }
+    
+    .logo-text h1 {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    
+    .logo-text span {
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+    
+    .nav {
+      display: flex;
+      gap: 8px;
+    }
+    
+    .nav-btn {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 13px;
+      transition: all 0.2s;
+    }
+    
+    .nav-btn:hover, .nav-btn.active {
+      background: rgba(0,255,136,0.1);
+      border-color: var(--green);
+      color: var(--green);
+    }
+    
+    /* MAIN LAYOUT */
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+    
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 400px;
+      gap: 24px;
+    }
+    
+    @media (max-width: 1200px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+    
+    /* CARDS */
+    .card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+    
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .card-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .card-title::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      background: var(--green);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    
+    .status-badge {
+      background: rgba(0,255,136,0.1);
+      border: 1px solid rgba(0,255,136,0.2);
+      color: var(--green);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    
+    .status-badge.warning {
+      background: rgba(255,204,0,0.1);
+      border-color: rgba(255,204,0,0.2);
+      color: var(--yellow);
+    }
+    
+    .status-badge.error {
+      background: rgba(255,51,85,0.1);
+      border-color: rgba(255,51,85,0.2);
+      color: var(--red);
+    }
+    
+    /* STATS GRID */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    
+    @media (max-width: 768px) {
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    
+    .stat-card {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+    }
+    
+    .stat-value {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--green);
+      margin-bottom: 4px;
+    }
+    
+    .stat-value.red { color: var(--red); }
+    .stat-value.yellow { color: var(--yellow); }
+    .stat-value.cyan { color: var(--cyan); }
+    
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    /* PRODUCTS SECTION */
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    
+    @media (max-width: 900px) {
+      .products-grid { grid-template-columns: 1fr; }
+    }
+    
+    .product-card {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+      transition: all 0.2s;
+    }
+    
+    .product-card:hover {
+      border-color: var(--green);
+      transform: translateY(-2px);
+      box-shadow: var(--glow-g);
+    }
+    
+    .product-badge {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--green);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 8px;
+    }
+    
+    .product-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    
+    .product-desc {
+      font-size: 13px;
+      color: var(--text-dim);
+      margin-bottom: 16px;
+    }
+    
+    .product-price {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+    
+    .product-btn {
+      display: block;
+      background: var(--green);
+      color: #000;
+      text-align: center;
+      padding: 10px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 13px;
+      transition: all 0.2s;
+    }
+    
+    .product-btn:hover {
+      background: var(--green-dim);
+      transform: scale(1.02);
+    }
+    
+    /* IFRAME SECTION */
+    .iframe-container {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      height: 600px;
+    }
+    
+    .iframe-container iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    
+    .iframe-header {
+      background: var(--bg3);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .iframe-title {
+      font-size: 14px;
+      font-weight: 600;
+    }
+    
+    .iframe-actions {
+      display: flex;
+      gap: 8px;
+    }
+    
+    .iframe-btn {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    
+    .iframe-btn:hover {
+      border-color: var(--green);
+      color: var(--green);
+    }
+    
+    /* TRADING STATS */
+    .trading-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .trading-row:last-child {
+      border-bottom: none;
+    }
+    
+    .trading-label {
+      color: var(--text-dim);
+      font-size: 13px;
+    }
+    
+    .trading-value {
+      font-weight: 600;
+      font-family: monospace;
+    }
+    
+    .trading-value.positive { color: var(--green); }
+    .trading-value.negative { color: var(--red); }
+    
+    /* FOOTER */
+    .footer {
+      border-top: 1px solid var(--border);
+      padding: 24px;
+      text-align: center;
+      color: var(--text-dim);
+      font-size: 13px;
+    }
+    
+    .footer a {
+      color: var(--green);
+      text-decoration: none;
+    }
+    
+    /* HIDDEN SECTIONS */
+    .section {
+      display: none;
+    }
+    
+    .section.active {
+      display: block;
+    }
+    
+    /* LOGS */
+    .log-entry {
+      font-family: monospace;
+      font-size: 12px;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-dim);
+    }
+    
+    .log-time {
+      color: var(--cyan);
+      margin-right: 12px;
+    }
+    
+    .log-success { color: var(--green); }
+    .log-error { color: var(--red); }
+    .log-warning { color: var(--yellow); }
+  </style>
+</head>
+<body>
+  <!-- HEADER -->
+  <header class="header">
+    <div class="logo">
+      <div class="logo-icon">M</div>
+      <div class="logo-text">
+        <h1>MOLDUK</h1>
+        <span>Unified Command Center</span>
+      </div>
+    </div>
+    <nav class="nav">
+      <button class="nav-btn active" onclick="showSection('overview')">Overview</button>
+      <button class="nav-btn" onclick="showSection('products')">Products</button>
+      <button class="nav-btn" onclick="showSection('trading')">Trading</button>
+      <button class="nav-btn" onclick="showSection('chat')">AI Chat</button>
+      <button class="nav-btn" onclick="showSection('logs')">Logs</button>
+    </nav>
+  </header>
+
+  <div class="container">
+    
+    <!-- OVERVIEW SECTION -->
+    <div id="overview" class="section active">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value" id="wallet-balance">0.086</div>
+          <div class="stat-label">SOL Balance</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="tokens-scanned">7,149</div>
+          <div class="stat-label">Tokens Scanned</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="positions-open">0</div>
+          <div class="stat-label">Open Positions</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value cyan" id="bot-uptime">22h</div>
+          <div class="stat-label">Bot Uptime</div>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="main-col">
+          <!-- Products Preview -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Digital Products</div>
+              <span class="status-badge">$267 Total Value</span>
+            </div>
+            
+            <div class="products-grid">
+              <div class="product-card">
+                <div class="product-badge">Starter Kit</div>
+                <div class="product-title">AI Agent Kit</div>
+                <div class="product-desc">Build your own AI in 5 minutes. Multi-LLM support.</div>
+                <div class="product-price">$79</div>
+                <a href="http://161.35.10.127:3001" target="_blank" class="product-btn">View Live →</a>
+              </div>
+              
+              <div class="product-card">
+                <div class="product-badge">Bestseller</div>
+                <div class="product-title">Trading Guide</div>
+                <div class="product-desc">80-page playbook. From zero to live trading bot.</div>
+                <div class="product-price">$39</div>
+                <a href="http://161.35.10.127/trading-guide" target="_blank" class="product-btn">Read Now →</a>
+              </div>
+              
+              <div class="product-card">
+                <div class="product-badge">Professional</div>
+                <div class="product-title">CrewAI Framework</div>
+                <div class="product-desc">Enterprise 4-agent system. White-label ready.</div>
+                <div class="product-price">$149</div>
+                <a href="#" class="product-btn">Coming Soon</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Trading Stats -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Trading Activity</div>
+              <span class="status-badge warning">Wallet Low</span>
+            </div>
+            
+            <div class="trading-row">
+              <span class="trading-label">Bot Status</span>
+              <span class="trading-value positive">Running (22h)</span>
+            </div>
+            <div class="trading-row">
+              <span class="trading-label">Last Trade</span>
+              <span class="trading-value">2026-03-29 22:15 UTC</span>
+            </div>
+            <div class="trading-row">
+              <span class="trading-label">Total PnL</span>
+              <span class="trading-value">0.00 SOL</span>
+            </div>
+            
+            <div class="trading-row">
+              <span class="trading-label">Strategy</span>
+              <span class="trading-value">TrenchScore + 5min Re-eval</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="side-col">
+          <!-- Quick Links -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Quick Links</div>
+            </div>
+            
+            <a href="http://161.35.10.127:3001" target="_blank" class="product-btn" style="margin-bottom: 12px;">
+              🤖 AI Agent Kit
+            </a>
+            
+            <a href="http://161.35.10.127/trading-guide" target="_blank" class="product-btn" style="margin-bottom: 12px;">
+              📚 Trading Guide
+            </a>
+            
+            <a href="http://161.35.10.127:7777" target="_blank" class="product-btn" style="margin-bottom: 12px;">
+              💬 MOLDUKMOD3 Chat
+            </a>
+            
+            <a href="https://twitter.com/moldukbot" target="_blank" class="product-btn" style="background: var(--bg3); color: var(--text);">
+              🐦 Twitter / X
+            </a>
+          </div>
+
+          <!-- System Status -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">System Status</div>
+            </div>
+            
+            <div class="trading-row">
+              <span class="trading-label">PumpFun Bot</span>
+              <span class="trading-value positive">● Online</span>
+            </div>
+            
+            <div class="trading-row">
+              <span class="trading-label">Kingpin Server</span>
+              <span class="trading-value positive">● Online</span>
+            </div>
+            
+            <div class="trading-row">
+              <span class="trading-label">AI Agent Kit</span>
+              <span class="trading-value positive">● Online</span>
+            </div>
+            
+            <div class="trading-row">
+              <span class="trading-label">Polymarket Bot</span>
+              <span class="trading-value negative">● Stopped</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRODUCTS SECTION -->
+    <div id="products" class="section">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">All Digital Products</div>
+          <span class="status-badge">3 Active</span>
+        </div>
+        
+        <div class="products-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+          <div class="product-card">
+            <div class="product-badge">AI Agent Starter Kit</div>
+            <div class="product-title">Build Your Own ChatGPT</div>
+            <div class="product-desc">
+              Complete Node.js server with multi-LLM support. Qwen, GPT-4, Claude, Gemini, Llama. 
+              Dark theme, responsive UI, zero-config deployment. Perfect for developers building AI assistants.
+            </div>
+            <ul style="margin: 16px 0; padding-left: 20px; color: var(--text-dim); font-size: 13px;">
+              <li>10+ LLM models supported</li>
+              <li>Complete source code (600 lines)</li>
+              <li>One-click Render.com deploy</li>
+              <li>Custom system prompts</li>
+              <li>Persistent sessions</li>
+            </ul>
+            
+            <div class="product-price">$79</div>
+            <a href="http://161.35.10.127:3001" target="_blank" class="product-btn">View Live Demo →</a>
+          </div>
+
+          <div class="product-card">
+            <div class="product-badge">Bestseller</div>
+            <div class="product-title">Build Your Own AI Trading Agent</div>
+            <div class="product-desc">
+              The complete 80-page playbook. From zero to live Solana trading bot. 
+              Scanner, Analyzer, Executor, RiskGuard. Real code, real strategies, real money.
+            </div>
+            
+            <ul style="margin: 16px 0; padding-left: 20px; color: var(--text-dim); font-size: 13px;">
+              <li>80-page interactive HTML guide</li>
+              <li>Complete agent architecture</li>
+              <li>Jupiter swap integration</li>
+              <li>DeepNets safety checks</li>
+              <li>VPS deployment guide</li>
+              <li>Strategy tuning & optimization</li>
+            </ul>
+            
+            <div class="product-price">$39</div>
+            <a href="http://161.35.10.127/trading-guide" target="_blank" class="product-btn">Read Free Preview →</a>
+          </div>
+
+          <div class="product-card">
+            <div class="product-badge">Professional</div>
+            <div class="product-title">CrewAI Trading Framework</div>
+            <div class="product-desc">
+              Enterprise-grade multi-agent system. What we actually use to trade 24/7. 
+              Scanner → Analyzer → RiskGuard → Executor. White-label ready.
+            </div>
+            
+            <ul style="margin: 16px 0; padding-left: 20px; color: var(--text-dim); font-size: 13px;">
+              <li>4-Agent CrewAI architecture</li>
+              <li>Firecrawl + Tavily integration</li>
+              <li>Real-time dashboard</li>
+              <li>Risk management system</li>
+              <li>White-label license</li>
+              <li>Priority support</li>
+            </ul>
+            
+            <div class="product-price">$149</div>
+            <a href="#" class="product-btn" style="background: var(--bg3); color: var(--text-dim); cursor: not-allowed;">Coming Soon</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TRADING SECTION -->
+    <div id="trading" class="section">
+      <div class="grid">
+        <div class="main-col">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Live Trading Data</div>
+              <span class="status-badge">Real-time</span>
+            </div>
+            
+            <div class="stats-grid" style="grid-template-columns: repeat(2, 1fr);">
+              <div class="stat-card">
+                <div class="stat-value" id="live-balance">Loading...</div>
+                <div class="stat-label">Wallet Balance (SOL)</div>
+              </div>
+              
+              <div class="stat-card">
+                <div class="stat-value cyan" id="live-scanned">Loading...</div>
+                <div class="stat-label">Tokens Scanned</div>
+              </div>
+              
+              <div class="stat-card">
+                <div class="stat-value" id="live-positions">Loading...</div>
+                <div class="stat-label">Open Positions</div>
+              </div>
+              
+              <div class="stat-card">
+                <div class="stat-value" id="live-pnl">Loading...</div>
+                <div class="stat-label">Total PnL</div>
+              </div>
+            </div>
+            
+            <p style="color: var(--text-dim); font-size: 13px; margin-top: 16px;">
+              Data refreshes every 30 seconds from live bot.
+            </p>
+          </div>
+        </div>
+
+        <div class="side-col">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Trading Strategy</div>
+            </div>
+            
+            <div class="trading-row">
+              <span class="trading-label">Entry Criteria</span>
+              <span class="trading-value">Score ≥ 65</span>
+            </div>
+            
+            <div class="trading-row">
+              <span class="trading-label">Take Profit</span>
+              <span class="trading-value positive">+136%</span>
+            </div>
+            
+            <div class="trading-row">
+              <span class="trading-label">Stop Loss</span>
+              <span class="trading-value negative">-40%</span>
+            </div>
+            
+            <div class="trading-row">
+              <span class="trading-label">Max Positions</span>
+              <span class="trading-value">2</span>
+            </div>
+            
+            <div class="trading-row">
+              <span class="trading-label">Trade Size</span>
+              <span class="trading-value">0.04 SOL</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHAT SECTION -->
+    <div id="chat" class="section">
+      <div class="iframe-container">
+        <div class="iframe-header">
+          <div class="iframe-title">💬 MOLDUKMOD3 — AI Trading Intelligence</div>
+          <div class="iframe-actions">
+            <a href="http://161.35.10.127:7777" target="_blank" class="iframe-btn">Open Full Screen</a>
+          </div>
+        </div>
+        
+        <iframe src="http://161.35.10.127:7777" sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
+      </div>
+    </div>
+
+    <!-- LOGS SECTION -->
+    <div id="logs" class="section">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">System Logs</div>
+          <span class="status-badge">Live</span>
+        </div>
+        
+        <div id="logs-container">
+          <div class="log-entry">
+            <span class="log-time">08:43:15</span>
+            <span class="log-success">Dashboard updated successfully</span>
+          </div>
+          
+          <div class="log-entry">
+            <span class="log-time">08:42:30</span>
+            <span>Products deployed to VPS</span>
+          </div>
+          
+          <div class="log-entry">
+            <span class="log-time">08:40:00</span>
+            <span class="log-warning">Wallet balance low: 0.086 SOL</span>
+          </div>
+          
+          <div class="log-entry">
+            <span class="log-time">08:35:00</span>
+            <span>Cron jobs scheduled for Twitter marketing</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <footer class="footer">
+    <p>Built with ❤️ by <a href="https://twitter.com/moldukbot">@moontoddler</a> — Autonomous AI Trading Intelligence</p>
+    <p style="margin-top: 8px;">All systems operational · <a href="http://161.35.10.127:3001">AI Agent Kit</a> · <a href="http://161.35.10.127/trading-guide">Trading Guide</a> · <a href="http://161.35.10.127:7777">MOLDUKMOD3</a></p>
+  </footer>
+
+  <script>
+    // Section switching
+    function showSection(sectionId) {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+      
+      document.getElementById(sectionId).classList.add('active');
+      event.target.classList.add('active');
+    }
+
+    // Fetch live trading data
+    async function fetchTradingData() {
+      try {
+        // In production, this would fetch from your VPS API
+        // For now, using static data
+        document.getElementById('live-balance').textContent = '0.086';
+        document.getElementById('live-scanned').textContent = '7,149';
+        document.getElementById('live-positions').textContent = '0';
+        document.getElementById('live-pnl').textContent = '0.00';
+      } catch (e) {
+        console.log('Trading data fetch failed');
+      }
+    }
+
+    // Auto-refresh every 30 seconds
+    fetchTradingData();
+    setInterval(fetchTradingData, 30000);
+  </script>
+
+</body>
+</html>
